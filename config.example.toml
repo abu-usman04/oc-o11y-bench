@@ -1,0 +1,17 @@
+# Copy to config.toml (already prepared locally and ignored by Git).
+# Fill values locally. Never paste this completed file into logs or chat.
+[model]
+provider = "anthropic"          # anthropic or openrouter
+name = ""                       # exact model ID accepted by that provider
+api_key = ""
+
+[grading]
+# Required for scored runs; optional for the unscored connectivity smoke.
+# If blank and model.provider is anthropic, reuse model.api_key.
+anthropic_api_key = ""
+
+[run]
+controlplane_repo = "../oc-control-plane"
+controlplane_commit = "f3f0e700c5927f94e893681e4b12bf40b741ebff"
+# Empty picks a UTC time just before this run. Keep recorded timestamps for reproduction.
+scenario_time = ""

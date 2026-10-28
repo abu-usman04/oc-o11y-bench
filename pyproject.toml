@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "oc-o11y-bench"
+version = "0.1.0"
+description = "Run the real OpenCluster Investigation Agent on o11y-bench cases"
+requires-python = ">=3.14"
+dependencies = ["harbor==0.24.0", "o11y-bench"]
+
+[dependency-groups]
+dev = ["ruff>=0.14", "mypy>=1.15", "types-PyYAML"]
+
+[tool.uv.sources]
+o11y-bench = { path = "upstream/o11y-bench", editable = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["opencluster_bench"]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+exclude = ["upstream", ".work", "jobs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.mypy]
+python_version = "3.14"
+check_untyped_defs = true
+ignore_missing_imports = true

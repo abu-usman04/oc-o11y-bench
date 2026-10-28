@@ -1,0 +1,45 @@
+services:
+  main:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - "${OC_BENCH_BINARY}:/opt/opencluster/controlplane:ro"
+      - "${OC_BENCH_RUNTIME}:/opt/opencluster/runtime.py:ro"
+      - "${OC_BENCH_MODEL_KEY}:/run/opencluster/model-key:ro"
+    secrets:
+      - postgres_password
+    environment:
+      OC_BENCH_MODEL: "${OC_BENCH_MODEL}"
+      OC_BENCH_PROVIDER: "${OC_BENCH_PROVIDER}"
+      OC_BENCH_COMMIT: "${OC_BENCH_COMMIT}"
+      OC_BENCH_WINDOW_HOURS: "${OC_BENCH_WINDOW_HOURS:-24}"
+      OC_BENCH_SMOKE: "${OC_BENCH_SMOKE:-0}"
+    networks:
+      opencluster: {}
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: opencluster
+      POSTGRES_DB: opencluster
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets:
+      - postgres_password
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U opencluster -d opencluster"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    networks:
+      opencluster: {}
+
+networks:
+  opencluster:
+    internal: true
+
+secrets:
+  postgres_password:
+    file: "${OC_BENCH_PG_PASSWORD}"

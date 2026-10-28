@@ -235,8 +235,23 @@ def smoke_checks(results):
     return checks
 
 
+def redacted_log(path, known_secrets, limit=65536):
+    guard = max((len(secret.encode("utf-8")) for secret in known_secrets if secret), default=0)
+    offset = max(0, path.stat().st_size - limit - guard)
+    with path.open("rb") as source:
+        source.seek(offset)
+        text = source.read(limit + guard).decode("utf-8", errors="replace")
+    for secret in known_secrets:
+        if secret:
+            text = text.replace(secret, "[redacted]")
+    # Drop the guard after redaction so a read boundary cannot expose a credential suffix.
+    if offset:
+        text = text[guard:]
+    return text[-limit:]
+
+
 def main():
-    instruction = Path("/app/instruction.txt").read_text()
+    instruction = Path("/app/instruction.txt").read_text(encoding="utf-8")
     output = Path("/logs/agent")
     output.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
@@ -254,7 +269,7 @@ def main():
         text = json.dumps(value, ensure_ascii=False, indent=2)
         for secret in known_secrets:
             text = text.replace(secret, "[redacted]")
-        (output / name).write_text(text)
+        (output / name).write_text(text, encoding="utf-8")
 
     def stop(_signal, _frame):
         raise KeyboardInterrupt
@@ -264,8 +279,8 @@ def main():
         private = Path(directory)
         bootstrap, password = secrets.token_urlsafe(40), secrets.token_urlsafe(40)
         seal = base64.b64encode(secrets.token_bytes(32)).decode()
-        postgres_password = Path("/run/secrets/postgres_password").read_text()
-        model_key = Path("/run/opencluster/model-key").read_text()
+        postgres_password = Path("/run/secrets/postgres_password").read_text(encoding="utf-8")
+        model_key = Path("/run/opencluster/model-key").read_text(encoding="utf-8")
         known_secrets.extend([bootstrap, password, seal, postgres_password, model_key])
         for name, value in (
             ("bootstrap", bootstrap),
@@ -278,7 +293,7 @@ def main():
             ),
         ):
             path = private / name
-            path.write_text(value)
+            path.write_text(value, encoding="utf-8")
             path.chmod(0o600)
         env = os.environ.copy()
         env.update(
@@ -387,12 +402,9 @@ def main():
                     process.kill()
                     process.wait()
             if log_path.exists():
-                with log_path.open("rb") as source:
-                    source.seek(max(0, log_path.stat().st_size - 65536))
-                    log_tail = source.read().decode(errors="replace")
-                for secret in known_secrets:
-                    log_tail = log_tail.replace(secret, "[redacted]")
-                (output / "backend.log").write_text(log_tail)
+                (output / "backend.log").write_text(
+                    redacted_log(log_path, known_secrets), encoding="utf-8"
+                )
     return exit_code
 
 

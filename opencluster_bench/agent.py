@@ -35,7 +35,7 @@ class OpenClusterAgent(BaseAgent):
     ) -> None:
         self.logs_dir.mkdir(parents=True, exist_ok=True)
         instruction_file = self.logs_dir / "instruction.txt"
-        instruction_file.write_text(instruction)
+        instruction_file.write_text(instruction, encoding="utf-8")
         await environment.upload_file(
             source_path=instruction_file, target_path="/app/instruction.txt"
         )
@@ -61,7 +61,7 @@ class OpenClusterAgent(BaseAgent):
                     self.logger.debug("Artifact unavailable: %s", name)
         path = self.logs_dir / "trajectory.json"
         if path.exists():
-            document = json.loads(path.read_text())
+            document = json.loads(path.read_text(encoding="utf-8"))
             Trajectory.model_validate(document)
             metrics = document["final_metrics"]
             context.n_input_tokens = metrics.get("total_prompt_tokens")

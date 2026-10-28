@@ -33,13 +33,13 @@ def prepare_task(upstream, output, name):
     generate_task(specs[0], output)
     task = output / name
     path = task / "task.toml"
-    original = path.read_text()
+    original = path.read_text(encoding="utf-8")
     expected = tomllib.loads(original)
     expected["environment"].pop("mcp_servers")
     native = original.split("[[environment.mcp_servers]]", 1)[0].rstrip() + "\n"
     if tomllib.loads(native) != expected:
         raise RuntimeError("task preparation would change more than the MCP declaration")
-    path.write_text(native)
+    path.write_text(native, encoding="utf-8")
     return task
 
 
@@ -53,8 +53,6 @@ def git_value(repo, *args):
 
 def build_binary(repo, commit):
     binary = ROOT / ".work" / "bin" / commit / "controlplane"
-    if binary.exists():
-        return binary
     binary.parent.mkdir(parents=True, exist_ok=True)
     image = "oc-o11y-bench-controlplane:" + commit
     archive = subprocess.Popen(["git", "-C", str(repo), "archive", commit], stdout=subprocess.PIPE)
@@ -180,7 +178,7 @@ def main():
         "model": name,
     }
     if args.case != "smoke":
-        gate = json.loads(gate_path.read_text()) if gate_path.exists() else {}
+        gate = json.loads(gate_path.read_text(encoding="utf-8")) if gate_path.exists() else {}
         if gate.get("identity") != identity:
             raise ValueError("run ./run.sh smoke successfully with this code/model before scoring")
     build_stack()
@@ -191,7 +189,7 @@ def main():
     private.mkdir(parents=True, mode=0o700)
     model_file, postgres_file = private / "model-key", private / "postgres-password"
     for path, value in ((model_file, key), (postgres_file, secrets.token_urlsafe(32))):
-        path.write_text(value)
+        path.write_text(value, encoding="utf-8")
         path.chmod(0o600)
     env = os.environ.copy()
     env.update(
@@ -254,7 +252,9 @@ def main():
             raise RuntimeError("Harbor did not complete; inspect this job's artifacts")
         if args.case == "smoke":
             receipts = list(job_dir.glob("*/agent/smoke.json"))
-            if len(receipts) != 1 or not json.loads(receipts[0].read_text()).get("passed"):
+            if len(receipts) != 1 or not json.loads(receipts[0].read_text(encoding="utf-8")).get(
+                "passed"
+            ):
                 raise RuntimeError("native Integration connectivity has not passed")
             gate_path.write_text(json.dumps({"identity": identity, "job": job_name}, indent=2))
             print("Live native Integration connectivity passed; this run was not scored.")

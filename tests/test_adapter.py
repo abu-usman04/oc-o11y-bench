@@ -180,6 +180,21 @@ class AdapterTest(unittest.TestCase):
         self.assertTrue(failures[0].is_error)
         self.assertEqual(json.loads(transcript.final_answer())["status"], "failed")
 
+    def test_bounded_diagnostics_do_not_export_a_cut_credential(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
+        from opencluster_bench.runtime import redacted_log
+
+        secret = "api-key-that-must-never-be-exported"
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / "backend.log"
+            path.write_text("prefix-" * 20 + secret + "x" * 50, encoding="utf-8")
+            exported = redacted_log(path, [secret], limit=60)
+        self.assertNotIn("exported", exported)
+        self.assertNotIn(secret, exported)
+        self.assertLessEqual(len(exported), 60)
+
     def test_exact_question_window_session_and_honest_public_trajectory(self):
         with application() as (api, requests):
             api.bootstrap("bootstrap-secret", "temporary strong admin password")

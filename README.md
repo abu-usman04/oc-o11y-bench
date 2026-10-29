@@ -10,6 +10,7 @@ Requirements: Git, uv, a working Linux Docker daemon and Docker Compose.
 Python 3.14 and project dependencies are installed by the launcher. Keep enough disk space for Docker images.
 The production repository is read through Git; its working-directory edits are not included in builds.
 Launchers clone upstream with core.autocrlf=false so its Linux shell scripts retain LF line endings.
+The harness uses UTF-8 mode so Unicode Findings and traces work on Windows.
 
 1. Edit the prepared, Git-ignored `config.toml`:
    - Set `model.name` to an exact model ID and `model.api_key` to its API key.
@@ -70,6 +71,7 @@ trial and zero automatic retries. Each job gets a unique directory under `jobs/`
 
 Useful files:
 - `opencluster-result.md`: readable question, Conclusion, Findings, every Tool attempt, timing and usage.
+  It also records Harbor's process exit code, separately from the Investigation outcome.
 - `opencluster-manifest.json`: code/binary/benchmark identity, model and scenario time.
 - `*/agent/integrations.json`: verification and Tool availability.
 - `*/agent/investigation.json`: actual public Conclusion, Tool Runs and token totals.

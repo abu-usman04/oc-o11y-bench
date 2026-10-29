@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+export PYTHONUTF8=1
 export UV_CACHE_DIR="$PWD/.work/uv-cache"
 export UV_PYTHON_INSTALL_DIR="$PWD/.work/python"
 export TMPDIR="$PWD/.work/tmp"

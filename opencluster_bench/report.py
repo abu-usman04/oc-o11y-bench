@@ -9,13 +9,18 @@ def _block(value):
     return "\n".join("    " + line for line in text.splitlines())
 
 
-def write_report(job_dir: Path, model: str, *, graded: bool) -> Path:
+def write_report(job_dir: Path, model: str, *, graded: bool, harness_exit_code: int) -> Path:
     lines = [
         "# OpenCluster results",
         "",
         "Grading requested; see upstream verifier artifacts."
         if graded
         else "Ungraded: no benchmark correctness score was requested.",
+        "",
+        f"Harbor process exit code: {harness_exit_code}",
+        "Harness failed; retained Investigation records follow."
+        if harness_exit_code
+        else "Harness completed. Answer correctness is separate from execution status.",
         "",
         "Model: " + model,
         "",

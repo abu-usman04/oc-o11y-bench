@@ -5,6 +5,7 @@ param(
 $ErrorActionPreference = 'Stop'
 Push-Location $PSScriptRoot
 try {
+    $env:PYTHONUTF8 = '1'
     $env:UV_CACHE_DIR = Join-Path $PSScriptRoot '.work/uv-cache'
     $env:UV_PYTHON_INSTALL_DIR = Join-Path $PSScriptRoot '.work/python'
     $env:TEMP = Join-Path $PSScriptRoot '.work/tmp'

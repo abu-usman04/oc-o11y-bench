@@ -202,6 +202,7 @@ def main():
     env = os.environ.copy()
     env.update(
         {
+            "PYTHONUTF8": "1",
             "OC_BENCH_BINARY": binary.as_posix(),
             "OC_BENCH_RUNTIME": (ROOT / "opencluster_bench" / "runtime.py").as_posix(),
             "OC_BENCH_MODEL_KEY": model_file.as_posix(),
@@ -257,7 +258,9 @@ def main():
         completed = subprocess.run(argv, cwd=ROOT, env=env)
         job_dir.mkdir(parents=True, exist_ok=True)
         (job_dir / "opencluster-manifest.json").write_text(json.dumps(manifest, indent=2))
-        report = write_report(job_dir, provider + "/" + name, graded=graded)
+        report = write_report(
+            job_dir, provider + "/" + name, graded=graded, harness_exit_code=completed.returncode
+        )
         print("Readable results: " + str(report))
         if completed.returncode:
             raise RuntimeError("Harbor did not complete; inspect this job's artifacts")

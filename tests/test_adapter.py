@@ -225,9 +225,12 @@ class AdapterTest(unittest.TestCase):
             logs.mkdir(parents=True)
             (logs / "instruction.txt").write_text("What overall share returned 5xx?")
             (logs / "investigation.json").write_text(json.dumps(result))
-            report = write_report(job, "z-ai/glm-5.1", graded=False).read_text(encoding="utf-8")
+            report = write_report(job, "z-ai/glm-5.1", graded=False, harness_exit_code=1).read_text(
+                encoding="utf-8"
+            )
         for expected in (
             "Ungraded",
+            "Harbor process exit code: 1",
             "What overall share returned 5xx?",
             "5xx share is 2%.",
             "Findings",

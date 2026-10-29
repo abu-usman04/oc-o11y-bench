@@ -1,6 +1,6 @@
 # Publish the OpenCluster benchmark repository
 
-Status: authorized by the user on 2026-10-29; reviewed against the request before execution.
+Status: published and verified on 2026-10-29 at https://github.com/abu-usman04/oc-o11y-bench. Public visibility was verified anonymously; remote file hashes match the reviewed local snapshot. All 329 job files are tracked. Configured-key, publication-snapshot and full-history secret scans passed.
 
 ## Scope
 

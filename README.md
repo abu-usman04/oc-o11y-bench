@@ -18,7 +18,7 @@ The harness uses UTF-8 mode so Unicode Findings and traces work on Windows.
    - For scored runs, set `grading.anthropic_api_key`. A blank value reuses the Agent key
      when its provider is Anthropic. The grader is upstream's pinned Anthropic judge.
    - Leave the repository path and commit unchanged to evaluate the reviewed control-plane revision.
-2. Prepare and check connectivity, then run one scored case:
+2. Prepare and check connectivity, then run one case:
 
 ```powershell
 .\run.ps1 prepare
@@ -50,7 +50,10 @@ Harbor -> thin adapter -> local OpenCluster HTTP API -> real Investigation Agent
        -> unchanged upstream verifier -> grading artifacts and HTML report
 ```
 
-Each trial runs the clean, pinned Linux control-plane binary inside Harbor's `main` container.
+Each trial builds the pinned control-plane source with a benchmark-only entry point inside Harbor's `main` container.
+It wraps the existing real provider interface to retain bounded Tool observations and records read-only HTTP
+metadata. Agent logic, provider policy and the default 30-read budget stay unchanged. The manifest records
+the production commit, instrumentation hash and resulting binary hash.
 PostgreSQL has a private network and disposable memory-backed storage. The upstream telemetry sidecar
 and its task-specific data remain unchanged. No application ports are published.
 
@@ -66,20 +69,29 @@ with the exact benchmark question and an explicit scenario-time window. It never
 .\run.ps1 service-degradation-rca --no-grade
 ```
 
-Run these only after inspecting the first scored result. Every run stays at one attempt, one concurrent
+Inspect each result before expanding to more cases. Every run stays at one attempt, one concurrent
 trial and zero automatic retries. Each job gets a unique directory under `jobs/`.
 
 Useful files:
-- `opencluster-result.md`: readable question, Conclusion, Findings, every Tool attempt, timing and usage.
-  It also records Harbor's process exit code, separately from the Investigation outcome.
-- `opencluster-manifest.json`: code/binary/benchmark identity, model and scenario time.
-- `*/agent/integrations.json`: verification and Tool availability.
-- `*/agent/investigation.json`: actual public Conclusion, Tool Runs and token totals.
-- `*/agent/trajectory.json`: ATIF derived from those public records.
-- `*/agent/smoke.json`: unscored connectivity checks and actual Investigations.
-- `*/agent/failure.json`, `*/agent/backend.log`: failure details and a bounded, redacted log tail.
-- `*/verifier/grading_details.json`, `*/verifier/reward.txt`: upstream grading.
+- `opencluster-result.md`: readable answer, trace examples, cited Findings, uncertainty, Tool table and endpoint details.
+  Execution status, independent facts and any judge verdict are stated separately.
+- `opencluster-manifest.json`: code/binary/instrumentation identity, model, scenario time and unchanged read budget.
+- `*/agent/trajectory.json`: the only root JSON transcript; unchanged upstream grading can parse this directory.
+- `*/agent/artifacts/investigation.json`: public response from `GET /api/v1/investigations/{id}`.
+- `*/agent/artifacts/integrations.json`: real Integration verification responses and query availability.
+- `*/agent/artifacts/tool-results.json`: actual bounded observations supplied to the provider, real call IDs,
+  associated HTTP method/source/path/parameters/status and precise request timestamps. Ambiguity is explicit.
+- `*/agent/artifacts/capture.jsonl`: redacted recorder output; `backend.log` is the application's own log.
+- `*/agent/artifacts/smoke.json`, `failure.json`: connectivity records or failure details.
+- `fact-audit.json`, when present: canonical facts and deterministic checks, without an LLM judge verdict.
+- `*/verifier/grading_details.json`, `reward.txt`, `truth.json`: unchanged upstream grading, only for scored runs.
 - `run_report.html`: upstream report for a scored job.
+
+Diagnostic JSON lives under `artifacts/` because the upstream parser treats every root JSON file as a transcript.
+Trace examples list IDs stated in the answer; the report never invents an example from search results.
+An instant Prometheus evaluation can legitimately have equal bounds while `[60m]` reads the preceding hour.
+Public Tool execution timestamps have second precision. HTTP timestamps retain subsecond precision and measure
+request-to-response-headers time, not complete Tool execution.
 
 Docker readiness is checked before any build. Application execution has a bounded deadline;
 unfinished Investigations are cancelled, and failures are reported rather than converted into answers.
@@ -98,15 +110,20 @@ retain Tool arguments, outcomes, errors, truncation, source references and times
   `environment.mcp_servers`, because this adapter uses native Integrations. Instructions, setup,
   sidecar Compose and grading code are preserved. There is no MCP replacement.
 - Upstream's broad stale-project cleanup script is not run. Harbor deletes its own trial containers.
-- Durable Tool Runs do not contain full Tool-result payloads or private model reasoning.
-  ATIF explicitly marks that limit and uses synthetic ordinal-based call IDs. It is not a complete
-  original model transcript. Input/output token totals are available; cache breakdown and dollar cost are not.
+- Public Tool Runs still contain summaries. The external recorder additionally retains the exact bounded
+  Tool observations submitted to the real provider adapter, not unlimited vendor responses or private reasoning.
+  Captures are limited to 128 KiB per record and 8 MiB per run; overflow or missing evidence fails capture acceptance
+  without changing the provider input. Headers and model messages are excluded; known secrets are redacted.
+  ATIF remains reconstructed, with real call IDs and observations when captured. Input/output totals are available;
+  cache breakdown and dollar cost are not.
 - Loki currently supports bounded log excerpts, not aggregate LogQL result vectors/matrices.
   Exact exhaustive counts/shares may be unsupported. Tempo metrics/tag discovery and native Prometheus
   histogram payloads are outside the shipped Tools. Do not claim full benchmark coverage.
 - The ten-minute benchmark limit is retained; OpenCluster can ordinarily run longer.
-- Local fixture tests and successful preparation do not prove live Integration compatibility.
-  Until `smoke` and a scored run actually finish, live connectivity and grading remain unverified.
+- Fixture tests do not prove live connectivity or answer correctness. Smoke verifies native connectivity;
+  canonical facts and deterministic checks verify specific claims. Only upstream grading supplies benchmark verdicts.
+  Selected ungraded cases cannot produce a full-suite Pass³ or Pass@3 score. Some benchmark tasks need capabilities
+  the current read-only Tools do not offer.
 
 ## Contributing
 

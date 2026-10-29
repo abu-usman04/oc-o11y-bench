@@ -15,7 +15,23 @@ from http.cookies import SimpleCookie
 from pathlib import Path
 from urllib.parse import quote, urlsplit
 
+from opencluster_bench.evidence import collect_results
+
 MAX_RESPONSE_BYTES = 4 * 1024 * 1024
+
+
+def artifact_path(root, name):
+    return root / name if name == "trajectory.json" else root / "artifacts" / name
+
+
+def write_artifact(root, name, value, known_secrets=()):
+    path = artifact_path(root, name)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    text = json.dumps(value, ensure_ascii=False, indent=2)
+    for secret in known_secrets:
+        if secret:
+            text = text.replace(secret, "[redacted]")
+    path.write_text(text, encoding="utf-8")
 
 
 class API:
@@ -139,10 +155,16 @@ def investigate(api, instruction, start, end, *, timeout=540, poll_interval=1):
         time.sleep(min(poll_interval, max(0, deadline - time.monotonic())))
 
 
-def trajectory(instruction, result, model):
+def trajectory(instruction, result, model, tool_results=()):
+    captured = {
+        entry["ordinal"]: entry
+        for entry in tool_results
+        if entry["investigationId"] == result["id"]
+    }
     steps = [{"step_id": 1, "source": "user", "message": instruction}]
     for run in result.get("runs", []):
-        call_id = "run-" + str(run["ordinal"])
+        observation = captured.get(run["ordinal"])
+        call_id = observation["callId"] if observation else "run-" + str(run["ordinal"])
         recorded = {key: value for key, value in run.items() if key != "arguments"}
         recorded["contentAvailability"] = "Full Tool-result content is not persisted."
         steps.append(
@@ -162,8 +184,17 @@ def trajectory(instruction, result, model):
                     "results": [
                         {
                             "source_call_id": call_id,
-                            "extra": {"is_error": run["outcome"] != "succeeded"},
-                            "content": json.dumps(recorded, ensure_ascii=False),
+                            "extra": {
+                                "is_error": observation["isError"]
+                                if observation
+                                else run["outcome"] != "succeeded",
+                                "endpointRequests": observation.get("requests", [])
+                                if observation
+                                else [],
+                            },
+                            "content": observation["content"]
+                            if observation
+                            else json.dumps(recorded, ensure_ascii=False),
                         }
                     ]
                 },
@@ -212,8 +243,14 @@ def trajectory(instruction, result, model):
         "extra": {
             "reconstructedFrom": "public Investigation and durable Tool Runs",
             "privateReasoningAvailable": False,
-            "fullToolResultsAvailable": False,
-            "originalModelCallIdsAvailable": False,
+            "fullToolResultsAvailable": bool(captured)
+            and len(captured) == len(result.get("runs", [])),
+            "toolObservationScope": (
+                "bounded observations as submitted to the provider adapter; "
+                "no private model reasoning"
+            ),
+            "originalModelCallIdsAvailable": bool(captured)
+            and len(captured) == len(result.get("runs", [])),
             "elapsedSeconds": result.get("adapterElapsedSeconds"),
         },
     }
@@ -266,10 +303,7 @@ def main():
     exit_code = 1
 
     def write_json(name, value):
-        text = json.dumps(value, ensure_ascii=False, indent=2)
-        for secret in known_secrets:
-            text = text.replace(secret, "[redacted]")
-        (output / name).write_text(text, encoding="utf-8")
+        write_artifact(output, name, value, known_secrets)
 
     def stop(_signal, _frame):
         raise KeyboardInterrupt
@@ -307,6 +341,8 @@ def main():
                 "OC_AI_PROVIDER": os.environ["OC_BENCH_PROVIDER"],
                 "OC_AI_MODEL": os.environ["OC_BENCH_MODEL"],
                 "OC_INVESTIGATION_WORKERS": "1",
+                "OC_LOG_LEVEL": "debug",
+                "OC_BENCH_CAPTURE_FILE": str(private / "capture.jsonl"),
             }
         )
         log_path = private / "backend.log"
@@ -383,12 +419,34 @@ def main():
                     else 1
                 )
             write_json("investigation.json", result)
+            captured = collect_results(
+                private / "capture.jsonl",
+                log_path,
+                [item["result"] for item in results] if smoke else [result],
+                verified,
+            )
+            write_json("tool-results.json", captured)
+            artifact_path(output, "capture.jsonl").write_text(
+                redacted_log(
+                    private / "capture.jsonl", known_secrets, limit=8 * 1024 * 1024 + 131072
+                )
+                if (private / "capture.jsonl").exists()
+                else "",
+                encoding="utf-8",
+            )
+            if not captured["complete"]:
+                exit_code = 1
+                write_json(
+                    "failure.json",
+                    {"error": "Evidence capture incomplete", "details": captured["errors"]},
+                )
             write_json(
                 "trajectory.json",
                 trajectory(
                     instruction,
                     result,
                     os.environ["OC_BENCH_PROVIDER"] + "/" + os.environ["OC_BENCH_MODEL"],
+                    captured["toolResults"],
                 ),
             )
         except (Exception, KeyboardInterrupt) as error:
@@ -401,8 +459,17 @@ def main():
                 except subprocess.TimeoutExpired:
                     process.kill()
                     process.wait()
+            capture_path = private / "capture.jsonl"
+            exported_capture = artifact_path(output, "capture.jsonl")
+            if capture_path.exists() and not exported_capture.exists():
+                exported_capture.parent.mkdir(parents=True, exist_ok=True)
+                exported_capture.write_text(
+                    redacted_log(capture_path, known_secrets, limit=8 * 1024 * 1024 + 131072),
+                    encoding="utf-8",
+                )
             if log_path.exists():
-                (output / "backend.log").write_text(
+                artifact_path(output, "backend.log").parent.mkdir(parents=True, exist_ok=True)
+                artifact_path(output, "backend.log").write_text(
                     redacted_log(log_path, known_secrets), encoding="utf-8"
                 )
     return exit_code

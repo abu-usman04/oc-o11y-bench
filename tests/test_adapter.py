@@ -157,6 +157,53 @@ class AdapterTest(unittest.TestCase):
                 (upstream / "environment" / "docker-compose.yaml").read_bytes(),
             )
 
+    def test_complete_export_is_readable_by_the_unchanged_upstream_parser(self):
+        import asyncio
+        import os
+        import shutil
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        from grading.transcript_parser import parse_transcript
+        from harbor.models.agent.context import AgentContext
+
+        from opencluster_bench.agent import OpenClusterAgent
+        from opencluster_bench.runtime import write_artifact
+
+        with application() as (api, _):
+            result = investigate(api, "Question", "2026-10-28T09:00:00Z", "2026-10-28T10:00:00Z")
+        with TemporaryDirectory() as directory:
+            source, logs = Path(directory) / "container", Path(directory) / "host"
+            write_artifact(source, "trajectory.json", trajectory("Question", result, "test/model"))
+            write_artifact(source, "investigation.json", result)
+            write_artifact(source, "integrations.json", {"numericValues": [1, 2]})
+            write_artifact(source, "failure.json", {"error": "test-secret"}, ["test-secret"])
+
+            async def upload_file(**_):
+                pass
+
+            async def execute(**_):
+                return SimpleNamespace(return_code=0)
+
+            async def download_file(*, source_path, target_path):
+                self.assertTrue(source_path.startswith("/logs/agent/"), source_path)
+                shutil.copy2(source / source_path.removeprefix("/logs/agent/"), target_path)
+
+            environment = SimpleNamespace(
+                upload_file=upload_file, exec=execute, download_file=download_file
+            )
+            with patch.dict(os.environ, {"OC_BENCH_COMMIT": "test-commit"}):
+                asyncio.run(
+                    OpenClusterAgent(logs_dir=logs).run("Question", environment, AgentContext())
+                )
+            transcript = parse_transcript(logs)
+            self.assertEqual(json.loads(transcript.final_answer())["summary"], "5xx share is 2%.")
+            self.assertEqual([p.name for p in logs.glob("*.json")], ["trajectory.json"])
+            self.assertTrue((logs / "artifacts/investigation.json").exists())
+            self.assertNotIn("test-secret", (logs / "artifacts/failure.json").read_text())
+
     def test_failed_tool_runs_remain_errors_for_the_upstream_grader(self):
         from pathlib import Path
         from tempfile import TemporaryDirectory
@@ -195,20 +242,17 @@ class AdapterTest(unittest.TestCase):
         self.assertNotIn(secret, exported)
         self.assertLessEqual(len(exported), 60)
 
-    def test_ungraded_report_keeps_findings_and_every_tool_attempt(self):
+    def test_ungraded_report_explains_evidence_endpoints_and_missing_trace_example(self):
         from pathlib import Path
         from tempfile import TemporaryDirectory
 
         from opencluster_bench.report import write_report
+        from opencluster_bench.runtime import write_artifact
 
         with application() as (api, _):
-            result = investigate(
-                api,
-                "What overall share returned 5xx?",
-                "2026-10-28T09:00:00Z",
-                "2026-10-28T10:00:00Z",
-                timeout=2,
-            )
+            result = investigate(api, "Question", "2026-10-28T09:00:00Z", "2026-10-28T10:00:00Z")
+        result["runs"][0]["arguments"] = {"query": "test[60m]", "mode": "instant"}
+        result["runs"][0]["windowFrom"] = result["runs"][0]["windowUntil"]
         result["runs"].append(
             {
                 "ordinal": 2,
@@ -219,33 +263,168 @@ class AdapterTest(unittest.TestCase):
                 "truncated": True,
             }
         )
+        capture = {
+            "complete": True,
+            "errors": [],
+            "toolResults": [
+                {
+                    "investigationId": "investigation-1",
+                    "ordinal": 1,
+                    "callId": "real-call-1",
+                    "content": (
+                        '[run 1] prometheus_query {}\nCONTENT: {"series":[{"value":"0.02"}]}'
+                    ),
+                    "requests": [
+                        {
+                            "method": "POST",
+                            "path": "/api/v1/query",
+                            "status": 200,
+                            "parameters": {"query": ["test[60m]"]},
+                        }
+                    ],
+                }
+            ],
+        }
         with TemporaryDirectory() as directory:
             job = Path(directory)
-            logs = job / "trial-1" / "agent"
+            logs = job / "trial-1/agent"
             logs.mkdir(parents=True)
-            (logs / "instruction.txt").write_text("What overall share returned 5xx?")
-            (logs / "investigation.json").write_text(json.dumps(result))
+            (logs / "instruction.txt").write_text(
+                "What share returned 5xx? Include a trace id if possible."
+            )
+            write_artifact(logs, "investigation.json", result)
+            write_artifact(logs, "tool-results.json", capture)
+            (job / "fact-audit.json").write_text(
+                json.dumps(
+                    {
+                        "facts": [
+                            {
+                                "criterion": "Expected share",
+                                "evidence": {"summary": "0.02", "error": None},
+                            }
+                        ]
+                    }
+                )
+            )
             report = write_report(job, "z-ai/glm-5.1", graded=False, harness_exit_code=1).read_text(
                 encoding="utf-8"
             )
         for expected in (
             "Ungraded",
             "Harbor process exit code: 1",
-            "What overall share returned 5xx?",
             "5xx share is 2%.",
             "Findings",
-            '"runRefs"',
-            "Tool Run 1",
-            "prometheus_query",
-            "Tool Run 2",
-            "tempo_get_trace",
+            "Tool attempts",
+            "Read budget",
+            "No trace ID was included in the Agent answer",
+            "/api/v1/investigations/investigation-1",
+            "POST /api/v1/query",
+            "0.02",
+            "Evaluation at",
+            "[60m]",
             "Trace not available",
-            '"truncated": true',
-            "2026-10-28T10:00:01Z",
-            '"inputTokens": 120',
-            "Full Tool-result content is not persisted",
+            "120",
+            "30",
         ):
             self.assertIn(expected, report)
+        self.assertIn("#run-investigation-1-1", report)
+        self.assertLess(report.index("## Answer"), report.index("## Independent checks"))
+        self.assertLess(report.index("## Independent checks"), report.index("### Tool attempts"))
+        self.assertNotIn('"summary": "5xx share', report)
+        self.assertNotIn("Full Tool-result content is not persisted", report)
+
+    def test_captured_observations_match_investigation_source_parameters_and_time(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
+        from opencluster_bench.evidence import collect_results
+
+        trace = "1" * 32
+        other = "2" * 32
+        run = {
+            "ordinal": 1,
+            "tool": "prometheus_query",
+            "integrationId": "prom-1",
+            "arguments": {"query": "test", "mode": "instant"},
+            "outcome": "succeeded",
+            "windowUntil": "2026-10-28T10:00:00Z",
+            "startedAt": "2026-10-28T10:00:01Z",
+            "finishedAt": "2026-10-28T10:00:02Z",
+        }
+        record = {
+            "kind": "observation",
+            "traceId": trace,
+            "callId": "same-call",
+            "issuedAt": "2026-10-28T10:00:01Z",
+            "observedAt": "2026-10-28T10:00:02Z",
+            "content": (
+                '[run 1] prometheus_query {"query":"test","mode":"instant"}\nCONTENT: {"series":[]}'
+            ),
+            "tool": "prometheus_query",
+            "isError": False,
+        }
+        request = {
+            "kind": "request",
+            "traceId": trace,
+            "origin": "http://source:9090",
+            "method": "POST",
+            "path": "/api/v1/query",
+            "status": 200,
+            "parameters": {"query": ["test"], "time": ["1793181600"]},
+            "startedAt": "2026-10-28T10:00:01.5Z",
+            "headersAt": "2026-10-28T10:00:01.6Z",
+        }
+        integrations = {
+            "prometheus": {"id": "prom-1", "configuration": {"url": "http://source:9090"}}
+        }
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            capture = root / "capture.jsonl"
+            log = root / "backend.log"
+            log.write_text(
+                json.dumps({"investigation_id": "a", "trace_id": trace})
+                + "\n"
+                + json.dumps({"investigation_id": "b", "trace_id": other})
+            )
+            second = {**record, "traceId": other}
+            capture.write_text(
+                "\n".join(
+                    json.dumps(r) for r in [record, request, second, {**request, "traceId": other}]
+                )
+            )
+            data = collect_results(
+                capture,
+                log,
+                [
+                    {"id": "a", "runs": [run]},
+                    {
+                        "id": "b",
+                        "runs": [
+                            {**run, "outcome": "failed", "windowUntil": "2026-10-28T11:00:00Z"}
+                        ],
+                    },
+                ],
+                integrations,
+            )
+            self.assertTrue(data["complete"], data["errors"])
+            self.assertEqual(len(data["toolResults"]), 2)
+            first, second = data["toolResults"]
+            self.assertEqual(first["requests"][0]["path"], "/api/v1/query")
+            self.assertEqual(first["callId"], "same-call")
+            self.assertEqual(first["content"], record["content"])
+            exported = trajectory(
+                "Question", {"id": "a", "runs": [run]}, "model", data["toolResults"]
+            )
+            self.assertEqual(exported["steps"][1]["tool_calls"][0]["tool_call_id"], "same-call")
+            self.assertEqual(
+                exported["steps"][1]["observation"]["results"][0]["content"], record["content"]
+            )
+            self.assertTrue(exported["extra"]["fullToolResultsAvailable"])
+            self.assertEqual(second["requests"][0]["traceId"], other)
+            log.write_text("")
+            missing = collect_results(capture, log, [{"id": "a", "runs": [run]}], integrations)
+            self.assertFalse(missing["complete"])
+            self.assertTrue(any("Investigation" in error for error in missing["errors"]))
 
     def test_no_grade_cli_does_not_require_a_judge_key(self):
         import subprocess

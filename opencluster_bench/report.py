@@ -1,90 +1,312 @@
-"""Render public Investigation records without another model or judge."""
+"""Readable benchmark answers, evidence and execution diagnostics; no generated verdicts."""
 
 import json
+import re
 from pathlib import Path
 
 
 def _block(value):
-    text = json.dumps(value, ensure_ascii=False, indent=2)
+    text = value if isinstance(value, str) else json.dumps(value, ensure_ascii=False, indent=2)
     return "\n".join("    " + line for line in text.splitlines())
+
+
+def _cell(value):
+    return str(value).replace("|", "\\|").replace("\n", " ")
+
+
+def _read(path, default):
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else default
+
+
+def _outcome(run):
+    if run["outcome"] != "succeeded":
+        return "failed / not executed" if "not executed" in run.get("error", "") else "failed"
+    if re.search(r"empty:|: 0 (series|names|log excerpts|traces)", run.get("summary", "")):
+        return "succeeded, empty"
+    return "succeeded, limited" if run.get("truncated") else "succeeded"
+
+
+def _investigation(lines, question, result, artifacts, capture, audit_lines):
+    runs = result.get("runs", [])
+    observations = {
+        entry["ordinal"]: entry
+        for entry in capture.get("toolResults", [])
+        if entry["investigationId"] == result["id"]
+    }
+    failed = sum(run["outcome"] != "succeeded" for run in runs)
+    limited = sum(bool(run.get("truncated")) for run in runs)
+    seen: dict[str, int] = {}
+    duplicate_ordinals = []
+    for run in runs:
+        identity = json.dumps(
+            [run.get("integrationId"), run["tool"], run.get("arguments", {})], sort_keys=True
+        )
+        if identity in seen:
+            duplicate_ordinals.append(f"#{run['ordinal']} repeats #{seen[identity]}")
+        else:
+            seen[identity] = run["ordinal"]
+    usage = result.get("usage", {})
+    elapsed = result.get("adapterElapsedSeconds")
+    lines.extend(
+        [
+            "",
+            "## Answer",
+            "",
+            _block(result.get("summary") or "No answer was produced."),
+            "",
+            "### Question",
+            "",
+            _block(question),
+            "",
+            f"Investigation: **{result['status']}**; assessment: "
+            f"**{result.get('conclusionStatus', 'unavailable')}**.",
+            f"Tool attempts: **{len(runs)}**, including **{failed} failed/blocked** "
+            f"and **{limited} limited**.",
+            "Read budget: **30** (unchanged); stopped by: **"
+            + result.get("stoppedBy", "Agent conclusion")
+            + "**.",
+            f"Tokens: {usage.get('inputTokens', 'unavailable')} input / "
+            f"{usage.get('outputTokens', 'unavailable')} output.",
+            f"Agent elapsed: {elapsed:.1f} seconds."
+            if elapsed is not None
+            else "Agent elapsed: unavailable.",
+            "Exact repeated requests: " + ("; ".join(duplicate_ordinals) or "none") + ".",
+            "",
+            "### Trace examples in the answer",
+            "",
+        ]
+    )
+    answer_text = (
+        result.get("summary", "")
+        + "\n"
+        + "\n".join(finding["statement"] for finding in result.get("findings") or [])
+    )
+    trace_ids = list(dict.fromkeys(re.findall(r"\b[0-9a-fA-F]{32}\b", answer_text)))
+    if trace_ids:
+        lines.extend("- `" + identifier + "`" for identifier in trace_ids)
+        lines.append(
+            "These IDs were stated by the Agent; IDs appearing only in Tool search output "
+            "are not added here."
+        )
+    elif re.search(r"trace\s*id", question, re.I):
+        lines.append("**No trace ID was included in the Agent answer despite the request.**")
+    else:
+        lines.append("No trace example was stated or requested.")
+    lines.extend(["", "### Findings and uncertainty", ""])
+    for finding in result.get("findings") or []:
+        refs = ", ".join(f"[#{n}](#run-{result['id']}-{n})" for n in finding.get("runRefs", []))
+        lines.append(
+            f"- **{finding.get('kind', 'observation')}**: {finding['statement']} "
+            f"({refs or 'no cited reads'})"
+        )
+    for limitation in result.get("limitations") or []:
+        lines.append("- **Limitation**: " + limitation["statement"])
+    for hypothesis in result.get("hypotheses") or []:
+        lines.append(
+            f"- **Hypothesis ({hypothesis.get('status', 'unresolved')})**: "
+            f"{hypothesis['statement']}"
+        )
+    for action in result.get("actions") or []:
+        lines.append(f"- **Next diagnostic step**: {action['title']}. {action['verification']}")
+    lines.extend(audit_lines)
+    lines.extend(
+        [
+            "",
+            "### Tool attempts",
+            "",
+            "| Run | Tool | Outcome | Purpose |",
+            "| --- | --- | --- | --- |",
+        ]
+    )
+    for run in runs:
+        n = run["ordinal"]
+        lines.append(
+            f"| [#{n}](#run-{result['id']}-{n}) | {_cell(run['tool'])} | {_outcome(run)} | "
+            f"{_cell(run.get('purpose', ''))} |"
+        )
+    lines.extend(
+        [
+            "",
+            "### Where these files came from",
+            "",
+            f"Control-plane endpoint: `GET /api/v1/investigations/{result['id']}` "
+            "supplies the public Conclusion and Tool Run records.",
+            "`adapterElapsedSeconds` is added by this benchmark adapter. "
+            "It is not backend telemetry.",
+            "Integration configuration comes from `POST /api/v1/integrations/{id}/verify`.",
+            "`backend.log` is the OpenCluster process log, not queried Loki log data.",
+            "`trajectory.json` is reconstructed ATIF; it contains the Agent's recorded answer "
+            "and observations, not private reasoning.",
+            f"[Public result]({(artifacts / 'investigation.json').as_posix()}) · "
+            f"[Actual Tool observations and HTTP metadata]"
+            f"({(artifacts / 'tool-results.json').as_posix()}) · "
+            f"[Application log]({(artifacts / 'backend.log').as_posix()})",
+            "",
+            "An instant Prometheus read has one evaluation timestamp. A selector such as `[60m]` "
+            "reads the preceding hour; equal evaluation bounds do not mean an empty lookback.",
+            "Public execution timestamps are rounded to seconds by the pinned API. Equal "
+            "start/finish values do not prove zero duration. Captured HTTP timestamps retain "
+            "subsecond precision; their elapsed interval measures time to response headers.",
+        ]
+    )
+    for run in runs:
+        n = run["ordinal"]
+        observation = observations.get(n)
+        lines.extend(
+            [
+                "",
+                f'<a id="run-{result["id"]}-{n}"></a>',
+                f"### Tool Run {n}",
+                "",
+                f"**{run['tool']}** — {run.get('purpose', '')}",
+            ]
+        )
+        if run.get("windowFrom"):
+            label = (
+                "Evaluation at"
+                if run.get("arguments", {}).get("mode") == "instant"
+                else "Read window"
+            )
+            lines.append(
+                f"{label}: {run['windowFrom']}"
+                + (
+                    ""
+                    if label == "Evaluation at"
+                    else " to " + run.get("windowUntil", "unavailable")
+                )
+            )
+        lines.extend(["", "Arguments:", "", _block(run.get("arguments", {})), ""])
+        lines.append(run.get("error") or run.get("summary") or "No result summary.")
+        if run.get("sources"):
+            labels = []
+            for reference in run["sources"][:3]:
+                parts = reference.split(":", 3)
+                resource = parts[2] if len(parts) > 2 else "result"
+                label = parts[0].title() + " " + resource
+                if len(parts) == 4:
+                    label += " `" + parts[3] + "`"
+                labels.append(label)
+            lines.append("Sources: " + "; ".join(labels) + ".")
+            if len(run["sources"]) > 3:
+                lines.append(
+                    f"Plus {len(run['sources']) - 3} other sources. "
+                    "Full stable references are in the public result."
+                )
+        if not observation:
+            lines.append(
+                "**Actual observation unavailable.** This attempt cannot be audited "
+                "from its summary alone."
+            )
+            continue
+        for request in observation.get("requests", []):
+            lines.extend(
+                [
+                    "",
+                    f"Endpoint: **{request['method']} {request['path']}** "
+                    f"- HTTP {request.get('status', 'unavailable')}.",
+                ]
+            )
+            if request.get("origin"):
+                lines.append("Configured source: `" + request["origin"] + "`.")
+            lines.extend(
+                ["", "Actual request parameters:", "", _block(request.get("parameters", {}))]
+            )
+        if not observation.get("requests"):
+            lines.append(
+                "Endpoint association: " + observation.get("requestStatus", "unavailable") + "."
+            )
+        content = observation.get("content", "")
+        lines.extend(
+            [
+                "",
+                "Actual observation submitted to the provider adapter:",
+                "",
+                _block(content[:1800]),
+            ]
+        )
+        if len(content) > 1800:
+            lines.append(
+                "Display excerpt only; the complete bounded observation "
+                "is retained in tool-results.json."
+            )
 
 
 def write_report(job_dir: Path, model: str, *, graded: bool, harness_exit_code: int) -> Path:
     lines = [
-        "# OpenCluster results",
-        "",
-        "Grading requested; see upstream verifier artifacts."
-        if graded
-        else "Ungraded: no benchmark correctness score was requested.",
-        "",
-        f"Harbor process exit code: {harness_exit_code}",
-        "Harness failed; retained Investigation records follow."
-        if harness_exit_code
-        else "Harness completed. Answer correctness is separate from execution status.",
+        "# OpenCluster benchmark assessment",
         "",
         "Model: " + model,
         "",
-        "Full Tool-result content is not persisted. This report contains the public "
-        "Conclusion and every durable Tool Run; private model reasoning is unavailable.",
+        "Grading requested; see unchanged upstream verifier artifacts."
+        if graded
+        else "**Ungraded: no LLM judge verdict or benchmark pass score.**",
+        f"Harbor process exit code: {harness_exit_code}",
+        "Execution completion, answer correctness and benchmark grading are separate outcomes.",
     ]
+    audit = _read(job_dir / "fact-audit.json", {})
+    audit_lines = []
+    if audit:
+        audit_lines.extend(
+            [
+                "",
+                "## Independent checks",
+                "",
+                "Canonical facts were read from the original benchmark stack at this run's "
+                "scenario clock. They are independent evidence, not a judge verdict.",
+            ]
+        )
+        for name, score in audit.get("checks", {}).get("scores", {}).items():
+            audit_lines.append(
+                f"- Deterministic check: **{'passed' if score == 1 else 'failed'}** — {name}."
+            )
+        for note in audit.get("engineeringReview", []):
+            audit_lines.append("- **Engineering review (not an upstream judge verdict)**: " + note)
+        for fact in audit.get("facts", []):
+            evidence = fact["evidence"]
+            audit_lines.extend(
+                [
+                    "",
+                    "**" + fact["criterion"] + "**",
+                    "",
+                    _block((evidence.get("error") or evidence["summary"])[:1800]),
+                ]
+            )
+        audit_lines.append(
+            "Fact displays are excerpts. "
+            "[Full canonical queries and returned data](fact-audit.json)"
+        )
     for logs in sorted(job_dir.glob("*/agent")):
-        smoke = logs / "smoke.json"
-        investigation = logs / "investigation.json"
-        if smoke.exists():
-            receipt = json.loads(smoke.read_text(encoding="utf-8"))
-            entries = receipt["results"]
-            lines.extend(["", "## Connectivity checks", "", _block(receipt["checks"])])
-        elif investigation.exists():
+        artifacts = logs / "artifacts"
+        capture = _read(artifacts / "tool-results.json", {})
+        if not capture.get("complete"):
+            lines.extend(
+                [
+                    "",
+                    "**Evidence capture incomplete or unavailable.**",
+                    _block(capture.get("errors", ["No observation capture was exported."])),
+                ]
+            )
+        smoke = _read(artifacts / "smoke.json", {})
+        entries = smoke.get("results", [])
+        if not entries and (artifacts / "investigation.json").exists():
             entries = [
                 {
                     "question": (logs / "instruction.txt").read_text(encoding="utf-8"),
-                    "result": json.loads(investigation.read_text(encoding="utf-8")),
+                    "result": _read(artifacts / "investigation.json", {}),
                 }
             ]
-        else:
-            entries = []
         for entry in entries:
-            result = entry["result"]
-            lines.extend(
-                [
-                    "",
-                    "## Investigation " + result["id"],
-                    "",
-                    "### Question",
-                    "",
-                    _block(entry["question"]),
-                    "",
-                    "### Summary",
-                    "",
-                    _block(result.get("summary", "")),
-                    "",
-                    "### Findings",
-                    "",
-                    _block(result.get("findings", [])),
-                    "",
-                    "### Conclusion, timing and usage",
-                    "",
-                    _block(
-                        {
-                            key: value
-                            for key, value in result.items()
-                            if key not in ("summary", "findings", "runs")
-                        }
-                    ),
-                ]
+            _investigation(
+                lines,
+                entry["question"],
+                entry["result"],
+                artifacts.relative_to(job_dir),
+                capture,
+                audit_lines,
             )
-            for run in result.get("runs", []):
-                lines.extend(["", f"### Tool Run {run['ordinal']}: {run['tool']}", "", _block(run)])
-        failure = logs / "failure.json"
-        if failure.exists():
-            lines.extend(
-                [
-                    "",
-                    "## Execution failure",
-                    "",
-                    _block(json.loads(failure.read_text(encoding="utf-8"))),
-                ]
-            )
+        failure = _read(artifacts / "failure.json", {})
+        if failure:
+            lines.extend(["", "## Execution failure", "", _block(failure)])
     path = job_dir / "opencluster-result.md"
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path

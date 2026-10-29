@@ -6,6 +6,7 @@ services:
     volumes:
       - "${OC_BENCH_BINARY}:/opt/opencluster/controlplane:ro"
       - "${OC_BENCH_RUNTIME}:/opt/opencluster/runtime.py:ro"
+      - "${OC_BENCH_EVIDENCE}:/opt/opencluster/opencluster_bench/evidence.py:ro"
       - "${OC_BENCH_MODEL_KEY}:/run/opencluster/model-key:ro"
     secrets:
       - postgres_password

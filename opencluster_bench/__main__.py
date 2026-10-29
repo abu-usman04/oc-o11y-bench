@@ -8,6 +8,8 @@ import re
 import secrets
 import subprocess
 import sys
+import tarfile
+import tempfile
 import tomllib
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -53,32 +55,42 @@ def git_value(repo, *args):
     return subprocess.check_output(["git", "-C", str(repo), *args], text=True).strip()
 
 
+def instrumentation_hash():
+    digest = hashlib.sha256()
+    for name in ("Dockerfile", "recorder.go", "recorder_test.go"):
+        digest.update(name.encode())
+        digest.update((ROOT / "environment" / name).read_bytes())
+    return digest.hexdigest()
+
+
 def build_binary(repo, commit):
-    binary = ROOT / ".work" / "bin" / commit / "controlplane"
+    instrumentation = instrumentation_hash()
+    binary = ROOT / ".work" / "bin" / commit / instrumentation / "controlplane"
     binary.parent.mkdir(parents=True, exist_ok=True)
-    image = "oc-o11y-bench-controlplane:" + commit
-    archive = subprocess.Popen(["git", "-C", str(repo), "archive", commit], stdout=subprocess.PIPE)
-    try:
+    image = "oc-o11y-bench-controlplane:" + commit[:12] + "-" + instrumentation[:12]
+    with tempfile.TemporaryFile(dir=ROOT / ".work") as archive:
+        subprocess.run(["git", "-C", str(repo), "archive", commit], stdout=archive, check=True)
+        archive.seek(0)
+        with tarfile.open(fileobj=archive, mode="a") as context:
+            context.add(ROOT / "environment/Dockerfile", arcname="benchmark.Dockerfile")
+        archive.seek(0)
         subprocess.run(
             [
                 "docker",
                 "build",
                 "--target",
                 "build",
+                "--build-context",
+                "recorder=" + str(ROOT / "environment"),
                 "-t",
                 image,
                 "-f",
-                "deploy/compose/Dockerfile",
+                "benchmark.Dockerfile",
                 "-",
             ],
-            stdin=archive.stdout,
+            stdin=archive,
             check=True,
         )
-    finally:
-        if archive.stdout:
-            archive.stdout.close()
-        if archive.wait() != 0:
-            raise RuntimeError("could not archive the pinned control-plane commit")
     container = subprocess.check_output(["docker", "create", image], text=True).strip()
     try:
         command(["docker", "cp", container + ":/out/controlplane", str(binary)])
@@ -181,6 +193,7 @@ def main():
     identity = {
         "controlplaneCommit": commit,
         "binarySHA256": binary_hash,
+        "instrumentationSHA256": instrumentation_hash(),
         "benchmarkCommit": BENCH_COMMIT,
         "provider": provider,
         "model": name,
@@ -205,6 +218,7 @@ def main():
             "PYTHONUTF8": "1",
             "OC_BENCH_BINARY": binary.as_posix(),
             "OC_BENCH_RUNTIME": (ROOT / "opencluster_bench" / "runtime.py").as_posix(),
+            "OC_BENCH_EVIDENCE": (ROOT / "opencluster_bench" / "evidence.py").as_posix(),
             "OC_BENCH_MODEL_KEY": model_file.as_posix(),
             "OC_BENCH_PG_PASSWORD": postgres_file.as_posix(),
             "OC_BENCH_MODEL": name,
@@ -224,6 +238,12 @@ def main():
         "concurrentTrials": 1,
         "harborVersion": "0.24.0",
         "gradingEnabled": graded,
+        "adapterCommit": git_value(ROOT, "rev-parse", "HEAD"),
+        "readBudget": 30,
+        "instrumentation": (
+            "benchmark-only cmd/oc-benchmark wraps the existing real Completer "
+            "and HTTP transport; Agent logic and provider policy unchanged"
+        ),
         "omittedTaskMetadata": ["environment.mcp_servers"],
     }
     job_dir = ROOT / "jobs" / job_name
@@ -265,7 +285,7 @@ def main():
         if completed.returncode:
             raise RuntimeError("Harbor did not complete; inspect this job's artifacts")
         if args.case == "smoke":
-            receipts = list(job_dir.glob("*/agent/smoke.json"))
+            receipts = list(job_dir.glob("*/agent/artifacts/smoke.json"))
             if len(receipts) != 1 or not json.loads(receipts[0].read_text(encoding="utf-8")).get(
                 "passed"
             ):
@@ -290,7 +310,7 @@ def main():
                 env=env,
             )
         else:
-            records = list(job_dir.glob("*/agent/investigation.json"))
+            records = list(job_dir.glob("*/agent/artifacts/investigation.json"))
             result = json.loads(records[0].read_text(encoding="utf-8")) if len(records) == 1 else {}
             if result.get("status") != "concluded" or result.get("adapterTimedOut"):
                 raise RuntimeError("Investigation did not conclude; inspect the readable results")

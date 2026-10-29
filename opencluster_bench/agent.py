@@ -2,6 +2,7 @@
 
 import json
 import os
+from pathlib import Path
 
 from harbor.agents.base import BaseAgent
 from harbor.agents.capabilities import AgentCapabilities
@@ -9,6 +10,8 @@ from harbor.agents.installed.base import NonZeroAgentExitCodeError
 from harbor.environments.base import BaseEnvironment
 from harbor.models.agent.context import AgentContext
 from harbor.models.trajectories import Trajectory
+
+from opencluster_bench.runtime import artifact_path
 
 
 class OpenClusterAgent(BaseAgent):
@@ -51,11 +54,16 @@ class OpenClusterAgent(BaseAgent):
                 "integrations.json",
                 "smoke.json",
                 "failure.json",
+                "tool-results.json",
+                "capture.jsonl",
                 "backend.log",
             ):
                 try:
+                    target = artifact_path(self.logs_dir, name)
+                    target.parent.mkdir(parents=True, exist_ok=True)
                     await environment.download_file(
-                        source_path="/logs/agent/" + name, target_path=self.logs_dir / name
+                        source_path=artifact_path(Path("/logs/agent"), name).as_posix(),
+                        target_path=target,
                     )
                 except Exception:
                     self.logger.debug("Artifact unavailable: %s", name)
@@ -63,13 +71,16 @@ class OpenClusterAgent(BaseAgent):
         if path.exists():
             document = json.loads(path.read_text(encoding="utf-8"))
             Trajectory.model_validate(document)
+            from grading.transcript_parser import parse_transcript
+
+            parse_transcript(self.logs_dir)
             metrics = document["final_metrics"]
             context.n_input_tokens = metrics.get("total_prompt_tokens")
             context.n_output_tokens = metrics.get("total_completion_tokens")
             context.metadata = {
                 "controlplaneCommit": self.version(),
                 "trajectorySource": "public Investigation and durable Tool Runs",
-                "fullToolResultsAvailable": False,
+                "fullToolResultsAvailable": document["extra"]["fullToolResultsAvailable"],
                 "smoke": os.environ.get("OC_BENCH_SMOKE") == "1",
                 "elapsedSeconds": document["extra"].get("elapsedSeconds"),
             }

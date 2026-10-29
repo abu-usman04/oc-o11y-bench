@@ -28,7 +28,7 @@ def _outcome(run):
     return "succeeded, limited" if run.get("truncated") else "succeeded"
 
 
-def _investigation(lines, question, result, artifacts, capture, audit_lines):
+def _investigation(lines, question, result, artifacts, capture, audit_lines, public_file):
     runs = result.get("runs", [])
     observations = {
         entry["ordinal"]: entry
@@ -177,7 +177,7 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines):
             "`backend.log` is the OpenCluster process log, not queried Loki log data.",
             "`trajectory.json` is reconstructed ATIF; it contains the Agent's recorded answer "
             "and observations, not private reasoning.",
-            f"[Public result]({(artifacts / 'investigation.json').as_posix()}) · "
+            f"[Public result]({(artifacts / public_file).as_posix()}) · "
             f"[Actual Tool observations and HTTP metadata]"
             f"({(artifacts / 'tool-results.json').as_posix()}) · "
             f"[Application log]({(artifacts / 'backend.log').as_posix()})",
@@ -358,6 +358,7 @@ def write_report(job_dir: Path, model: str, *, graded: bool, harness_exit_code: 
                 artifacts.relative_to(job_dir),
                 capture,
                 audit_lines,
+                "smoke.json" if smoke else "investigation.json",
             )
         failure = _read(artifacts / "failure.json", {})
         if failure:

@@ -597,6 +597,37 @@ class AdapterTest(unittest.TestCase):
         self.assertIn("model observation clipped", report)
         self.assertNotIn("Evidence capture incomplete", report)
 
+    def test_smoke_report_links_all_investigations_to_the_full_smoke_record(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
+        from opencluster_bench.report import write_report
+        from opencluster_bench.runtime import write_artifact
+
+        with application() as (api, _):
+            result = investigate(api, "Question", "2026-10-28T09:00:00Z", "2026-10-28T10:00:00Z")
+        with TemporaryDirectory() as directory:
+            job = Path(directory)
+            logs = job / "trial/agent"
+            logs.mkdir(parents=True)
+            second = {**result, "id": "investigation-2"}
+            write_artifact(
+                logs,
+                "smoke.json",
+                {
+                    "results": [
+                        {"question": "First", "result": result},
+                        {"question": "Second", "result": second},
+                    ]
+                },
+            )
+            write_artifact(logs, "investigation.json", second)
+            report = write_report(job, "model", graded=False, harness_exit_code=0).read_text(
+                encoding="utf-8"
+            )
+        self.assertEqual(report.count("[Public result](trial/agent/artifacts/smoke.json)"), 2)
+        self.assertNotIn("[Public result](trial/agent/artifacts/investigation.json)", report)
+
     def test_no_grade_cli_does_not_require_a_judge_key(self):
         import subprocess
         import sys

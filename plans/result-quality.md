@@ -38,7 +38,7 @@ This is a selected-case evaluation, not a full benchmark claim. Current Tools do
 
 ## Completed verification and results
 
-Fourteen Python tests pass in the existing single test file, including the real Harbor export lifecycle and unchanged upstream parser. The real OpenRouter SDK httptest.Server check and per-record/total capture-bound checks pass in the one Go test file. Ruff lint/format, mypy, instrumented Linux build and distribution builds pass. Independent Spec and Standards reviews have no residual findings after the correlation corrections. Runtime instrumentation remains outside the production repository.
+Fifteen Python tests pass in the existing single test file, including the real Harbor export lifecycle and unchanged upstream parser. The real OpenRouter SDK httptest.Server check and per-record/total capture-bound checks pass in the one Go test file. Ruff lint/format, mypy, instrumented Linux build and distribution builds pass. Independent Spec and Standards reviews have no residual findings after the correlation corrections. Runtime instrumentation remains outside the production repository.
 
 Connectivity smoke concluded three Investigations and verified all four native Tools. The original case attempts produced ten captured observations for the failed Prometheus Investigation, one for Loki, fourteen for Tempo and thirty-one for cross-source. Including smoke, sixty exact bounded observations are retained. Cross-source made thirty source requests and its final read was explicitly blocked by the unchanged limit.
 

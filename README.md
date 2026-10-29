@@ -89,6 +89,8 @@ Useful files:
 
 Diagnostic JSON lives under `artifacts/` because the upstream parser treats every root JSON file as a transcript.
 Trace examples list IDs stated in the answer; the report never invents an example from search results.
+Smoke's full three-Investigation history is in `smoke.json` and the shared capture; its root ATIF represents
+only the final Tempo connectivity Investigation.
 An instant Prometheus evaluation can legitimately have equal bounds while `[60m]` reads the preceding hour.
 Public Tool execution timestamps have second precision. HTTP timestamps retain subsecond precision and measure
 request-to-response-headers time, not complete Tool execution.

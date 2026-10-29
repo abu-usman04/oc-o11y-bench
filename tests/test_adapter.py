@@ -426,6 +426,77 @@ class AdapterTest(unittest.TestCase):
             self.assertFalse(missing["complete"])
             self.assertTrue(any("Investigation" in error for error in missing["errors"]))
 
+    def test_same_batch_reads_keep_parameters_and_nonexecuted_attempts_separate(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
+        from opencluster_bench.evidence import collect_results
+
+        trace = "3" * 32
+        first = {"query": '{job="orders"}', "limit": 10, "direction": "forward"}
+        second = {"query": '{job="orders"}', "limit": 20, "direction": "backward"}
+        runs = [
+            {
+                "ordinal": i,
+                "tool": "loki_query_logs",
+                "integrationId": "loki-1",
+                "arguments": arguments,
+                "outcome": "succeeded",
+            }
+            for i, arguments in enumerate([first, second, first], 1)
+        ]
+        runs[2].update(outcome="failed", error="not executed: identical to run 1 in this batch")
+        records = [
+            {
+                "kind": "observation",
+                "traceId": trace,
+                "callId": f"call-{run['ordinal']}",
+                "issuedAt": "2026-10-28T10:00:01Z",
+                "observedAt": "2026-10-28T10:00:02Z",
+                "content": f"[run {run['ordinal']}] loki_query_logs "
+                + json.dumps(run["arguments"])
+                + "\nCONTENT: {}",
+                "isError": run["outcome"] != "succeeded",
+            }
+            for run in runs
+        ]
+        for arguments in [first, second]:
+            records.append(
+                {
+                    "kind": "request",
+                    "traceId": trace,
+                    "origin": "http://loki:3100",
+                    "method": "GET",
+                    "path": "/loki/api/v1/query_range",
+                    "status": 200,
+                    "startedAt": "2026-10-28T10:00:01.5Z",
+                    "headersAt": "2026-10-28T10:00:01.6Z",
+                    "parameters": {
+                        "query": ['{job="orders"}'],
+                        "limit": [str(arguments["limit"])],
+                        "direction": [arguments["direction"]],
+                    },
+                }
+            )
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            capture = root / "capture.jsonl"
+            log = root / "backend.log"
+            capture.write_text("\n".join(json.dumps(record) for record in records))
+            log.write_text(json.dumps({"investigation_id": "investigation", "trace_id": trace}))
+            result = collect_results(
+                capture,
+                log,
+                [{"id": "investigation", "runs": runs}],
+                {"loki": {"id": "loki-1", "configuration": {"url": "http://loki:3100"}}},
+            )
+        self.assertTrue(result["complete"], result["errors"])
+        a, b, skipped = result["toolResults"]
+        self.assertEqual(a["requests"][0]["parameters"]["direction"], ["forward"])
+        self.assertEqual(b["requests"][0]["parameters"]["limit"], ["20"])
+        self.assertEqual(skipped["requests"], [])
+        self.assertIn("[run 3]", skipped["content"])
+
     def test_no_grade_cli_does_not_require_a_judge_key(self):
         import subprocess
         import sys

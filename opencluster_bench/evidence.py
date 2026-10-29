@@ -11,6 +11,8 @@ def _time(value):
 
 
 def _matches(request, observation, run, integration):
+    if run.get("error", "").startswith("not executed:"):
+        return False
     if request["traceId"] != observation["traceId"]:
         return False
     try:
@@ -52,6 +54,24 @@ def _matches(request, observation, run, integration):
         return False
     if parameter and parameters.get(parameter) != [query]:
         return False
+    if tool == "loki_query_logs":
+        if parameters.get("direction") != [arguments.get("direction", "backward")]:
+            return False
+        if parameters.get("limit") != [str(arguments.get("limit", 100))]:
+            return False
+    elif tool == "tempo_search_traces":
+        if parameters.get("limit") != [str(arguments.get("limit", 20))]:
+            return False
+    elif tool == "prometheus_query" and arguments.get("mode") == "range":
+        # The returned effective step includes source-bound clamping, even in a cut observation.
+        applied = re.search(r'(?<!\\)"stepSeconds"\s*:\s*(\d+)', observation["content"])
+        expected_step = int(applied[1]) if applied else arguments.get("step")
+        if expected_step is not None:
+            try:
+                if float(parameters.get("step", [""])[0]) != float(expected_step):
+                    return False
+            except ValueError, TypeError:
+                return False
     for parameter, bound in (
         ("time", "windowUntil"),
         ("start", "windowFrom"),

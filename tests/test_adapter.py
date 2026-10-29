@@ -663,6 +663,24 @@ class AdapterTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "OpenRouter"):
             configure_judge({"model": {"provider": "anthropic", "api_key": "test-secret"}})
 
+    def test_regrading_preserves_saved_execution_and_engineering_review(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
+        from opencluster_bench.grade import update_report
+
+        with TemporaryDirectory() as directory:
+            job = Path(directory)
+            (job / "opencluster-result.md").write_text("Harbor process exit code: 7\n")
+            (job / "fact-audit.json").write_text(
+                json.dumps({"engineeringReview": ["Pool exhaustion is unproven."], "facts": []})
+            )
+            update_report(job, {"provider": "openrouter", "model": "model"}, [], [])
+            audit = json.loads((job / "fact-audit.json").read_text())
+            report = (job / "opencluster-result.md").read_text()
+        self.assertEqual(audit["engineeringReview"], ["Pool exhaustion is unproven."])
+        self.assertIn("Harbor process exit code: 7", report)
+
     def test_no_grade_cli_does_not_require_a_judge_key(self):
         import subprocess
         import sys

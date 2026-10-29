@@ -277,6 +277,7 @@ def main():
     try:
         completed = subprocess.run(argv, cwd=ROOT, env=env)
         job_dir.mkdir(parents=True, exist_ok=True)
+        manifest["harnessExitCode"] = completed.returncode
         (job_dir / "opencluster-manifest.json").write_text(json.dumps(manifest, indent=2))
         report = write_report(
             job_dir, provider + "/" + name, graded=graded, harness_exit_code=completed.returncode

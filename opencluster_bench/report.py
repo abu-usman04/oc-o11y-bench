@@ -284,7 +284,15 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines, pub
             )
 
 
-def write_report(job_dir: Path, model: str, *, graded: bool, harness_exit_code: int) -> Path:
+def write_report(job_dir: Path, model: str, *, graded: bool, harness_exit_code: int | None) -> Path:
+    if harness_exit_code is None:
+        previous = job_dir / "opencluster-result.md"
+        match = re.search(
+            r"^Harbor process exit code: (\d+)$",
+            previous.read_text(encoding="utf-8") if previous.exists() else "",
+            re.MULTILINE,
+        )
+        harness_exit_code = int(match[1]) if match else None
     trial_stats = _read(job_dir / "result.json", {}).get("stats", {})
     grading_status = (
         "Grading requested; see unchanged upstream verifier artifacts."
@@ -308,7 +316,8 @@ def write_report(job_dir: Path, model: str, *, graded: bool, harness_exit_code: 
         "Model: " + model,
         "",
         grading_status,
-        f"Harbor process exit code: {harness_exit_code}",
+        "Harbor process exit code: "
+        + (str(harness_exit_code) if harness_exit_code is not None else "unavailable"),
         f"Harbor trial errors: {trial_stats.get('n_errored_trials', 'unavailable')}",
         "Execution completion, answer correctness and benchmark grading are separate outcomes.",
     ]

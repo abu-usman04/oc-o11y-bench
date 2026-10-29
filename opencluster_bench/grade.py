@@ -32,6 +32,28 @@ def configure_judge(config):
     }
 
 
+def update_report(job, manifest, facts, checks):
+    path = job / "fact-audit.json"
+    audit = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    audit.update(
+        {
+            "mode": "Canonical facts and checks from local upstream grading",
+            "facts": facts,
+            "checks": {
+                "scores": {item.name: item.score for item in checks},
+                "explanations": {item.name: item.explanation for item in checks},
+            },
+        }
+    )
+    path.write_text(json.dumps(audit, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_report(
+        job,
+        manifest["provider"] + "/" + manifest["model"],
+        graded=False,
+        harness_exit_code=manifest.get("harnessExitCode"),
+    )
+
+
 def main():
     import yaml
     from grading.facts import resolve_fact
@@ -97,23 +119,7 @@ def main():
             ),
             encoding="utf-8",
         )
-        (job / "fact-audit.json").write_text(
-            json.dumps(
-                {
-                    "facts": facts,
-                    "checks": {
-                        "scores": {item.name: item.score for item in result.checks},
-                        "explanations": {item.name: item.explanation for item in result.checks},
-                    },
-                },
-                ensure_ascii=False,
-                indent=2,
-            ),
-            encoding="utf-8",
-        )
-        write_report(
-            job, manifest["provider"] + "/" + manifest["model"], graded=False, harness_exit_code=0
-        )
+        update_report(job, manifest, facts, result.checks)
         print("VERDICT", manifest["case"], result.status, result.score, flush=True)
 
 

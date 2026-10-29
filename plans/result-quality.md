@@ -1,6 +1,6 @@
 # Benchmark evidence and report improvements
 
-Status: authorized by the user on 2026-10-29; independent Spec and Standards reviews accepted the approach, with the capture guardrails below included before implementation. Review baseline: 01c83dd8da7652b3d2059e07722650b27986bbc7 in this standalone benchmark repository.
+Status: implementation, independent reviews and the authorized live rerun completed on 2026-10-29. All evidence captures are complete. Three original cases concluded; Prometheus failed native conclusion validation and was retained without retry. No judge verdict or full-suite pass is claimed. Review baseline: 01c83dd8da7652b3d2059e07722650b27986bbc7.
 
 ## Critique before implementation
 
@@ -35,3 +35,17 @@ New jobs contain opencluster-result.md and the existing manifest at job level, t
 ## Known limits
 
 This is a selected-case evaluation, not a full benchmark claim. Current Tools do not cover all o11y-bench tasks. A correct bottleneck diagnosis may still leave its internal trigger unknown. The recorder retains bounded observations supplied to the provider adapter, not private model reasoning or an unlimited backend document. HTTP metadata describes actual requests; response timing is time to headers unless explicitly measured otherwise.
+
+## Completed verification and results
+
+Fourteen Python tests pass in the existing single test file, including the real Harbor export lifecycle and unchanged upstream parser. The real OpenRouter SDK httptest.Server check and per-record/total capture-bound checks pass in the one Go test file. Ruff lint/format, mypy, instrumented Linux build and distribution builds pass. Independent Spec and Standards reviews have no residual findings after the correlation corrections. Runtime instrumentation remains outside the production repository.
+
+Connectivity smoke concluded three Investigations and verified all four native Tools. The original case attempts produced ten captured observations for the failed Prometheus Investigation, one for Loki, fourteen for Tempo and thirty-one for cross-source. Including smoke, sixty exact bounded observations are retained. Cross-source made thirty source requests and its final read was explicitly blocked by the unchanged limit.
+
+Canonical facts were replayed at each job's scenario clock. Prometheus obtained the correct intermediate 3.4483 percent ratio but supplied invalid prior-evidence citations and produced no valid final answer. Loki's three deployment records and timestamps are supported. Tempo's cited slow traces pass the upstream deterministic check. Cross-source's order-service bottleneck and 10-second peak p95 are supported; its resource-pool mechanism and earlier-user-service contributing-factor claims remain unproven.
+
+Reports now expose native failures even when Harbor exits zero, label assessment certainty as Agent-claimed, put engineering critique before detailed Findings, show stated trace IDs with captured operations, and show actual HTTP time-to-headers timestamps. They distinguish source limits, pre-existing 16 KiB model-observation clipping and recording completeness. Cross-source observations eleven and nineteen were cut by the Agent before provider submission; their exact bounded inputs were retained.
+
+The results index is jobs/evidence-results-20261029.md. All real exported directories pass the unchanged upstream parser and ATIF validation; report artifact links resolve. Configured API keys are absent from inspected job/package artifacts. Temporary credential files and trial/replay containers were removed; pre-existing user containers, local benchmark formatting edits, IDE files and production checkout were preserved.
+
+Remaining product work is deliberately outside this measurement change: improve current-versus-prior citation guidance, use observed labels and valid query syntax, shape compact initial queries before detailed reads, and keep unsupported mechanisms as hypotheses. The rerun demonstrates these limitations rather than hiding them with more reads or model retries.

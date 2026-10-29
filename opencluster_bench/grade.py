@@ -7,7 +7,7 @@ import tomllib
 from dataclasses import asdict
 from pathlib import Path
 
-from opencluster_bench.__main__ import BENCH_COMMIT, ROOT
+from opencluster_bench.__main__ import BENCH_COMMIT, ROOT, git_value
 from opencluster_bench.report import write_report
 
 
@@ -55,12 +55,21 @@ def update_report(job, manifest, facts, checks):
 
 
 def main():
+    import grading
+    import o11y_bench
     import yaml
     from grading.facts import resolve_fact
     from grading.models import Problem
     from grading.transcript_parser import parse_transcript
     from grading.verifier import grade, write_outputs
     from o11y_bench.regrade_stack import running_regrade_stack
+
+    for package in (grading, o11y_bench):
+        upstream = Path(package.__file__).resolve().parents[1]
+        if git_value(upstream, "rev-parse", "HEAD") != BENCH_COMMIT or git_value(
+            upstream, "status", "--porcelain"
+        ):
+            raise ValueError("executing upstream grading source must be clean and pinned")
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("jobs", nargs="+", type=Path)

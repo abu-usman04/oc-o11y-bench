@@ -681,6 +681,19 @@ class AdapterTest(unittest.TestCase):
         self.assertEqual(audit["engineeringReview"], ["Pool exhaustion is unproven."])
         self.assertIn("Harbor process exit code: 7", report)
 
+    def test_grading_rejects_dirty_or_unpinned_executing_source_before_reading_keys(self):
+        from unittest.mock import patch
+
+        from opencluster_bench.__main__ import BENCH_COMMIT
+        from opencluster_bench.grade import main
+
+        for values in (["wrong-commit"], [BENCH_COMMIT, "modified"]):
+            with patch("opencluster_bench.grade.git_value", side_effect=values):
+                with patch("opencluster_bench.grade.configure_judge") as configure:
+                    with self.assertRaisesRegex(ValueError, "clean and pinned"):
+                        main()
+                    configure.assert_not_called()
+
     def test_no_grade_cli_does_not_require_a_judge_key(self):
         import subprocess
         import sys

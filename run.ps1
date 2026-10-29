@@ -11,7 +11,7 @@ try {
     $env:TMP = $env:TEMP
     New-Item -ItemType Directory -Force -Path $env:TEMP | Out-Null
     if (-not (Test-Path -LiteralPath 'upstream/o11y-bench/.git')) {
-        git clone --no-checkout https://github.com/grafana/o11y-bench.git upstream/o11y-bench
+        git clone --config core.autocrlf=false --no-checkout https://github.com/grafana/o11y-bench.git upstream/o11y-bench
         if ($LASTEXITCODE) { throw 'Could not clone o11y-bench' }
     }
     git -C upstream/o11y-bench checkout --detach b66d8cfbbe309d2e03e9a301baea056d9718b71b

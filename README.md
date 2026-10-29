@@ -9,6 +9,7 @@ the questions, grading and HTML reports. OpenCluster performs all model reasonin
 Requirements: Git, uv, a working Linux Docker daemon and Docker Compose.
 Python 3.14 and project dependencies are installed by the launcher. Keep enough disk space for Docker images.
 The production repository is read through Git; its working-directory edits are not included in builds.
+Launchers clone upstream with core.autocrlf=false so its Linux shell scripts retain LF line endings.
 
 1. Edit the prepared, Git-ignored `config.toml`:
    - Set `model.name` to an exact model ID and `model.api_key` to its API key.

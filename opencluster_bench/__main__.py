@@ -12,6 +12,8 @@ import tomllib
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+from opencluster_bench.report import write_report
+
 ROOT = Path(__file__).resolve().parents[1]
 UPSTREAM = ROOT / "upstream" / "o11y-bench"
 BENCH_COMMIT = "b66d8cfbbe309d2e03e9a301baea056d9718b71b"
@@ -115,7 +117,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("case", choices=("prepare", "smoke", *CASES))
     parser.add_argument("--config", type=Path, default=ROOT / "config.toml")
+    parser.add_argument(
+        "--no-grade",
+        action="store_true",
+        help="Run the original case and export results without a judge or score",
+    )
     args = parser.parse_args()
+    graded = args.case != "smoke" and not args.no_grade
     if git_value(UPSTREAM, "rev-parse", "HEAD") != BENCH_COMMIT:
         raise ValueError("upstream checkout must match the pinned benchmark commit")
     if git_value(UPSTREAM, "status", "--porcelain"):
@@ -142,7 +150,7 @@ def main():
     grading_key = config.get("grading", {}).get("anthropic_api_key", "").strip()
     if not grading_key and provider == "anthropic":
         grading_key = key
-    if args.case != "smoke" and not grading_key:
+    if graded and not grading_key:
         raise ValueError("fill grading.anthropic_api_key for a scored run")
     run = config["run"]
     commit = run["controlplane_commit"]
@@ -214,6 +222,7 @@ def main():
         "attempts": 1,
         "concurrentTrials": 1,
         "harborVersion": "0.24.0",
+        "gradingEnabled": graded,
         "omittedTaskMetadata": ["environment.mcp_servers"],
     }
     job_dir = ROOT / "jobs" / job_name
@@ -242,12 +251,14 @@ def main():
         "--extra-docker-compose",
         str(ROOT / "environment" / "compose.override.yaml"),
     ]
-    if args.case == "smoke":
+    if not graded:
         argv.append("--disable-verification")
     try:
         completed = subprocess.run(argv, cwd=ROOT, env=env)
         job_dir.mkdir(parents=True, exist_ok=True)
         (job_dir / "opencluster-manifest.json").write_text(json.dumps(manifest, indent=2))
+        report = write_report(job_dir, provider + "/" + name, graded=graded)
+        print("Readable results: " + str(report))
         if completed.returncode:
             raise RuntimeError("Harbor did not complete; inspect this job's artifacts")
         if args.case == "smoke":
@@ -258,7 +269,7 @@ def main():
                 raise RuntimeError("native Integration connectivity has not passed")
             gate_path.write_text(json.dumps({"identity": identity, "job": job_name}, indent=2))
             print("Live native Integration connectivity passed; this run was not scored.")
-        else:
+        elif graded:
             command(
                 [
                     sys.executable,
@@ -275,6 +286,12 @@ def main():
                 cwd=UPSTREAM,
                 env=env,
             )
+        else:
+            records = list(job_dir.glob("*/agent/investigation.json"))
+            result = json.loads(records[0].read_text(encoding="utf-8")) if len(records) == 1 else {}
+            if result.get("status") != "concluded" or result.get("adapterTimedOut"):
+                raise RuntimeError("Investigation did not conclude; inspect the readable results")
+            print("Original case completed without grading; correctness has not been scored.")
         print("Artifacts: " + str(job_dir))
     finally:
         model_file.unlink(missing_ok=True)

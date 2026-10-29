@@ -21,7 +21,7 @@ The production repository is read through Git; its working-directory edits are n
 ```powershell
 .\run.ps1 prepare
 .\run.ps1 smoke
-.\run.ps1 promql-error-rate
+.\run.ps1 promql-error-rate --no-grade
 ```
 
 On Linux or WSL, use `bash run.sh` with the same arguments.
@@ -31,7 +31,11 @@ Use one platform's virtual environment at a time. Launchers keep new uv/Python/t
 `smoke` starts disposable local containers and runs three real Investigations, requiring non-empty
 Prometheus metrics, Loki excerpts, Tempo search results and a retrieved trace with spans.
 It is unscored and does not need a grader key.
-A scored run requires a successful smoke receipt for the same binary, benchmark and configured model.
+A case run requires a successful smoke receipt for the same binary, benchmark and configured model.
+
+Use --no-grade to run the original case using only the Agent API key. It preserves the real question,
+Investigation, Findings, Tool Runs and ATIF, and skips the judge and correctness score. Omit --no-grade
+when you want upstream scoring and have supplied its Anthropic key.
 
 One trial is one attempt, not one model call. Set account spending limits before running;
 connectivity checks and rubric grading also consume model usage. No Grafana Cloud or Harbor Cloud key is needed.
@@ -55,15 +59,16 @@ with the exact benchmark question and an explicit scenario-time window. It never
 ## Usage and Results
 
 ```powershell
-.\run.ps1 logql-deployment-rollout-events
-.\run.ps1 find-slow-traces
-.\run.ps1 service-degradation-rca
+.\run.ps1 logql-deployment-rollout-events --no-grade
+.\run.ps1 find-slow-traces --no-grade
+.\run.ps1 service-degradation-rca --no-grade
 ```
 
 Run these only after inspecting the first scored result. Every run stays at one attempt, one concurrent
 trial and zero automatic retries. Each job gets a unique directory under `jobs/`.
 
 Useful files:
+- `opencluster-result.md`: readable question, Conclusion, Findings, every Tool attempt, timing and usage.
 - `opencluster-manifest.json`: code/binary/benchmark identity, model and scenario time.
 - `*/agent/integrations.json`: verification and Tool availability.
 - `*/agent/investigation.json`: actual public Conclusion, Tool Runs and token totals.
@@ -76,6 +81,8 @@ Useful files:
 Docker readiness is checked before any build. Application execution has a bounded deadline;
 unfinished Investigations are cancelled, and failures are reported rather than converted into answers.
 A completed Investigation can still receive a low score: execution success and answer correctness differ.
+Ungraded reports explicitly show that no correctness score was requested. The JSON/ATIF records
+retain Tool arguments, outcomes, errors, truncation, source references and timestamps.
 
 ## Reproducibility and Limits
 

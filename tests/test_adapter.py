@@ -195,6 +195,82 @@ class AdapterTest(unittest.TestCase):
         self.assertNotIn(secret, exported)
         self.assertLessEqual(len(exported), 60)
 
+    def test_ungraded_report_keeps_findings_and_every_tool_attempt(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
+        from opencluster_bench.report import write_report
+
+        with application() as (api, _):
+            result = investigate(
+                api,
+                "What overall share returned 5xx?",
+                "2026-10-28T09:00:00Z",
+                "2026-10-28T10:00:00Z",
+                timeout=2,
+            )
+        result["runs"].append(
+            {
+                "ordinal": 2,
+                "tool": "tempo_get_trace",
+                "arguments": {"traceId": "0123"},
+                "outcome": "failed",
+                "error": "Trace not available",
+                "truncated": True,
+            }
+        )
+        with TemporaryDirectory() as directory:
+            job = Path(directory)
+            logs = job / "trial-1" / "agent"
+            logs.mkdir(parents=True)
+            (logs / "instruction.txt").write_text("What overall share returned 5xx?")
+            (logs / "investigation.json").write_text(json.dumps(result))
+            report = write_report(job, "z-ai/glm-5.1", graded=False).read_text(encoding="utf-8")
+        for expected in (
+            "Ungraded",
+            "What overall share returned 5xx?",
+            "5xx share is 2%.",
+            "Findings",
+            '"runRefs"',
+            "Tool Run 1",
+            "prometheus_query",
+            "Tool Run 2",
+            "tempo_get_trace",
+            "Trace not available",
+            '"truncated": true',
+            "2026-10-28T10:00:01Z",
+            '"inputTokens": 120',
+            "Full Tool-result content is not persisted",
+        ):
+            self.assertIn(expected, report)
+
+    def test_no_grade_cli_does_not_require_a_judge_key(self):
+        import subprocess
+        import sys
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
+        with TemporaryDirectory() as directory:
+            config = Path(directory) / "config.toml"
+            config.write_text(
+                '[model]\nprovider="openrouter"\nname="z-ai/glm-5.1"\n'
+                'api_key="test-only-never-sent"\n[run]\ncontrolplane_commit="invalid"\n',
+                encoding="utf-8",
+            )
+            command = [
+                sys.executable,
+                "-m",
+                "opencluster_bench",
+                "promql-error-rate",
+                "--config",
+                str(config),
+            ]
+            ungraded = subprocess.run([*command, "--no-grade"], capture_output=True, text=True)
+            graded = subprocess.run(command, capture_output=True, text=True)
+        self.assertEqual(ungraded.returncode, 1)
+        self.assertIn("controlplane_commit must be a full Git commit SHA", ungraded.stderr)
+        self.assertIn("fill grading.anthropic_api_key", graded.stderr)
+
     def test_exact_question_window_session_and_honest_public_trajectory(self):
         with application() as (api, requests):
             api.bootstrap("bootstrap-secret", "temporary strong admin password")

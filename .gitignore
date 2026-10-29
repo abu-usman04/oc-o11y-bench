@@ -2,6 +2,7 @@ config.toml
 .secrets/
 .work/
 upstream/
+plans/
 .venv/
 __pycache__/
 *.py[cod]

@@ -1,0 +1,22 @@
+{
+    "task": {
+        "path": "D:\\Development\\oc-o11y-bench\\.work\\tasks\\find-slow-traces",
+        "source": "tasks"
+    },
+    "trial_name": "find-slow-traces__ApknHqQ",
+    "trials_dir": "D:\\Development\\oc-o11y-bench\\jobs\\find-slow-traces-20261029-071609-bffb90",
+    "agent": {
+        "name": "opencluster_bench.agent:OpenClusterAgent",
+        "model_name": "openrouter/z-ai/glm-5.1"
+    },
+    "environment": {
+        "type": "docker",
+        "extra_docker_compose": [
+            "D:\\Development\\oc-o11y-bench\\environment\\compose.override.yaml"
+        ]
+    },
+    "verifier": {
+        "disable": true
+    },
+    "job_id": "649d2119-ccad-4eef-9566-5dc23e44c5ea"
+}

@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "D:\Development\oc-o11y-bench\.venv\Lib\site-packages\harbor\trial\trial.py", line 500, in run
+    await self._run()
+  File "D:\Development\oc-o11y-bench\.venv\Lib\site-packages\harbor\trial\single_step.py", line 40, in _run
+    await self._run_agent()
+  File "D:\Development\oc-o11y-bench\.venv\Lib\site-packages\harbor\trial\single_step.py", line 86, in _run_agent
+    await self._sync_agent_output(self.result)
+  File "D:\Development\oc-o11y-bench\.venv\Lib\site-packages\harbor\trial\trial.py", line 1056, in _sync_agent_output
+    target.agent_result.model_usage = load_model_usage_from_trajectory(
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        (self.user_agent or self.agent).logs_dir / "trajectory.json"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Development\oc-o11y-bench\.venv\Lib\site-packages\harbor\utils\trajectory_utils.py", line 56, in load_model_usage_from_trajectory
+    trajectory = Trajectory.model_validate_json(trajectory_path.read_text())
+                                                ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\Development\oc-o11y-bench\.work\python\cpython-3.14-windows-x86_64-none\Lib\pathlib\__init__.py", line 788, in read_text
+    return f.read()
+           ~~~~~~^^
+  File "D:\Development\oc-o11y-bench\.work\python\cpython-3.14-windows-x86_64-none\Lib\encodings\cp1252.py", line 23, in decode
+    return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x90 in position 28060: character maps to <undefined>

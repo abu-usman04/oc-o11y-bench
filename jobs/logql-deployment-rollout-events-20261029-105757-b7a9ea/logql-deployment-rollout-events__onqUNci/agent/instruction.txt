@@ -1,0 +1,1 @@
+Which services logged a v2.5.0 deployment over roughly the last day, and about when did each one land?

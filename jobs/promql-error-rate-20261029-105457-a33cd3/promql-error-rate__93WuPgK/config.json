@@ -1,0 +1,22 @@
+{
+    "task": {
+        "path": "D:\\Development\\oc-o11y-bench\\.work\\tasks\\promql-error-rate",
+        "source": "tasks"
+    },
+    "trial_name": "promql-error-rate__93WuPgK",
+    "trials_dir": "D:\\Development\\oc-o11y-bench\\jobs\\promql-error-rate-20261029-105457-a33cd3",
+    "agent": {
+        "name": "opencluster_bench.agent:OpenClusterAgent",
+        "model_name": "openrouter/z-ai/glm-5.1"
+    },
+    "environment": {
+        "type": "docker",
+        "extra_docker_compose": [
+            "D:\\Development\\oc-o11y-bench\\environment\\compose.override.yaml"
+        ]
+    },
+    "verifier": {
+        "disable": true
+    },
+    "job_id": "3695fa0b-e6a2-48ab-9e99-d321f7ed01d0"
+}

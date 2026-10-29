@@ -1,0 +1,20 @@
+{
+  "controlplaneCommit": "f3f0e700c5927f94e893681e4b12bf40b741ebff",
+  "binarySHA256": "16805ba84f8da01153af20284ac0b7c9b19f9a133a32e12d565187ecc179b1fa",
+  "instrumentationSHA256": "2a23b52861be31ad0f0532ce1a197c25b19c0a77b53044c359fa12ca1834f479",
+  "benchmarkCommit": "b66d8cfbbe309d2e03e9a301baea056d9718b71b",
+  "provider": "openrouter",
+  "model": "z-ai/glm-5.1",
+  "scenarioTime": "2026-10-29T07:15:51.133937+00:00",
+  "case": "find-slow-traces",
+  "attempts": 1,
+  "concurrentTrials": 1,
+  "harborVersion": "0.24.0",
+  "gradingEnabled": false,
+  "adapterCommit": "ad141ac89acb6b5f8909a9a00a8ddcd6c5fefd2b",
+  "readBudget": 30,
+  "instrumentation": "benchmark-only cmd/oc-benchmark wraps the existing real Completer and HTTP transport; Agent logic and provider policy unchanged",
+  "omittedTaskMetadata": [
+    "environment.mcp_servers"
+  ]
+}

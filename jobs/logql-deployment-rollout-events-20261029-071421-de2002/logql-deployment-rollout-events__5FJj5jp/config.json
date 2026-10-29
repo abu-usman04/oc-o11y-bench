@@ -1,0 +1,22 @@
+{
+    "task": {
+        "path": "D:\\Development\\oc-o11y-bench\\.work\\tasks\\logql-deployment-rollout-events",
+        "source": "tasks"
+    },
+    "trial_name": "logql-deployment-rollout-events__5FJj5jp",
+    "trials_dir": "D:\\Development\\oc-o11y-bench\\jobs\\logql-deployment-rollout-events-20261029-071421-de2002",
+    "agent": {
+        "name": "opencluster_bench.agent:OpenClusterAgent",
+        "model_name": "openrouter/z-ai/glm-5.1"
+    },
+    "environment": {
+        "type": "docker",
+        "extra_docker_compose": [
+            "D:\\Development\\oc-o11y-bench\\environment\\compose.override.yaml"
+        ]
+    },
+    "verifier": {
+        "disable": true
+    },
+    "job_id": "6ec2de3c-e461-4318-8d21-e3da97595389"
+}

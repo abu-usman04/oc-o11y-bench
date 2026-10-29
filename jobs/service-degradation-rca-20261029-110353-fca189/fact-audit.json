@@ -1,0 +1,73 @@
+{
+  "mode": "Canonical facts and checks from local upstream grading",
+  "facts": [
+    {
+      "criterion": "The final response characterizes the slowdown as a severe multi-second issue, consistent with the order-service p95 peak in the Source of truth.",
+      "evidence": {
+        "summary": "Matching metrics exist in the snapshot window: Query returned 1 result: 10",
+        "debug": {
+          "backend": "prometheus",
+          "query": "max_over_time(histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{job=\"order-service\"}[5m])))[8h:1m])",
+          "result": {
+            "shape": "items",
+            "items": [
+              {
+                "labels": {},
+                "value": 10.0
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    },
+    {
+      "criterion": "The final response names the job with the highest peak p95 in the Source of truth as the primary bottleneck and explains how symptoms in other services or layers connect to it",
+      "evidence": {
+        "summary": "Ranking from the snapshot window: Query returned 3 results: {job=\"order-service\"} 10; {job=\"user-service\"} 4.5; {job=\"payment-service\"} 2.2",
+        "debug": {
+          "backend": "prometheus",
+          "query": "topk(3, max_over_time(histogram_quantile(0.95, sum by (job, le) (rate(http_request_duration_seconds_bucket[5m])))[8h:1m]))",
+          "result": {
+            "shape": "items",
+            "items": [
+              {
+                "labels": {
+                  "job": "order-service"
+                },
+                "value": 10.0
+              },
+              {
+                "labels": {
+                  "job": "user-service"
+                },
+                "value": 4.5
+              },
+              {
+                "labels": {
+                  "job": "payment-service"
+                },
+                "value": 2.1999999999999997
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    }
+  ],
+  "checks": {
+    "scores": {},
+    "explanations": {}
+  },
+  "engineeringReview": [
+    "Supported: order-service is the principal bottleneck; canonical peak p95 ranks order-service 10s, user-service 4.5s, payment-service 2.2s. Trace 4715b7764646608b1a48f1b3a2cec04b has 12.706s in order-service; 0595f4e097fcacc5724644e76d76ad60 has 5.860s with a 25ms user-service child.",
+    "Incorrect: payment-service was unaffected conflicts with Tool Run 4 returning a 1.858s POST /api/payments trace, and canonical payment p95 reaching 2.2s. Less affected is supported; unaffected is not.",
+    "Metric semantics: Runs 5, 8 and 10 use raw cumulative duration_sum / duration_count. The 45-to-160ms values are cumulative means, not incident-window means. Use rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m]) for a recent mean or histogram_quantile for tail latency.",
+    "Unproven: database degradation is promoted to cause despite missing DB metrics/spans and no correlation of slow-query logs with the example traces. Missing child spans identify uninstrumented time, not DB wait. DB involvement is a hypothesis; the causal mechanism remains unresolved.",
+    "Timing: a 04:13 DB timeout on a 37ms GET /api/cart failure does not establish the onset of sustained checkout slowness. Claims about precise onset/recovery and user-service contributions exceed the evidence.",
+    "Efficiency improved to 14 reads, four empty and no HTTP errors, but Run 8 still hit the existing 16KiB model-content cut. Fourteen reads left room to test competing explanations; stopping early did not make the mechanism established."
+  ]
+}

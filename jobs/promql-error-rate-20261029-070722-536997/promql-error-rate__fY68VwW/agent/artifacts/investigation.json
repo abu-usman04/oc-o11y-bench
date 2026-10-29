@@ -1,0 +1,224 @@
+{
+  "id": "c7f0c538-fcaf-4aa3-a447-c48ff8f99a7e",
+  "status": "failed",
+  "subject": "Observability benchmark",
+  "windowFrom": "2026-10-29T06:06:58.981457Z",
+  "windowUntil": "2026-10-29T07:06:58.981457Z",
+  "impact": {
+    "summary": "",
+    "runRefs": null
+  },
+  "findings": [],
+  "hypotheses": null,
+  "actions": null,
+  "limitations": null,
+  "error": "the reasoning step could not run: malformed_output: openrouter/z-ai/glm-5.1: a finding cites unavailable prior evidence",
+  "usage": {
+    "inputTokens": 45914,
+    "outputTokens": 3426
+  },
+  "createdAt": "2026-10-29T07:07:47Z",
+  "concludedAt": "2026-10-29T07:09:17Z",
+  "runs": [
+    {
+      "ordinal": 1,
+      "integrationId": "eb0c04c5-f3a5-4720-94fa-e9d941ed80c1",
+      "tool": "prometheus_discover_metrics",
+      "purpose": "Discover the exact metric name for HTTP request counts to compute 5xx share",
+      "arguments": {
+        "hint": "http_requests",
+        "selector": ""
+      },
+      "windowFrom": "2026-10-29T06:06:58.981457Z",
+      "windowUntil": "2026-10-29T07:06:58.981457Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus metric discovery \"http_requests\": 1 names, 2026-10-29T06:06:58Z to 2026-10-29T07:06:58Z; incomplete=false",
+      "sources": [
+        "prometheus:eb0c04c5-f3a5-4720-94fa-e9d941ed80c1:metric-names"
+      ],
+      "startedAt": "2026-10-29T07:07:51Z",
+      "finishedAt": "2026-10-29T07:07:51Z"
+    },
+    {
+      "ordinal": 2,
+      "integrationId": "eb0c04c5-f3a5-4720-94fa-e9d941ed80c1",
+      "tool": "prometheus_query",
+      "purpose": "Compute overall 5xx share across the three services for the full 60-minute window",
+      "arguments": {
+        "end": "2026-10-29T07:06:58Z",
+        "mode": "instant",
+        "query": "sum(increase(http_requests_total{job=~\"user-service|order-service|payment-service\",code=~\"5..\"}[60m])) / sum(increase(http_requests_total{job=~\"user-service|order-service|payment-service\"}[60m]))"
+      },
+      "windowFrom": "2026-10-29T07:06:58Z",
+      "windowUntil": "2026-10-29T07:06:58Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",code=~\\\"5..\\\"}[60m])) / sum(increase(ht…\": 0 series, 0 samples; 2026-10-29T07:06:58Z to 2026-10-29T07:06:58Z; incomplete=false",
+      "sources": [
+        "prometheus:eb0c04c5-f3a5-4720-94fa-e9d941ed80c1:instant"
+      ],
+      "startedAt": "2026-10-29T07:08:07Z",
+      "finishedAt": "2026-10-29T07:08:07Z"
+    },
+    {
+      "ordinal": 3,
+      "integrationId": "eb0c04c5-f3a5-4720-94fa-e9d941ed80c1",
+      "tool": "prometheus_query",
+      "purpose": "Break down 5xx share per service for context",
+      "arguments": {
+        "end": "2026-10-29T07:06:58Z",
+        "mode": "instant",
+        "query": "sum by (job) (increase(http_requests_total{job=~\"user-service|order-service|payment-service\",code=~\"5..\"}[60m])) / sum by (job) (increase(http_requests_total{job=~\"user-service|order-service|payment-service\"}[60m]))"
+      },
+      "windowFrom": "2026-10-29T07:06:58Z",
+      "windowUntil": "2026-10-29T07:06:58Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",code=~\\\"5..\\\"}[60m])) / sum b…\": 0 series, 0 samples; 2026-10-29T07:06:58Z to 2026-10-29T07:06:58Z; incomplete=false",
+      "sources": [
+        "prometheus:eb0c04c5-f3a5-4720-94fa-e9d941ed80c1:instant"
+      ],
+      "startedAt": "2026-10-29T07:08:07Z",
+      "finishedAt": "2026-10-29T07:08:07Z"
+    },
+    {
+      "ordinal": 4,
+      "integrationId": "eb0c04c5-f3a5-4720-94fa-e9d941ed80c1",
+      "tool": "prometheus_query",
+      "purpose": "Get total request volume per service for context",
+      "arguments": {
+        "end": "2026-10-29T07:06:58Z",
+        "mode": "instant",
+        "query": "sum by (job) (increase(http_requests_total{job=~\"user-service|order-service|payment-service\"}[60m]))"
+      },
+      "windowFrom": "2026-10-29T07:06:58Z",
+      "windowUntil": "2026-10-29T07:06:58Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\": 3 series, 3 samples; 2026-10-29T07:06:58Z to 2026-10-29T07:06:58Z; incomplete=false; retained {job=\"order-service\"}=39.18888888888888 at 2026-10-29T07:06:58Z",
+      "sources": [
+        "prometheus:eb0c04c5-f3a5-4720-94fa-e9d941ed80c1:instant"
+      ],
+      "startedAt": "2026-10-29T07:08:07Z",
+      "finishedAt": "2026-10-29T07:08:07Z"
+    },
+    {
+      "ordinal": 5,
+      "integrationId": "eb0c04c5-f3a5-4720-94fa-e9d941ed80c1",
+      "tool": "prometheus_query",
+      "purpose": "Check if there are any 5xx requests at all",
+      "arguments": {
+        "end": "2026-10-29T07:06:58Z",
+        "mode": "instant",
+        "query": "sum(increase(http_requests_total{job=~\"user-service|order-service|payment-service\",code=~\"5..\"}[60m]))"
+      },
+      "windowFrom": "2026-10-29T07:06:58Z",
+      "windowUntil": "2026-10-29T07:06:58Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",code=~\\\"5..\\\"}[60m]))\": 0 series, 0 samples; 2026-10-29T07:06:58Z to 2026-10-29T07:06:58Z; incomplete=false",
+      "sources": [
+        "prometheus:eb0c04c5-f3a5-4720-94fa-e9d941ed80c1:instant"
+      ],
+      "startedAt": "2026-10-29T07:08:18Z",
+      "finishedAt": "2026-10-29T07:08:18Z"
+    },
+    {
+      "ordinal": 6,
+      "integrationId": "eb0c04c5-f3a5-4720-94fa-e9d941ed80c1",
+      "tool": "prometheus_query",
+      "purpose": "List all HTTP status codes seen across the three services in the window",
+      "arguments": {
+        "end": "2026-10-29T07:06:58Z",
+        "mode": "instant",
+        "query": "sum by (code) (increase(http_requests_total{job=~\"user-service|order-service|payment-service\"}[60m]))"
+      },
+      "windowFrom": "2026-10-29T07:06:58Z",
+      "windowUntil": "2026-10-29T07:06:58Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"sum by (code) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\": 1 series, 1 samples; 2026-10-29T07:06:58Z to 2026-10-29T07:06:58Z; incomplete=false; retained {}=58.28091168091167 at 2026-10-29T07:06:58Z",
+      "sources": [
+        "prometheus:eb0c04c5-f3a5-4720-94fa-e9d941ed80c1:instant"
+      ],
+      "startedAt": "2026-10-29T07:08:18Z",
+      "finishedAt": "2026-10-29T07:08:18Z"
+    },
+    {
+      "ordinal": 7,
+      "integrationId": "eb0c04c5-f3a5-4720-94fa-e9d941ed80c1",
+      "tool": "prometheus_query",
+      "purpose": "Inspect raw series labels to find the status code label name",
+      "arguments": {
+        "end": "2026-10-29T07:06:58Z",
+        "mode": "instant",
+        "query": "http_requests_total{job=~\"user-service|order-service|payment-service\"}"
+      },
+      "windowFrom": "2026-10-29T07:06:58Z",
+      "windowUntil": "2026-10-29T07:06:58Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}\": 6 series, 6 samples; 2026-10-29T07:06:58Z to 2026-10-29T07:06:58Z; incomplete=false; retained http_requests_total{instance=\"order-service:8083\", job=\"order-service\", status=\"…=2863 at 2026-10-29T07:06:58Z",
+      "sources": [
+        "prometheus:eb0c04c5-f3a5-4720-94fa-e9d941ed80c1:instant"
+      ],
+      "startedAt": "2026-10-29T07:08:24Z",
+      "finishedAt": "2026-10-29T07:08:24Z"
+    },
+    {
+      "ordinal": 8,
+      "integrationId": "eb0c04c5-f3a5-4720-94fa-e9d941ed80c1",
+      "tool": "prometheus_query",
+      "purpose": "Compute overall 5xx share across three services over the 60-minute window using correct label name",
+      "arguments": {
+        "end": "2026-10-29T07:06:58Z",
+        "mode": "instant",
+        "query": "sum(increase(http_requests_total{job=~\"user-service|order-service|payment-service\",status=~\"5..\"}[60m])) / sum(increase(http_requests_total{job=~\"user-service|order-service|payment-service\"}[60m]))"
+      },
+      "windowFrom": "2026-10-29T07:06:58Z",
+      "windowUntil": "2026-10-29T07:06:58Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m])) / sum(increase(…\": 1 series, 1 samples; 2026-10-29T07:06:58Z to 2026-10-29T07:06:58Z; incomplete=false; retained {}=0.034482758620689655 at 2026-10-29T07:06:58Z",
+      "sources": [
+        "prometheus:eb0c04c5-f3a5-4720-94fa-e9d941ed80c1:instant"
+      ],
+      "startedAt": "2026-10-29T07:08:37Z",
+      "finishedAt": "2026-10-29T07:08:37Z"
+    },
+    {
+      "ordinal": 9,
+      "integrationId": "eb0c04c5-f3a5-4720-94fa-e9d941ed80c1",
+      "tool": "prometheus_query",
+      "purpose": "Per-service 5xx share for breakdown",
+      "arguments": {
+        "end": "2026-10-29T07:06:58Z",
+        "mode": "instant",
+        "query": "sum by (job) (increase(http_requests_total{job=~\"user-service|order-service|payment-service\",status=~\"5..\"}[60m])) / sum by (job) (increase(http_requests_total{job=~\"user-service|order-service|payment-service\"}[60m]))"
+      },
+      "windowFrom": "2026-10-29T07:06:58Z",
+      "windowUntil": "2026-10-29T07:06:58Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m])) / sum…\": 3 series, 3 samples; 2026-10-29T07:06:58Z to 2026-10-29T07:06:58Z; incomplete=false; retained {job=\"order-service\"}=0.025641025641025644 at 2026-10-29T07:06:58Z",
+      "sources": [
+        "prometheus:eb0c04c5-f3a5-4720-94fa-e9d941ed80c1:instant"
+      ],
+      "startedAt": "2026-10-29T07:08:37Z",
+      "finishedAt": "2026-10-29T07:08:37Z"
+    },
+    {
+      "ordinal": 10,
+      "integrationId": "eb0c04c5-f3a5-4720-94fa-e9d941ed80c1",
+      "tool": "prometheus_query",
+      "purpose": "Per-service per-status increase counts for verification",
+      "arguments": {
+        "end": "2026-10-29T07:06:58Z",
+        "mode": "instant",
+        "query": "sum by (job, status) (increase(http_requests_total{job=~\"user-service|order-service|payment-service\"}[60m]))"
+      },
+      "windowFrom": "2026-10-29T07:06:58Z",
+      "windowUntil": "2026-10-29T07:06:58Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"sum by (job, status) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\": 6 series, 6 samples; 2026-10-29T07:06:58Z to 2026-10-29T07:06:58Z; incomplete=false; retained {job=\"order-service\", status=\"200\"}=38.18404558404558 at 2026-10-29T07:06:58Z",
+      "sources": [
+        "prometheus:eb0c04c5-f3a5-4720-94fa-e9d941ed80c1:instant"
+      ],
+      "startedAt": "2026-10-29T07:08:37Z",
+      "finishedAt": "2026-10-29T07:08:37Z"
+    }
+  ],
+  "adapterElapsedSeconds": 90.55617627399988
+}

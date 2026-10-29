@@ -1,0 +1,454 @@
+{
+  "id": "1f7a6ef1-2106-491b-ba58-eda3fdaf0289",
+  "status": "concluded",
+  "subject": "Observability benchmark",
+  "windowFrom": "2026-10-28T11:03:20.503024Z",
+  "windowUntil": "2026-10-29T11:03:20.503024Z",
+  "conclusionStatus": "supported_explanation",
+  "summary": "Checkout became sluggish because the **order-service's database** degraded, starting around 04:13 UTC. The earliest sign was a \"database connection timeout\" log entry at 04:13, followed by repeated slow-query warnings on the products and sessions tables (569–2511 ms). Order-service average latency rose from ~45 ms baseline to ~160 ms peak (3.5×), with individual POST /api/orders traces reaching 17.6 seconds total, of which 12.7 s was consumed inside order-service. The user-service also logged occasional slow DB queries and 5xx errors but its average latency was declining, making order-service the dominant bottleneck. Payment-service was unaffected.\n\n**What slowed down:** POST /api/orders, GET /api/cart, and GET /api/products — the core checkout flow.\n\n**Why:** Database performance degradation (slow queries + connection timeouts) inside order-service, most likely on the products and sessions tables.\n\n**Main bottleneck:** The **order-service → database** layer. In the slowest representative trace (`4715b7764646608b1a48f1b3a2cec04b`, 17.6 s POST /api/orders), order-service accounted for 12.7 s (72 %) of total duration. A second trace with errors (`0595f4e097fcacc5724644e76d76ad60`) confirmed that the user-service child call took only 25 ms, so the bulk of delay is internal to order-service, consistent with uninstrumented DB wait time.\n\n**Evidence backing this:** (1) Traces showing 5–17 s checkout durations concentrated in 05:09–05:46 UTC with order-service consuming the majority of time. (2) Prometheus range data showing order-service average latency tripling while other services held flat. (3) Order-service logs showing database connection timeouts and slow queries starting at 04:13. (4) Absence of child spans inside order-service pointing to uninstrumented DB operations as the time sink.",
+  "impact": {
+    "summary": "Checkout requests became severely sluggish from ~04:13 to beyond 07:00 UTC on 2026-10-29. Order-service average latency tripled from ~45 ms to ~160 ms, with individual requests taking 5–17 seconds. Sporadic 5xx errors (500/502/503) returned to customers throughout the period, impacting order placement, cart retrieval, and product browsing.",
+    "runRefs": [
+      4,
+      8,
+      9
+    ]
+  },
+  "findings": [
+    {
+      "statement": "The order-service's database layer was the primary bottleneck: slow queries and connection issues on the products and sessions tables caused order-service average latency to spike from ~45 ms baseline to ~160 ms (3.5×), with individual POST /api/orders traces reaching 12.7 s inside order-service alone.",
+      "kind": "cause",
+      "mechanism": "Database performance degradation caused slow queries and connection timeouts in the order-service, which directly increased checkout request latency. The order-service spans in traces consumed 5–12.7 s with no child spans accounting for the time, and the earliest logged symptom was a 'database connection timeout' at 04:13 UTC, followed by repeated slow-query warnings on the products and sessions tables (569–2511 ms).",
+      "runRefs": [
+        7,
+        9,
+        13
+      ]
+    },
+    {
+      "statement": "User-service experienced intermittent slow database queries and 5xx errors, contributing to occasional checkout failures but not driving the overall latency increase.",
+      "kind": "contributing_factor",
+      "mechanism": "User-service also logged slow database queries (products table 2385 ms at 04:05, users table 2008 ms at 06:14) and 5xx errors, suggesting a shared or related database degradation. However, user-service average latency was actually declining during the window (0.288 s → 0.239 s), so its contribution to the checkout slowdown was minor relative to order-service.",
+      "runRefs": [
+        10,
+        12
+      ]
+    },
+    {
+      "statement": "Checkout sluggishness began around 04:13–05:04 UTC, peaked around 05:42–05:48 UTC, and was still recovering at 07:00 UTC. Individual checkout traces reached 11–17 seconds during the peak.",
+      "kind": "observation",
+      "mechanism": "Slow checkout traces (>1 s) clustered from ~05:09 to ~05:46 UTC, with the worst traces reaching 17.6 s. The most affected operations were POST /api/orders and GET /api/cart. The slowdown onset matches the earliest DB errors at 04:13 and the latency rise starting ~05:04 in metrics.",
+      "runRefs": [
+        4,
+        8
+      ]
+    },
+    {
+      "statement": "In the representative 17.6 s trace, order-service accounted for 12.7 s (72 %) of the total duration, confirming it as the dominant bottleneck in the call chain.",
+      "kind": "observation",
+      "mechanism": "Representative trace 4715b7764646608b1a48f1b3a2cec04b shows a POST /api/orders taking 17.6 s total: order-service span consumed 12.7 s, api-gateway added 3.2 s of overhead after order-service completed, and webapp added 1.8 s of overhead after api-gateway completed.",
+      "runRefs": [
+        7
+      ]
+    },
+    {
+      "statement": "The order-service's long spans are not explained by upstream calls: a user-service child call took only 25 ms inside a 5.9 s order-service span, indicating the delay is internal to order-service (likely database operations not instrumented with spans).",
+      "kind": "observation",
+      "mechanism": "Trace 0595f4e097fcacc5724644e76d76ad60 shows order-service taking 5.9 s with a user-service child call of only 25 ms (which errored). The remaining ~5.9 s inside order-service has no child spans, consistent with database wait time not instrumented with spans.",
+      "runRefs": [
+        13
+      ]
+    }
+  ],
+  "hypotheses": [
+    {
+      "statement": "The database slowness may have been caused by a missing index or a query-plan regression on the products/sessions tables, triggered by data growth or a schema change.",
+      "status": "unresolved",
+      "test": "Run EXPLAIN ANALYZE on the flagged slow queries against a production-like data set and compare with pre-incident query plans.",
+      "runRefs": [
+        9,
+        12
+      ]
+    },
+    {
+      "statement": "The 'database connection timeout' at 04:13 suggests the connection pool may have been exhausted, causing queuing that amplified latency through the 05:00–06:00 window.",
+      "status": "supported",
+      "test": "Check DB connection pool metrics (active/waiting connections) for the 04:00–06:00 window; if pool-exhaustion data is unavailable, review pool configuration against concurrent request counts.",
+      "runRefs": [
+        9
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "title": "Investigate order-service database queries on products and sessions tables",
+      "rationale": "The database is the root bottleneck. Investigate query plans for the products and sessions tables that appear repeatedly in slow-query logs, and check for missing indexes, table bloat, or lock contention.",
+      "verification": "Query planner output for the flagged tables; confirm whether index scans or full scans are occurring during the slow window.",
+      "runRefs": [
+        7,
+        9,
+        13
+      ]
+    },
+    {
+      "title": "Review database connection pool configuration in order-service",
+      "rationale": "The earliest symptom was a database connection timeout at 04:13 UTC. Check pool sizing, max connections, and whether the pool was exhausted during the incident.",
+      "verification": "DB connection pool metrics (active/idle/waiting) or configs compared to observed concurrency during 05:00–06:00 UTC.",
+      "runRefs": [
+        9
+      ]
+    },
+    {
+      "title": "Add database-client spans inside order-service to close the observability gap",
+      "rationale": "order-service spans consumed 5–12 s with no child spans, making it impossible to distinguish DB wait from other internal delay. Adding DB-client spans would pinpoint the bottleneck.",
+      "verification": "Future traces show DB-call child spans under order-service with measured durations.",
+      "runRefs": [
+        7,
+        13
+      ]
+    },
+    {
+      "title": "Implement circuit-breaker or timeout on order-service upstream calls",
+      "rationale": "order-service returned many 502/503 responses to the api-gateway, propagating failures to customers. Shorter timeouts with retries could reduce tail latency.",
+      "verification": "Reduced P99 latency on POST /api/orders and fewer 5xx errors under similar DB pressure.",
+      "runRefs": [
+        9,
+        14
+      ]
+    }
+  ],
+  "limitations": [
+    {
+      "type": "missing_telemetry",
+      "statement": "No database-level Prometheus metrics (connection pools, query durations, lock waits) were available, so the DB bottleneck is inferred from service-level metrics and logs rather than directly measured.",
+      "runRefs": [
+        11
+      ]
+    },
+    {
+      "type": "missing_telemetry",
+      "statement": "Order-service spans have no database-client child spans, so the 5–12 s spent inside order-service cannot be definitively attributed to specific DB operations — this is inferred from slow-query log lines and the absence of other child spans.",
+      "runRefs": [
+        7,
+        13
+      ]
+    },
+    {
+      "type": "missing_access",
+      "statement": "The trace search for slow traces returned 20 results marked incomplete; there may be additional slow traces that were not returned, so the 05:09–05:46 cluster may underrepresent the full scope.",
+      "runRefs": [
+        4
+      ]
+    }
+  ],
+  "usage": {
+    "inputTokens": 94302,
+    "outputTokens": 6922
+  },
+  "createdAt": "2026-10-29T11:04:19Z",
+  "concludedAt": "2026-10-29T11:06:11Z",
+  "runs": [
+    {
+      "ordinal": 1,
+      "integrationId": "d731ce83-6187-41a7-85ec-1e505a6ad75c",
+      "tool": "prometheus_discover_metrics",
+      "purpose": "Find checkout-related metrics to identify latency or error spikes",
+      "arguments": {
+        "hint": "checkout",
+        "selector": ""
+      },
+      "windowFrom": "2026-10-28T11:03:20.503024Z",
+      "windowUntil": "2026-10-29T11:03:20.503024Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus metric discovery \"checkout\": 0 names, 2026-10-28T11:03:20Z to 2026-10-29T11:03:20Z; incomplete=false",
+      "sources": [
+        "prometheus:d731ce83-6187-41a7-85ec-1e505a6ad75c:metric-names"
+      ],
+      "startedAt": "2026-10-29T11:04:25Z",
+      "finishedAt": "2026-10-29T11:04:25Z"
+    },
+    {
+      "ordinal": 2,
+      "integrationId": "d731ce83-6187-41a7-85ec-1e505a6ad75c",
+      "tool": "prometheus_discover_metrics",
+      "purpose": "Find HTTP latency/request metrics that may cover checkout",
+      "arguments": {
+        "hint": "http",
+        "selector": ""
+      },
+      "windowFrom": "2026-10-28T11:03:20.503024Z",
+      "windowUntil": "2026-10-29T11:03:20.503024Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus metric discovery \"http\": 4 names, 2026-10-28T11:03:20Z to 2026-10-29T11:03:20Z; incomplete=false",
+      "sources": [
+        "prometheus:d731ce83-6187-41a7-85ec-1e505a6ad75c:metric-names"
+      ],
+      "startedAt": "2026-10-29T11:04:25Z",
+      "finishedAt": "2026-10-29T11:04:25Z"
+    },
+    {
+      "ordinal": 3,
+      "integrationId": "ddd5e606-7b74-4147-a16d-623fb3c0f87e",
+      "tool": "tempo_search_traces",
+      "purpose": "Find slow checkout traces around the reported sluggish period",
+      "arguments": {
+        "end": "2026-10-29T07:00:00Z",
+        "limit": 20,
+        "query": "{ .service.name = \"checkout\" && duration > 1s }",
+        "start": "2026-10-29T04:00:00Z"
+      },
+      "windowFrom": "2026-10-29T04:00:00Z",
+      "windowUntil": "2026-10-29T07:00:00Z",
+      "outcome": "succeeded",
+      "summary": "Tempo search empty: 0 traces, 2026-10-29T04:00:00Z to 2026-10-29T07:00:00Z",
+      "startedAt": "2026-10-29T11:04:25Z",
+      "finishedAt": "2026-10-29T11:04:25Z"
+    },
+    {
+      "ordinal": 4,
+      "integrationId": "ddd5e606-7b74-4147-a16d-623fb3c0f87e",
+      "tool": "tempo_search_traces",
+      "purpose": "Broaden trace search for any slow traces around the sluggish period",
+      "arguments": {
+        "end": "2026-10-29T07:00:00Z",
+        "limit": 20,
+        "query": "{ duration > 1s }",
+        "start": "2026-10-29T04:00:00Z"
+      },
+      "windowFrom": "2026-10-29T04:00:00Z",
+      "windowUntil": "2026-10-29T07:00:00Z",
+      "outcome": "succeeded",
+      "truncated": true,
+      "summary": "Tempo search incomplete: 20 traces, 2026-10-29T04:00:00Z to 2026-10-29T07:00:00Z",
+      "sources": [
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:4f0658fd0718eee919faa4bf707c68af",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:68d875d7b3fd0552b7542f74963ec4b6",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:39d7c610a3f37cf522920f8ba0fbe6e8",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:4715b7764646608b1a48f1b3a2cec04b",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:a07bbb1502f458fab4bf5423b7c7d3f9",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:2d2f740e400bf8bc6d52304406e1ee47",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:0d52095905065127073157ffa3399fc8",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:47abe06ecd31833974a2217543eb4112",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:3a404358416132d75892f66997a2a8c5",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:6134496a81a6ec7230c2d8fc4cd13853",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:944a22c4bec66f592da42371ff9fcd30",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:53f10edfcf0168abaf07e2035bd6dce7",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:0595f4e097fcacc5724644e76d76ad60",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:9db32ab6cc949badc1aa4814c534652a",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:730f59cf0f3281958cbe39a21d864b36",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:209ac4592f67e004d5d54697579d6899",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:378770f8605da397713cc0d58d8d6b6b",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:00f1b1940a94a193ea48c57e693863bb",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:2d129f26d3cee85fa1f679a6340eea5a",
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:755556a5671c3b9303560d5fe736b240"
+      ],
+      "startedAt": "2026-10-29T11:04:30Z",
+      "finishedAt": "2026-10-29T11:04:30Z"
+    },
+    {
+      "ordinal": 5,
+      "integrationId": "d731ce83-6187-41a7-85ec-1e505a6ad75c",
+      "tool": "prometheus_query",
+      "purpose": "Find the highest average latency HTTP endpoints at the time of the slowdown",
+      "arguments": {
+        "end": "2026-10-29T05:00:00Z",
+        "mode": "instant",
+        "query": "topk(10, http_request_duration_seconds_sum / http_request_duration_seconds_count)"
+      },
+      "windowFrom": "2026-10-29T05:00:00Z",
+      "windowUntil": "2026-10-29T05:00:00Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"topk(10, http_request_duration_seconds_sum / http_request_duration_seconds_count)\": 5 series, 5 samples; 2026-10-29T05:00:00Z to 2026-10-29T05:00:00Z; incomplete=false; retained {instance=\"user-service:8082\", job=\"user-service\"}=0.2698415697674419 at 2026-10-29T05:00:00Z",
+      "sources": [
+        "prometheus:d731ce83-6187-41a7-85ec-1e505a6ad75c:instant"
+      ],
+      "startedAt": "2026-10-29T11:04:30Z",
+      "finishedAt": "2026-10-29T11:04:30Z"
+    },
+    {
+      "ordinal": 6,
+      "integrationId": "f3ff9509-1ae0-4ecc-bd42-da54654fadca",
+      "tool": "loki_query_logs",
+      "purpose": "Look for error/timeout/slow log entries in the checkout service",
+      "arguments": {
+        "end": "2026-10-29T07:00:00Z",
+        "limit": 50,
+        "query": "{service=\"checkout\"} |~ \"(?i)error|timeout|slow|latency\"",
+        "start": "2026-10-29T04:00:00Z"
+      },
+      "windowFrom": "2026-10-29T04:00:00Z",
+      "windowUntil": "2026-10-29T07:00:00Z",
+      "outcome": "succeeded",
+      "summary": "Loki empty: 0 log excerpts, 2026-10-29T04:00:00Z to 2026-10-29T07:00:00Z (exclusive end), direction=backward",
+      "sources": [
+        "loki:f3ff9509-1ae0-4ecc-bd42-da54654fadca:logs"
+      ],
+      "startedAt": "2026-10-29T11:04:30Z",
+      "finishedAt": "2026-10-29T11:04:30Z"
+    },
+    {
+      "ordinal": 7,
+      "integrationId": "ddd5e606-7b74-4147-a16d-623fb3c0f87e",
+      "tool": "tempo_get_trace",
+      "purpose": "Examine the slowest checkout trace (17.6s POST /api/orders) to identify which span is the bottleneck",
+      "arguments": {
+        "traceId": "4715b7764646608b1a48f1b3a2cec04b"
+      },
+      "windowFrom": "2026-10-28T11:03:21Z",
+      "windowUntil": "2026-10-29T11:03:20Z",
+      "outcome": "succeeded",
+      "summary": "Tempo trace 4715b7764646608b1a48f1b3a2cec04b: data, 3 spans; searched 2026-10-28T11:03:21Z to 2026-10-29T11:03:20Z; backend bounds are not a completeness guarantee",
+      "sources": [
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:4715b7764646608b1a48f1b3a2cec04b"
+      ],
+      "startedAt": "2026-10-29T11:04:50Z",
+      "finishedAt": "2026-10-29T11:04:50Z"
+    },
+    {
+      "ordinal": 8,
+      "integrationId": "d731ce83-6187-41a7-85ec-1e505a6ad75c",
+      "tool": "prometheus_query",
+      "purpose": "Track average HTTP latency per service over the slowdown window to see which service spiked",
+      "arguments": {
+        "end": "2026-10-29T07:00:00Z",
+        "mode": "range",
+        "query": "http_request_duration_seconds_sum / http_request_duration_seconds_count",
+        "start": "2026-10-29T04:00:00Z",
+        "step": 120
+      },
+      "windowFrom": "2026-10-29T04:00:00Z",
+      "windowUntil": "2026-10-29T07:00:00Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus range \"http_request_duration_seconds_sum / http_request_duration_seconds_count\": 5 series, 455 samples; 2026-10-29T04:00:00Z to 2026-10-29T07:00:00Z; incomplete=false; retained {instance=\"api-gateway:8081\", job=\"api-gateway\"}=NaN at 2026-10-29T07:00:00Z",
+      "sources": [
+        "prometheus:d731ce83-6187-41a7-85ec-1e505a6ad75c:range"
+      ],
+      "startedAt": "2026-10-29T11:04:50Z",
+      "finishedAt": "2026-10-29T11:04:50Z"
+    },
+    {
+      "ordinal": 9,
+      "integrationId": "f3ff9509-1ae0-4ecc-bd42-da54654fadca",
+      "tool": "loki_query_logs",
+      "purpose": "Check order-service logs for errors during the slowdown",
+      "arguments": {
+        "end": "2026-10-29T07:00:00Z",
+        "limit": 50,
+        "query": "{service=\"order-service\"} |~ \"(?i)error|timeout|slow|latency|fail\"",
+        "start": "2026-10-29T04:00:00Z"
+      },
+      "windowFrom": "2026-10-29T04:00:00Z",
+      "windowUntil": "2026-10-29T07:00:00Z",
+      "outcome": "succeeded",
+      "summary": "Loki data: 19 log excerpts, 2026-10-29T04:00:00Z to 2026-10-29T07:00:00Z (exclusive end), direction=backward",
+      "sources": [
+        "loki:f3ff9509-1ae0-4ecc-bd42-da54654fadca:logs"
+      ],
+      "startedAt": "2026-10-29T11:04:50Z",
+      "finishedAt": "2026-10-29T11:04:50Z"
+    },
+    {
+      "ordinal": 10,
+      "integrationId": "d731ce83-6187-41a7-85ec-1e505a6ad75c",
+      "tool": "prometheus_query",
+      "purpose": "Track user-service average latency over the slowdown window",
+      "arguments": {
+        "end": "2026-10-29T07:00:00Z",
+        "mode": "range",
+        "query": "http_request_duration_seconds_sum{job=\"user-service\"} / http_request_duration_seconds_count{job=\"user-service\"}",
+        "start": "2026-10-29T04:00:00Z",
+        "step": 120
+      },
+      "windowFrom": "2026-10-29T04:00:00Z",
+      "windowUntil": "2026-10-29T07:00:00Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus range \"http_request_duration_seconds_sum{job=\\\"user-service\\\"} / http_request_duration_seconds_count{job=\\\"user-service\\\"}\": 1 series, 91 samples; 2026-10-29T04:00:00Z to 2026-10-29T07:00:00Z; incomplete=false; retained {instance=\"user-service:8082\", job=\"user-service\"}=0.2390937896070976 at 2026-10-29T07:00:00Z",
+      "sources": [
+        "prometheus:d731ce83-6187-41a7-85ec-1e505a6ad75c:range"
+      ],
+      "startedAt": "2026-10-29T11:05:01Z",
+      "finishedAt": "2026-10-29T11:05:01Z"
+    },
+    {
+      "ordinal": 11,
+      "integrationId": "d731ce83-6187-41a7-85ec-1e505a6ad75c",
+      "tool": "prometheus_discover_metrics",
+      "purpose": "Find database-related metrics to confirm DB is the bottleneck",
+      "arguments": {
+        "hint": "db",
+        "selector": ""
+      },
+      "windowFrom": "2026-10-28T11:03:20.503024Z",
+      "windowUntil": "2026-10-29T11:03:20.503024Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus metric discovery \"db\": 0 names, 2026-10-28T11:03:20Z to 2026-10-29T11:03:20Z; incomplete=false",
+      "sources": [
+        "prometheus:d731ce83-6187-41a7-85ec-1e505a6ad75c:metric-names"
+      ],
+      "startedAt": "2026-10-29T11:05:01Z",
+      "finishedAt": "2026-10-29T11:05:01Z"
+    },
+    {
+      "ordinal": 12,
+      "integrationId": "f3ff9509-1ae0-4ecc-bd42-da54654fadca",
+      "tool": "loki_query_logs",
+      "purpose": "Check user-service logs for errors during the slowdown",
+      "arguments": {
+        "end": "2026-10-29T07:00:00Z",
+        "limit": 30,
+        "query": "{service=\"user-service\"} |~ \"(?i)error|timeout|slow|latency|fail\"",
+        "start": "2026-10-29T04:00:00Z"
+      },
+      "windowFrom": "2026-10-29T04:00:00Z",
+      "windowUntil": "2026-10-29T07:00:00Z",
+      "outcome": "succeeded",
+      "summary": "Loki data: 5 log excerpts, 2026-10-29T04:00:00Z to 2026-10-29T07:00:00Z (exclusive end), direction=backward",
+      "sources": [
+        "loki:f3ff9509-1ae0-4ecc-bd42-da54654fadca:logs"
+      ],
+      "startedAt": "2026-10-29T11:05:01Z",
+      "finishedAt": "2026-10-29T11:05:01Z"
+    },
+    {
+      "ordinal": 13,
+      "integrationId": "ddd5e606-7b74-4147-a16d-623fb3c0f87e",
+      "tool": "tempo_get_trace",
+      "purpose": "Examine the trace with errors in both order-service and user-service to see span timing and bottleneck",
+      "arguments": {
+        "traceId": "0595f4e097fcacc5724644e76d76ad60"
+      },
+      "windowFrom": "2026-10-28T11:03:21Z",
+      "windowUntil": "2026-10-29T11:03:20Z",
+      "outcome": "succeeded",
+      "summary": "Tempo trace 0595f4e097fcacc5724644e76d76ad60: data, 4 spans; searched 2026-10-28T11:03:21Z to 2026-10-29T11:03:20Z; backend bounds are not a completeness guarantee",
+      "sources": [
+        "tempo:ddd5e606-7b74-4147-a16d-623fb3c0f87e:trace:0595f4e097fcacc5724644e76d76ad60"
+      ],
+      "startedAt": "2026-10-29T11:05:31Z",
+      "finishedAt": "2026-10-29T11:05:31Z"
+    },
+    {
+      "ordinal": 14,
+      "integrationId": "d731ce83-6187-41a7-85ec-1e505a6ad75c",
+      "tool": "prometheus_query",
+      "purpose": "Track order-service 5xx error rate over the slowdown window",
+      "arguments": {
+        "end": "2026-10-29T07:00:00Z",
+        "mode": "range",
+        "query": "rate(http_requests_total{job=\"order-service\",status=~\"5..\"}[5m])",
+        "start": "2026-10-29T04:00:00Z",
+        "step": 120
+      },
+      "windowFrom": "2026-10-29T04:00:00Z",
+      "windowUntil": "2026-10-29T07:00:00Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus range \"rate(http_requests_total{job=\\\"order-service\\\",status=~\\\"5..\\\"}[5m])\": 1 series, 91 samples; 2026-10-29T04:00:00Z to 2026-10-29T07:00:00Z; incomplete=false; retained {instance=\"order-service:8083\", job=\"order-service\", status=\"500\"}=0 at 2026-10-29T07:00:00Z",
+      "sources": [
+        "prometheus:d731ce83-6187-41a7-85ec-1e505a6ad75c:range"
+      ],
+      "startedAt": "2026-10-29T11:05:31Z",
+      "finishedAt": "2026-10-29T11:05:31Z"
+    }
+  ],
+  "adapterElapsedSeconds": 113.2223588779998
+}

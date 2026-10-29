@@ -3,3 +3,6 @@
 *.toml text eol=lf
 *.yaml text eol=lf
 *.md text eol=lf
+
+# Preserve recorded artifacts exactly as exported.
+jobs/** -text -whitespace

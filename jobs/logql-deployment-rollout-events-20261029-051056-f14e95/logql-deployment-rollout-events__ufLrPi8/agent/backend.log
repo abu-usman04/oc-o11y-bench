@@ -1,0 +1,17 @@
+{"time":"2026-10-29T05:11:18.116207366Z","level":"INFO","msg":"control plane starting","version":"dev","service":"oc-control-plane"}
+{"time":"2026-10-29T05:11:18.762306127Z","level":"INFO","msg":"migrations applied","versions":["0001_current_schema","0002_simplify_conversation_investigation_contracts","0003_cleanup_conversation_schema"]}
+{"time":"2026-10-29T05:11:18.762670844Z","level":"INFO","msg":"model boundary configured","model_config":"openrouter/z-ai/glm-5.1 effort=high max_output=32000"}
+{"time":"2026-10-29T05:11:18.762917766Z","level":"INFO","msg":"one-time bootstrap credential configured"}
+{"time":"2026-10-29T05:11:18.769585952Z","level":"INFO","msg":"listening","address":"127.0.0.1:8081"}
+{"time":"2026-10-29T05:11:18.769800349Z","level":"INFO","msg":"slack message worker started"}
+{"time":"2026-10-29T05:11:18.769821461Z","level":"INFO","msg":"audit retention pruner started","interval":3600000000000}
+{"time":"2026-10-29T05:11:18.769870018Z","level":"INFO","msg":"change retention pruner started","retention_days":90}
+{"time":"2026-10-29T05:11:18.769909196Z","level":"INFO","msg":"slack delivery worker started"}
+{"time":"2026-10-29T05:11:18.874207545Z","level":"INFO","msg":"request served","request_id":"4e9660e9758c3d0da92830075952d44b","trace_id":"77f8d0c3663efcafe7ee62c255f86a4f","span_id":"3ea5bae87dfaf91a","method":"GET","path":"/readyz","status":200,"duration":483554}
+{"time":"2026-10-29T05:11:19.321569Z","level":"INFO","msg":"integration created","request_id":"50df28abf257c067fe754f8a1c33a561","org_id":"cd1f3988-0aa9-4dd2-95d3-fa5a7d674a8f","integration_id":"a5c26ee0-3c4f-4803-ac8e-a034b4d2ddcc","type":"prometheus"}
+{"time":"2026-10-29T05:11:19.357776968Z","level":"INFO","msg":"integration created","request_id":"5414b35fd0b413021d2296304e966800","org_id":"cd1f3988-0aa9-4dd2-95d3-fa5a7d674a8f","integration_id":"e7031379-2ea0-44a0-9a8f-79f474898aab","type":"loki"}
+{"time":"2026-10-29T05:11:19.385109773Z","level":"INFO","msg":"integration created","request_id":"a5236f45801fe2ef69d84d8148bacf80","org_id":"cd1f3988-0aa9-4dd2-95d3-fa5a7d674a8f","integration_id":"f92cf8bb-184f-40ae-a83b-1ea5ffcacf53","type":"tempo"}
+{"time":"2026-10-29T05:11:19.408338234Z","level":"INFO","msg":"conversation opened","request_id":"a1ef7f52c7a6c8a0a1e9488d1c82fc4f","org_id":"cd1f3988-0aa9-4dd2-95d3-fa5a7d674a8f","conversation_id":"a7c536ca-ce8d-4fac-999f-552558643150"}
+{"time":"2026-10-29T05:11:56.597413037Z","level":"INFO","msg":"investigation concluded","org_id":"cd1f3988-0aa9-4dd2-95d3-fa5a7d674a8f","investigation_id":"5f4b6ab5-d9ef-48f9-8323-6f8d90a17090","conversation_id":"a7c536ca-ce8d-4fac-999f-552558643150","trace_id":"5faa583682ad658cc298587addc6d6cc","span_id":"fda237911c212074","conclusion_status":"answer_only","duration":36801503142,"turns":2,"tool_runs":1,"input_tokens":12196,"output_tokens":1676}
+{"time":"2026-10-29T05:11:56.650871957Z","level":"INFO","msg":"draining","timeout":15000000000}
+{"time":"2026-10-29T05:11:56.651026455Z","level":"INFO","msg":"stopped"}

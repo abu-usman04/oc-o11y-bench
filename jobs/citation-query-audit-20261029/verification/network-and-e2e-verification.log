@@ -1,0 +1,3 @@
+ok  	github.com/open-cluster/oc-control-plane/test/controlplane	135.947s
+ok  	github.com/open-cluster/oc-control-plane/test/e2e	1.167s
+?   	github.com/open-cluster/oc-control-plane/test/e2e/cmd/controlplane-e2e	[no test files]

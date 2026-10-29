@@ -1,0 +1,33 @@
+{
+    "id": "87631df8-dfa0-4f90-9ff9-a21b50533be7",
+    "started_at": "2026-10-29T06:17:53.289140",
+    "updated_at": "2026-10-29T06:20:14.408768",
+    "finished_at": "2026-10-29T06:20:14.408768",
+    "n_total_trials": 1,
+    "stats": {
+        "n_completed_trials": 1,
+        "n_errored_trials": 0,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "opencluster__z-ai/glm-5.1__tasks": {
+                "n_trials": 0,
+                "n_errors": 0,
+                "metrics": [
+                    {
+                        "mean": 0.0
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {},
+                "exception_stats": {}
+            }
+        },
+        "n_input_tokens": 51977,
+        "n_cache_tokens": null,
+        "n_output_tokens": 6475,
+        "cost_usd": null
+    }
+}

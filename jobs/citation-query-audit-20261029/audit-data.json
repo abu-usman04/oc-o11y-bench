@@ -1,0 +1,329 @@
+{
+  "date": "2026-10-29",
+  "model": "z-ai/glm-5.1",
+  "provider": "openrouter",
+  "effort": "Provider default; no effort override pinned",
+  "selectedSolved": 4,
+  "selectedAttempted": 4,
+  "localPassAt1": 1.0,
+  "meanTokensPerTrial": 47770.0,
+  "totalAgentTokens": 191080,
+  "passCubed": null,
+  "passAt3": null,
+  "globalRanking": null,
+  "actualDollarCost": null,
+  "readLimit": 30,
+  "agentRetries": 0,
+  "benchmarkVersion": "1.1.0",
+  "benchmarkCommit": "b66d8cfbbe309d2e03e9a301baea056d9718b71b",
+  "productionCommit": "b1b8706d10a43a48f1212ae6b240146c23dcb541",
+  "judge": "anthropic/claude-haiku-5.5@high through OpenRouter Anthropic Messages endpoint",
+  "scope": "Four preselected tasks, one attempt each; no official submission or full-suite certification",
+  "cases": [
+    {
+      "case": "promql-error-rate",
+      "job": "promql-error-rate-20261029-105457-a33cd3",
+      "executionExitCode": 0,
+      "gradingExitCode": 0,
+      "category": "prometheus_query",
+      "grade": "passed",
+      "score": 1.0,
+      "nativeStatus": "concluded",
+      "certaintyClaimedByAgent": "answer_only",
+      "reads": 6,
+      "emptyReads": 0,
+      "failedReads": 0,
+      "modelCuts": [],
+      "sourceLimitedReads": [],
+      "duplicateReads": [],
+      "httpRequests": 6,
+      "tokens": 33508,
+      "usage": {
+        "inputTokens": 30029,
+        "outputTokens": 3479
+      },
+      "seconds": 44.40337977099989,
+      "report": "../promql-error-rate-20261029-105457-a33cd3/opencluster-result.md",
+      "manifest": {
+        "controlplaneCommit": "b1b8706d10a43a48f1212ae6b240146c23dcb541",
+        "binarySHA256": "af4407b32c55af89189e22dd392c9be0f77385a3e2542cc70584921938b1cead",
+        "instrumentationSHA256": "2a23b52861be31ad0f0532ce1a197c25b19c0a77b53044c359fa12ca1834f479",
+        "benchmarkCommit": "b66d8cfbbe309d2e03e9a301baea056d9718b71b",
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.1",
+        "scenarioTime": "2026-10-29T10:54:29.760429+00:00",
+        "case": "promql-error-rate",
+        "attempts": 1,
+        "concurrentTrials": 1,
+        "harborVersion": "0.24.0",
+        "gradingEnabled": false,
+        "adapterCommit": "5faa1c031869cdd6fbbe9622443f434242d15941",
+        "readBudget": 30,
+        "instrumentation": "benchmark-only cmd/oc-benchmark wraps the existing real Completer and HTTP transport; Agent logic and provider policy unchanged",
+        "omittedTaskMetadata": [
+          "environment.mcp_servers"
+        ]
+      },
+      "engineeringReview": [
+        "Supported: the full-hour 5xx share is about 3.4%; canonical truth is 0.033898. The ratio is based on 60-minute counter increases, not one short slice.",
+        "Counter increases such as 2.01 and 59.27 are extrapolated estimates, not exact integer event counts. Six reads completed without empty reads or model clipping."
+      ]
+    },
+    {
+      "case": "logql-deployment-rollout-events",
+      "job": "logql-deployment-rollout-events-20261029-105757-b7a9ea",
+      "executionExitCode": 0,
+      "gradingExitCode": 0,
+      "category": "loki_query",
+      "grade": "passed",
+      "score": 1.0,
+      "nativeStatus": "concluded",
+      "certaintyClaimedByAgent": "answer_only",
+      "reads": 1,
+      "emptyReads": 0,
+      "failedReads": 0,
+      "modelCuts": [],
+      "sourceLimitedReads": [],
+      "duplicateReads": [],
+      "httpRequests": 1,
+      "tokens": 9863,
+      "usage": {
+        "inputTokens": 9036,
+        "outputTokens": 827
+      },
+      "seconds": 20.22786419199838,
+      "report": "../logql-deployment-rollout-events-20261029-105757-b7a9ea/opencluster-result.md",
+      "manifest": {
+        "controlplaneCommit": "b1b8706d10a43a48f1212ae6b240146c23dcb541",
+        "binarySHA256": "af4407b32c55af89189e22dd392c9be0f77385a3e2542cc70584921938b1cead",
+        "instrumentationSHA256": "2a23b52861be31ad0f0532ce1a197c25b19c0a77b53044c359fa12ca1834f479",
+        "benchmarkCommit": "b66d8cfbbe309d2e03e9a301baea056d9718b71b",
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.1",
+        "scenarioTime": "2026-10-29T10:57:28.970090+00:00",
+        "case": "logql-deployment-rollout-events",
+        "attempts": 1,
+        "concurrentTrials": 1,
+        "harborVersion": "0.24.0",
+        "gradingEnabled": false,
+        "adapterCommit": "5faa1c031869cdd6fbbe9622443f434242d15941",
+        "readBudget": 30,
+        "instrumentation": "benchmark-only cmd/oc-benchmark wraps the existing real Completer and HTTP transport; Agent logic and provider policy unchanged",
+        "omittedTaskMetadata": [
+          "environment.mcp_servers"
+        ]
+      },
+      "engineeringReview": [
+        "Supported: exactly three returned deployment log lines name user-service (01:47 UTC), order-service and payment-service (07:55 UTC); canonical counts and service names agree.",
+        "The shared deployment time suggests coordination but does not prove coordination or an incident trigger."
+      ]
+    },
+    {
+      "case": "find-slow-traces",
+      "job": "find-slow-traces-20261029-110031-61566d",
+      "executionExitCode": 0,
+      "gradingExitCode": 0,
+      "category": "tempo_query",
+      "grade": "passed",
+      "score": 1.0,
+      "nativeStatus": "concluded",
+      "certaintyClaimedByAgent": "answer_only",
+      "reads": 10,
+      "emptyReads": 3,
+      "failedReads": 0,
+      "modelCuts": [],
+      "sourceLimitedReads": [
+        4
+      ],
+      "duplicateReads": [],
+      "httpRequests": 10,
+      "tokens": 46485,
+      "usage": {
+        "inputTokens": 42066,
+        "outputTokens": 4419
+      },
+      "seconds": 61.57964535599967,
+      "report": "../find-slow-traces-20261029-110031-61566d/opencluster-result.md",
+      "manifest": {
+        "controlplaneCommit": "b1b8706d10a43a48f1212ae6b240146c23dcb541",
+        "binarySHA256": "af4407b32c55af89189e22dd392c9be0f77385a3e2542cc70584921938b1cead",
+        "instrumentationSHA256": "2a23b52861be31ad0f0532ce1a197c25b19c0a77b53044c359fa12ca1834f479",
+        "benchmarkCommit": "b66d8cfbbe309d2e03e9a301baea056d9718b71b",
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.1",
+        "scenarioTime": "2026-10-29T10:59:59.659243+00:00",
+        "case": "find-slow-traces",
+        "attempts": 1,
+        "concurrentTrials": 1,
+        "harborVersion": "0.24.0",
+        "gradingEnabled": false,
+        "adapterCommit": "fb3b95e4ec9c0dac0b28bc4e320f595adfbd35a4",
+        "readBudget": 30,
+        "instrumentation": "benchmark-only cmd/oc-benchmark wraps the existing real Completer and HTTP transport; Agent logic and provider policy unchanged",
+        "omittedTaskMetadata": [
+          "environment.mcp_servers"
+        ],
+        "harnessExitCode": 0
+      },
+      "engineeringReview": [
+        "Supported: checkout trace 4715b7764646608b1a48f1b3a2cec04b is 17.648s, including 12.706s in order-service; payment trace 6661aabbc96f535480066bbe28c66e55 is 3.181s, including 2.290s in payment-service. The deterministic full-ID check passed.",
+        "Incorrect: the answer says user-service occurs in 10/20 checkout search results and payment-service in 6/20. Actual Tool Run 4 contains 12/20 and 5/20 respectively. The judge used a different nondeterministic search sample and did not catch this mismatch.",
+        "Unproven: all-route, job-level P99 and service presence do not establish user-service as responsible for checkout latency. No user-service checkout span was fetched to demonstrate that claim.",
+        "Scope: 20 checkout and 5 payment results are returned subsets, not exhaustive day-wide totals. Hitting the limit conservatively means possibly incomplete; it does not prove more results exist. Existing Agent feedback misleadingly states that the source held more.",
+        "Three empty reads remain: invented checkout/payment service identifiers and a guessed route label. TraceQL syntax was valid and there were no model-observation cuts."
+      ],
+      "actualCheckoutSampleServiceCounts": {
+        "api-gateway": 20,
+        "order-service": 20,
+        "payment-service": 5,
+        "webapp": 20,
+        "user-service": 12
+      }
+    },
+    {
+      "case": "service-degradation-rca",
+      "job": "service-degradation-rca-20261029-110353-fca189",
+      "executionExitCode": 0,
+      "gradingExitCode": 0,
+      "category": "investigation",
+      "grade": "passed",
+      "score": 1.0,
+      "nativeStatus": "concluded",
+      "certaintyClaimedByAgent": "supported_explanation",
+      "reads": 14,
+      "emptyReads": 4,
+      "failedReads": 0,
+      "modelCuts": [
+        8
+      ],
+      "sourceLimitedReads": [
+        4
+      ],
+      "duplicateReads": [],
+      "httpRequests": 14,
+      "tokens": 101224,
+      "usage": {
+        "inputTokens": 94302,
+        "outputTokens": 6922
+      },
+      "seconds": 113.2223588779998,
+      "report": "../service-degradation-rca-20261029-110353-fca189/opencluster-result.md",
+      "manifest": {
+        "controlplaneCommit": "b1b8706d10a43a48f1212ae6b240146c23dcb541",
+        "binarySHA256": "af4407b32c55af89189e22dd392c9be0f77385a3e2542cc70584921938b1cead",
+        "instrumentationSHA256": "2a23b52861be31ad0f0532ce1a197c25b19c0a77b53044c359fa12ca1834f479",
+        "benchmarkCommit": "b66d8cfbbe309d2e03e9a301baea056d9718b71b",
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.1",
+        "scenarioTime": "2026-10-29T11:03:20.503024+00:00",
+        "case": "service-degradation-rca",
+        "attempts": 1,
+        "concurrentTrials": 1,
+        "harborVersion": "0.24.0",
+        "gradingEnabled": false,
+        "adapterCommit": "1b0b55b2cffd416090281b9896eed5d65f0f1983",
+        "readBudget": 30,
+        "instrumentation": "benchmark-only cmd/oc-benchmark wraps the existing real Completer and HTTP transport; Agent logic and provider policy unchanged",
+        "omittedTaskMetadata": [
+          "environment.mcp_servers"
+        ],
+        "harnessExitCode": 0
+      },
+      "engineeringReview": [
+        "Supported: order-service is the principal bottleneck; canonical peak p95 ranks order-service 10s, user-service 4.5s, payment-service 2.2s. Trace 4715b7764646608b1a48f1b3a2cec04b has 12.706s in order-service; 0595f4e097fcacc5724644e76d76ad60 has 5.860s with a 25ms user-service child.",
+        "Incorrect: payment-service was unaffected conflicts with Tool Run 4 returning a 1.858s POST /api/payments trace, and canonical payment p95 reaching 2.2s. Less affected is supported; unaffected is not.",
+        "Metric semantics: Runs 5, 8 and 10 use raw cumulative duration_sum / duration_count. The 45-to-160ms values are cumulative means, not incident-window means. Use rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m]) for a recent mean or histogram_quantile for tail latency.",
+        "Unproven: database degradation is promoted to cause despite missing DB metrics/spans and no correlation of slow-query logs with the example traces. Missing child spans identify uninstrumented time, not DB wait. DB involvement is a hypothesis; the causal mechanism remains unresolved.",
+        "Timing: a 04:13 DB timeout on a 37ms GET /api/cart failure does not establish the onset of sustained checkout slowness. Claims about precise onset/recovery and user-service contributions exceed the evidence.",
+        "Efficiency improved to 14 reads, four empty and no HTTP errors, but Run 8 still hit the existing 16KiB model-content cut. Fourteen reads left room to test competing explanations; stopping early did not make the mechanism established."
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "category": "dashboarding",
+      "totalTasks": 7,
+      "attempted": 0,
+      "solved": 0,
+      "notRun": 7,
+      "capability": "Unsupported: no Grafana dashboard write Tool."
+    },
+    {
+      "category": "grafana_api",
+      "totalTasks": 6,
+      "attempted": 0,
+      "solved": 0,
+      "notRun": 6,
+      "capability": "Unsupported: no Grafana datasource/dashboard API Tool."
+    },
+    {
+      "category": "investigation",
+      "totalTasks": 11,
+      "attempted": 1,
+      "solved": 1,
+      "notRun": 10,
+      "capability": "Cross-source reads shipped. This run establishes the main service, but not the claimed DB mechanism or precise onset."
+    },
+    {
+      "category": "loki_query",
+      "totalTasks": 10,
+      "attempted": 1,
+      "solved": 1,
+      "notRun": 9,
+      "capability": "Bounded log excerpts shipped. Aggregate LogQL counts/percentiles are unsupported; excerpts cannot establish exhaustive totals when limited."
+    },
+    {
+      "category": "prometheus_query",
+      "totalTasks": 17,
+      "attempted": 1,
+      "solved": 1,
+      "notRun": 16,
+      "capability": "Scalar/vector/range PromQL and metric-name discovery shipped; 16 tasks unrun. Native histogram payloads are unsupported."
+    },
+    {
+      "category": "tempo_query",
+      "totalTasks": 13,
+      "attempted": 1,
+      "solved": 1,
+      "notRun": 12,
+      "capability": "Bounded trace search/get shipped. TraceQL metrics/tag discovery and exhaustive service inventories are unsupported."
+    }
+  ],
+  "verification": {
+    "fullGate": "make verify DID NOT PASS",
+    "passed": [
+      "Focused Agent/provider/Loki/Tempo Go tests",
+      "OpenAPI and generated documentation validation",
+      "gofmt, go vet, golangci-lint and both module builds",
+      "Real PostgreSQL race suite",
+      "All previously failing SSH-dependent HTTP tests after host-network correction",
+      "test/e2e race suite",
+      "18 benchmark unit tests",
+      "Benchmark ruff and mypy",
+      "Wheel and source package build",
+      "License checks",
+      "Compose/Helm validation, deployment image build and deployment test",
+      "API key scan of 99 result/audit files; packages exclude completed config/jobs/.work; temporary credential files removed",
+      "Git history secret scan"
+    ],
+    "baselineFailure": {
+      "test": "TestLiveProgressEventMatchesSerializedSchema",
+      "result": "Same missing-progress/context-deadline failure on both b1b8706 and unchanged baseline f3f0e700",
+      "logs": [
+        "verification/verification-network-recheck.log",
+        "verification/baseline-progress-check.log"
+      ]
+    },
+    "networking": "Initial nested-container SSH loopback failures passed with host-network verification; no source workaround added.",
+    "vulnerability": {
+      "id": "GO-2026-6809",
+      "component": "crypto/x509 in pinned Go 1.26.9",
+      "fixedIn": "Go 1.26.10",
+      "reference": "https://pkg.go.dev/vuln/GO-2026-6809",
+      "scope": "Existing production toolchain/Docker image and benchmark build image; not introduced by this change. Runtime update/rebuild is required before calling the release gate green."
+    },
+    "historySecretScan": "Passed: 461 commits, 11.46 MB scanned; no leaks found",
+    "remainingGateLog": "verification/remaining-gates.log",
+    "releaseRecommendation": "No merge or release claim while verification failures remain."
+  }
+}

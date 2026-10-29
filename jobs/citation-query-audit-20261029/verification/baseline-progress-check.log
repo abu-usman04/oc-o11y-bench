@@ -1,0 +1,5 @@
+--- FAIL: TestLiveProgressEventMatchesSerializedSchema (70.85s)
+    event_schema_test.go:118: live stream ended before progress; events=[started tool_completed tool_completed]: context deadline exceeded
+FAIL
+FAIL	github.com/open-cluster/oc-control-plane/test/controlplane	71.329s
+FAIL

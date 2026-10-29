@@ -1,0 +1,119 @@
+go-licenses check ./... --allowed_licenses=Apache-2.0,BSD-2-Clause,BSD-3-Clause,MIT,ISC,MPL-2.0 --ignore github.com/open-cluster/oc-control-plane
+W1029 11:16:15.285145       9 library.go:141] "github.com/cespare/xxhash/v2" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/github.com/cespare/xxhash/v2@v2.3.0/xxhash_amd64.s
+W1029 11:16:15.285675       9 library.go:141] "golang.org/x/sys/unix" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/golang.org/x/sys@v0.48.0/unix/asm_linux_amd64.s
+W1029 11:16:15.286412       9 library.go:141] "golang.org/x/crypto/argon2" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/golang.org/x/crypto@v0.57.0/argon2/blamka_amd64.s
+W1029 11:16:15.286475       9 library.go:141] "golang.org/x/crypto/blake2b" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/golang.org/x/crypto@v0.57.0/blake2b/blake2bAVX2_amd64.s
+/go/pkg/mod/golang.org/x/crypto@v0.57.0/blake2b/blake2b_amd64.s
+W1029 11:16:15.286492       9 library.go:141] "golang.org/x/sys/cpu" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/golang.org/x/sys@v0.48.0/cpu/cpu_gc_x86.s
+W1029 11:16:15.286585       9 library.go:141] "github.com/modern-go/reflect2" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/github.com/modern-go/reflect2@v1.0.2/reflect2_amd64.s
+/go/pkg/mod/github.com/modern-go/reflect2@v1.0.2/relfect2_mips64x.s
+/go/pkg/mod/github.com/modern-go/reflect2@v1.0.2/relfect2_mipsx.s
+/go/pkg/mod/github.com/modern-go/reflect2@v1.0.2/relfect2_ppc64x.s
+cd test/e2e && go-licenses check ./... --allowed_licenses=Apache-2.0,BSD-2-Clause,BSD-3-Clause,MIT,ISC,MPL-2.0 --ignore github.com/open-cluster/oc-control-plane
+W1029 11:16:17.778789      65 library.go:141] "golang.org/x/sys/unix" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/golang.org/x/sys@v0.48.0/unix/asm_linux_amd64.s
+W1029 11:16:17.779309      65 library.go:141] "github.com/klauspost/compress/zstd" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/github.com/klauspost/compress@v1.20.1/zstd/fse_decoder_amd64.s
+/go/pkg/mod/github.com/klauspost/compress@v1.20.1/zstd/matchlen_amd64.s
+/go/pkg/mod/github.com/klauspost/compress@v1.20.1/zstd/seqdec_amd64.s
+W1029 11:16:17.779456      65 library.go:141] "github.com/klauspost/compress/huff0" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/github.com/klauspost/compress@v1.20.1/huff0/decompress_amd64.s
+W1029 11:16:17.779480      65 library.go:141] "github.com/klauspost/compress/internal/cpuinfo" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/github.com/klauspost/compress@v1.20.1/internal/cpuinfo/cpuinfo_amd64.s
+W1029 11:16:17.779494      65 library.go:141] "github.com/klauspost/compress/zstd/internal/xxhash" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/github.com/klauspost/compress@v1.20.1/zstd/internal/xxhash/xxhash_amd64.s
+W1029 11:16:17.779678      65 library.go:141] "github.com/cespare/xxhash/v2" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/github.com/cespare/xxhash/v2@v2.3.0/xxhash_amd64.s
+W1029 11:16:17.780350      65 library.go:141] "golang.org/x/crypto/internal/poly1305" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/golang.org/x/crypto@v0.57.0/internal/poly1305/sum_amd64.s
+W1029 11:16:17.780653      65 library.go:141] "github.com/modern-go/reflect2" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/github.com/modern-go/reflect2@v1.0.3-0.20250322232337-35a7c28c31ee/reflect2_amd64.s
+/go/pkg/mod/github.com/modern-go/reflect2@v1.0.3-0.20250322232337-35a7c28c31ee/relfect2_mips64x.s
+/go/pkg/mod/github.com/modern-go/reflect2@v1.0.3-0.20250322232337-35a7c28c31ee/relfect2_mipsx.s
+/go/pkg/mod/github.com/modern-go/reflect2@v1.0.3-0.20250322232337-35a7c28c31ee/relfect2_ppc64x.s
+W1029 11:16:17.782502      65 library.go:141] "golang.org/x/crypto/argon2" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/golang.org/x/crypto@v0.57.0/argon2/blamka_amd64.s
+W1029 11:16:17.782598      65 library.go:141] "golang.org/x/crypto/blake2b" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/golang.org/x/crypto@v0.57.0/blake2b/blake2bAVX2_amd64.s
+/go/pkg/mod/golang.org/x/crypto@v0.57.0/blake2b/blake2b_amd64.s
+W1029 11:16:17.782642      65 library.go:141] "golang.org/x/sys/cpu" contains non-Go code that can't be inspected for further dependencies:
+/go/pkg/mod/golang.org/x/sys@v0.48.0/cpu/cpu_gc_x86.s
+docker compose -f deploy/compose/compose.yaml config --no-interpolate > /dev/null
+helm lint ./deploy/helm/opencluster --set server.publicURL=https://opencluster.example.com
+==> Linting ./deploy/helm/opencluster
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, 0 chart(s) failed
+helm template opencluster ./deploy/helm/opencluster \
+	--set server.publicURL=https://opencluster.example.com \
+	--set relay.enabled=true \
+	--set relay.tls.existingSecret=opencluster-relay-tls \
+	--set-json 'relay.spkiPins=["AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="]' \
+	> /dev/null
+docker build --file deploy/compose/Dockerfile --tag opencluster-control-plane:ci .
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon   1.24MB
+
+Step 1/13 : FROM golang:1.26.9-alpine AS build
+ ---> 3082400e369f
+Step 2/13 : RUN apk add --no-cache ca-certificates git
+ ---> Using cache
+ ---> 6dc0ee73f58d
+Step 3/13 : WORKDIR /src
+ ---> Using cache
+ ---> dc871911935a
+Step 4/13 : COPY go.mod go.sum ./
+ ---> 1b0acfd44854
+Step 5/13 : RUN go mod download
+ ---> Running in cf9df8228342
+ ---> Removed intermediate container cf9df8228342
+ ---> c73aa72cf440
+Step 6/13 : COPY . .
+ ---> 527424424218
+Step 7/13 : RUN CGO_ENABLED=0 go build -trimpath -buildvcs=false -o /out/controlplane ./cmd/controlplane
+ ---> Running in ee6b94bd62e4
+ ---> Removed intermediate container ee6b94bd62e4
+ ---> 250c6cc6068c
+Step 8/13 : FROM alpine:3.22
+ ---> 5291449c3df7
+Step 9/13 : RUN apk add --no-cache ca-certificates     && addgroup -S -g 65532 opencluster     && adduser -S -D -H -u 65532 -G opencluster opencluster
+ ---> Using cache
+ ---> 7714ae62cf64
+Step 10/13 : COPY --from=build /out/controlplane /usr/local/bin/controlplane
+ ---> b465b91fdcde
+Step 11/13 : USER 65532:65532
+ ---> Running in 661935ec0f93
+ ---> Removed intermediate container 661935ec0f93
+ ---> 4f2642a77e74
+Step 12/13 : EXPOSE 8081 8443
+ ---> Running in b7ccaa22d6fc
+ ---> Removed intermediate container b7ccaa22d6fc
+ ---> 6dc732647592
+Step 13/13 : ENTRYPOINT ["/usr/local/bin/controlplane"]
+ ---> Running in 001f6c4f36f1
+ ---> Removed intermediate container 001f6c4f36f1
+ ---> 4a1c3f78b337
+Successfully built 4a1c3f78b337
+Successfully tagged opencluster-control-plane:ci
+OC_REQUIRE_CONTAINERS=1 go test -count=1 ./test/deployment
+ok  	github.com/open-cluster/oc-control-plane/test/deployment	0.745s
+gitleaks git . --config .gitleaks.toml --redact --exit-code 1 --log-opts="--all --full-history"
+
+    ○
+    │╲
+    │ ○
+    ○ ░
+    ░    gitleaks
+
+11:20AM INF 461 commits scanned.
+11:20AM INF scanned ~11462472 bytes (11.46 MB) in 1m43s
+11:20AM INF no leaks found

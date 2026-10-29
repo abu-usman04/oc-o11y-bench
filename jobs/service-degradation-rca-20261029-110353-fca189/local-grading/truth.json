@@ -1,0 +1,54 @@
+[
+  {
+    "key": "{\"backend\": \"prometheus\", \"kind\": \"query\", \"query\": \"max_over_time(histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{job=\\\"order-service\\\"}[5m])))[8h:1m])\"}",
+    "summary": "Matching metrics exist in the snapshot window: Query returned 1 result: 10",
+    "error": null,
+    "fails": false,
+    "debug": {
+      "backend": "prometheus",
+      "query": "max_over_time(histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{job=\"order-service\"}[5m])))[8h:1m])",
+      "result": {
+        "shape": "items",
+        "items": [
+          {
+            "labels": {},
+            "value": 10.0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "key": "{\"backend\": \"prometheus\", \"kind\": \"query\", \"query\": \"topk(3, max_over_time(histogram_quantile(0.95, sum by (job, le) (rate(http_request_duration_seconds_bucket[5m])))[8h:1m]))\"}",
+    "summary": "Ranking from the snapshot window: Query returned 3 results: {job=\"order-service\"} 10; {job=\"user-service\"} 4.5; {job=\"payment-service\"} 2.2",
+    "error": null,
+    "fails": false,
+    "debug": {
+      "backend": "prometheus",
+      "query": "topk(3, max_over_time(histogram_quantile(0.95, sum by (job, le) (rate(http_request_duration_seconds_bucket[5m])))[8h:1m]))",
+      "result": {
+        "shape": "items",
+        "items": [
+          {
+            "labels": {
+              "job": "order-service"
+            },
+            "value": 10.0
+          },
+          {
+            "labels": {
+              "job": "user-service"
+            },
+            "value": 4.5
+          },
+          {
+            "labels": {
+              "job": "payment-service"
+            },
+            "value": 2.1999999999999997
+          }
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "facts": [
+    {
+      "criterion": "The final response states 5xx share accurately.",
+      "evidence": {
+        "summary": "Matching metrics exist in the snapshot window: Query returned 1 result: 0.033898",
+        "debug": {
+          "backend": "prometheus",
+          "query": "sum(rate(http_requests_total{status=~\"5..\",job=~\"user-service|order-service|payment-service\"}[1h])) / sum(rate(http_requests_total{job=~\"user-service|order-service|payment-service\"}[1h]))",
+          "result": {
+            "shape": "items",
+            "items": [
+              {
+                "labels": {},
+                "value": 0.03389830508474576
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    }
+  ],
+  "checks": {
+    "scores": {},
+    "explanations": {}
+  },
+  "engineeringReview": [
+    "Supported: the full-hour 5xx share is about 3.4%; canonical truth is 0.033898. The ratio is based on 60-minute counter increases, not one short slice.",
+    "Counter increases such as 2.01 and 59.27 are extrapolated estimates, not exact integer event counts. Six reads completed without empty reads or model clipping."
+  ]
+}

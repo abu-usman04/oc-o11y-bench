@@ -1,0 +1,2464 @@
+{
+  "mode": "Canonical facts and checks from local upstream grading",
+  "facts": [
+    {
+      "criterion": "The final response identifies the backend carrying the slow requests on each path it reports, as the Source of truth shows: order-service's `handle POST /api/orders` for checkout and payment-service's `handle POST /api/payments` for payments, not only the webapp or api-gateway relays",
+      "evidence": {
+        "summary": "Matching traces exist in the snapshot window: Query returned 20 results: trace 2ca41344161ae0a94675bf3d2aa2f4f1 POST /api/orders rooted at webapp 797ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 573.9ms service.name=order-service]; trace b9bba1a8dfa73acd91d12a35d784cb27 POST /api/orders rooted at webapp 11325ms services api-gateway, order-service, webapp matched spans [handle POST /api/orders 8154ms service.name=order-service]; trace 39d7c610a3f37cf522920f8ba0fbe6e8 POST /api/orders rooted at webapp 5926ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 4267ms service.name=order-service]; trace cb9eadb0737414c030d459fce7f9edb8 POST /api/orders rooted at webapp 10168ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 7321ms service.name=order-service]; trace 4715b7764646608b1a48f1b3a2cec04b POST /api/orders rooted at webapp 17647ms services api-gateway, order-service, webapp matched spans [handle POST /api/orders 12706ms service.name=order-service]; trace a07bbb1502f458fab4bf5423b7c7d3f9 POST /api/orders rooted at webapp 6973ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 5021ms service.name=order-service]; trace 2d2f740e400bf8bc6d52304406e1ee47 POST /api/orders rooted at webapp 11010ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 7928ms service.name=order-service]; trace d52095905065127073157ffa3399fc8 POST /api/payments rooted at webapp 1858ms services api-gateway, payment-service, webapp matched spans [handle POST /api/payments 1338ms service.name=payment-service]; trace 47abe06ecd31833974a2217543eb4112 POST /api/orders rooted at webapp 16142ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 11623ms service.name=order-service]; trace 3a404358416132d75892f66997a2a8c5 POST /api/orders rooted at webapp 4029ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 2901ms service.name=order-service]; trace 6134496a81a6ec7230c2d8fc4cd13853 POST /api/orders rooted at webapp 13139ms services api-gateway, order-service, payment-service, webapp matched spans [handle POST /api/orders 9461ms service.name=order-service]; trace cbcc14e2e1bc1e1dbd0b5488875ae9a3 POST /api/orders rooted at webapp 845ms services api-gateway, order-service, webapp matched spans [handle POST /api/orders 609ms service.name=order-service]; trace d929224eb9caa3d5b498ff3424f670a7 POST /api/payments rooted at webapp 680ms services api-gateway, payment-service, webapp matched spans [handle POST /api/payments 490.2ms service.name=payment-service]; trace 8df24c9a494129703fa2aa0e18536000 POST /api/orders rooted at webapp 1668ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 1201ms service.name=order-service]; trace 5e9d86a61bf3860144cfb929f6d72941 POST /api/orders rooted at webapp 1253ms services api-gateway, order-service, webapp matched spans [handle POST /api/orders 902.7ms service.name=order-service]; trace 134db24c1405400f9452d417f458a179 POST /api/payments rooted at webapp 3275ms services api-gateway, payment-service, webapp matched spans [handle POST /api/payments 2358ms service.name=payment-service]; trace 4a79d73fdc112b0afb4b695723403014 POST /api/orders rooted at webapp 2495ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 1796ms service.name=order-service]; trace 78727a8eef902f59deffcface51ae47d POST /api/orders rooted at webapp 2223ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 1601ms service.name=order-service]; trace 3c9f6fcaed9eebf1fe8203eb0971cec5 POST /api/orders rooted at webapp 2741ms services api-gateway, order-service, payment-service, webapp matched spans [handle POST /api/orders 1974ms service.name=order-service]; trace a5b6a3e6d08ea9ffcca5a7b7fcb43358 POST /api/payments rooted at webapp 773ms services api-gateway, payment-service, webapp matched spans [handle POST /api/payments 556.7ms service.name=payment-service] (the query stops at 20 results, so more may match)",
+        "debug": {
+          "backend": "tempo",
+          "query": "{ resource.service.name =~ \"order-service|payment-service\" && name =~ \"handle POST /api/(orders|payments)\" && duration > 300ms } | select(resource.service.name, name)",
+          "result": {
+            "shape": "traces",
+            "traces": [
+              {
+                "traceID": "2ca41344161ae0a94675bf3d2aa2f4f1",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793260684243659008",
+                "durationMs": 797,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "48f9b4afef524dc7",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793260684246659008",
+                      "durationNanos": "573914390",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "48f9b4afef524dc7",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793260684246659008",
+                        "durationNanos": "573914390",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "b9bba1a8dfa73acd91d12a35d784cb27",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793252529003802112",
+                "durationMs": 11325,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "4c4652fca4d00d69",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793252529006802112",
+                      "durationNanos": "8154443764",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "4c4652fca4d00d69",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793252529006802112",
+                        "durationNanos": "8154443764",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "39d7c610a3f37cf522920f8ba0fbe6e8",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793252407342070016",
+                "durationMs": 5926,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "8d20a98db1c4b6f2",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793252407345070016",
+                      "durationNanos": "4267023974",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "8d20a98db1c4b6f2",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793252407345070016",
+                        "durationNanos": "4267023974",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "cb9eadb0737414c030d459fce7f9edb8",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793252338459846912",
+                "durationMs": 10168,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "20b8fcc5ed17f317",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793252338462846912",
+                      "durationNanos": "7321118316",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "20b8fcc5ed17f317",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793252338462846912",
+                        "durationNanos": "7321118316",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "4715b7764646608b1a48f1b3a2cec04b",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793252301115115776",
+                "durationMs": 17647,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "07092fceefdb7922",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793252301118115776",
+                      "durationNanos": "12706344890",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "07092fceefdb7922",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793252301118115776",
+                        "durationNanos": "12706344890",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "a07bbb1502f458fab4bf5423b7c7d3f9",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793251775267034880",
+                "durationMs": 6973,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "c1d200b4b470d50f",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793251775270034880",
+                      "durationNanos": "5020826526",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "c1d200b4b470d50f",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793251775270034880",
+                        "durationNanos": "5020826526",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "2d2f740e400bf8bc6d52304406e1ee47",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793251741204235008",
+                "durationMs": 11010,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "987d38e4d10a2fb8",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793251741207235008",
+                      "durationNanos": "7927741636",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "987d38e4d10a2fb8",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793251741207235008",
+                        "durationNanos": "7927741636",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "d52095905065127073157ffa3399fc8",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/payments",
+                "startTimeUnixNano": "1793251668021872896",
+                "durationMs": 1858,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "10490bedf68ea0d5",
+                      "name": "handle POST /api/payments",
+                      "startTimeUnixNano": "1793251668024872896",
+                      "durationNanos": "1338392500",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "payment-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "10490bedf68ea0d5",
+                        "name": "handle POST /api/payments",
+                        "startTimeUnixNano": "1793251668024872896",
+                        "durationNanos": "1338392500",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "payment-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "payment-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "47abe06ecd31833974a2217543eb4112",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793251366927307008",
+                "durationMs": 16142,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "b632dc0ab9dbab14",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793251366930307008",
+                      "durationNanos": "11622670438",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "b632dc0ab9dbab14",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793251366930307008",
+                        "durationNanos": "11622670438",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "3a404358416132d75892f66997a2a8c5",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793251291108094976",
+                "durationMs": 4029,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "7b0bd9a81d6a2c9f",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793251291111094976",
+                      "durationNanos": "2900910953",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "7b0bd9a81d6a2c9f",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793251291111094976",
+                        "durationNanos": "2900910953",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "6134496a81a6ec7230c2d8fc4cd13853",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793251275472615936",
+                "durationMs": 13139,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "71b724453a87d922",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793251275475615936",
+                      "durationNanos": "9460780671",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "71b724453a87d922",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793251275475615936",
+                        "durationNanos": "9460780671",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "payment-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "cbcc14e2e1bc1e1dbd0b5488875ae9a3",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793227553372293888",
+                "durationMs": 845,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "2382320c777fa334",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793227553375293888",
+                      "durationNanos": "609027908",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "2382320c777fa334",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793227553375293888",
+                        "durationNanos": "609027908",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "d929224eb9caa3d5b498ff3424f670a7",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/payments",
+                "startTimeUnixNano": "1793226994537307136",
+                "durationMs": 680,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "3de35f7f14f80042",
+                      "name": "handle POST /api/payments",
+                      "startTimeUnixNano": "1793226994540307136",
+                      "durationNanos": "490219444",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "payment-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "3de35f7f14f80042",
+                        "name": "handle POST /api/payments",
+                        "startTimeUnixNano": "1793226994540307136",
+                        "durationNanos": "490219444",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "payment-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "payment-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "8df24c9a494129703fa2aa0e18536000",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793221763917169152",
+                "durationMs": 1668,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "1a23e86bc070ac99",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793221763920169152",
+                      "durationNanos": "1201244935",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "1a23e86bc070ac99",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793221763920169152",
+                        "durationNanos": "1201244935",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "5e9d86a61bf3860144cfb929f6d72941",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793221744651233024",
+                "durationMs": 1253,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "75dae60e83b99cda",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793221744654233024",
+                      "durationNanos": "902651128",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "75dae60e83b99cda",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793221744654233024",
+                        "durationNanos": "902651128",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "134db24c1405400f9452d417f458a179",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/payments",
+                "startTimeUnixNano": "1793215431477155072",
+                "durationMs": 3275,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "8947527974939b9f",
+                      "name": "handle POST /api/payments",
+                      "startTimeUnixNano": "1793215431480155072",
+                      "durationNanos": "2358034912",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "payment-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "8947527974939b9f",
+                        "name": "handle POST /api/payments",
+                        "startTimeUnixNano": "1793215431480155072",
+                        "durationNanos": "2358034912",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "payment-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "payment-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "4a79d73fdc112b0afb4b695723403014",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793214429516338176",
+                "durationMs": 2495,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "66278e47446dc4a7",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793214429519338176",
+                      "durationNanos": "1796453772",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "66278e47446dc4a7",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793214429519338176",
+                        "durationNanos": "1796453772",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "78727a8eef902f59deffcface51ae47d",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793210386040178176",
+                "durationMs": 2223,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "6f1c6eff10e02305",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793210386043178176",
+                      "durationNanos": "1601065152",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "6f1c6eff10e02305",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793210386043178176",
+                        "durationNanos": "1601065152",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "3c9f6fcaed9eebf1fe8203eb0971cec5",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793197226577667840",
+                "durationMs": 2741,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "69650599b8dc5512",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793197226580667840",
+                      "durationNanos": "1974153408",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "69650599b8dc5512",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793197226580667840",
+                        "durationNanos": "1974153408",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "payment-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "a5b6a3e6d08ea9ffcca5a7b7fcb43358",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/payments",
+                "startTimeUnixNano": "1793191745838430976",
+                "durationMs": 773,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "23f19702496767d0",
+                      "name": "handle POST /api/payments",
+                      "startTimeUnixNano": "1793191745841430976",
+                      "durationNanos": "556720178",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "payment-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "23f19702496767d0",
+                        "name": "handle POST /api/payments",
+                        "startTimeUnixNano": "1793191745841430976",
+                        "durationNanos": "556720178",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "payment-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "payment-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    },
+    {
+      "criterion": "The services the final response says keep showing up in the slow requests are the services of the slow traces in the Source of truth",
+      "evidence": {
+        "summary": "Matching traces exist in the snapshot window: Query returned 20 results: trace 2ca41344161ae0a94675bf3d2aa2f4f1 POST /api/orders rooted at webapp 797ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 573.9ms service.name=order-service]; trace b9bba1a8dfa73acd91d12a35d784cb27 POST /api/orders rooted at webapp 11325ms services api-gateway, order-service, webapp matched spans [handle POST /api/orders 8154ms service.name=order-service]; trace 39d7c610a3f37cf522920f8ba0fbe6e8 POST /api/orders rooted at webapp 5926ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 4267ms service.name=order-service]; trace cb9eadb0737414c030d459fce7f9edb8 POST /api/orders rooted at webapp 10168ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 7321ms service.name=order-service]; trace 4715b7764646608b1a48f1b3a2cec04b POST /api/orders rooted at webapp 17647ms services api-gateway, order-service, webapp matched spans [handle POST /api/orders 12706ms service.name=order-service]; trace a07bbb1502f458fab4bf5423b7c7d3f9 POST /api/orders rooted at webapp 6973ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 5021ms service.name=order-service]; trace 2d2f740e400bf8bc6d52304406e1ee47 POST /api/orders rooted at webapp 11010ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 7928ms service.name=order-service]; trace d52095905065127073157ffa3399fc8 POST /api/payments rooted at webapp 1858ms services api-gateway, payment-service, webapp matched spans [handle POST /api/payments 1338ms service.name=payment-service]; trace 47abe06ecd31833974a2217543eb4112 POST /api/orders rooted at webapp 16142ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 11623ms service.name=order-service]; trace 3a404358416132d75892f66997a2a8c5 POST /api/orders rooted at webapp 4029ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 2901ms service.name=order-service]; trace 6134496a81a6ec7230c2d8fc4cd13853 POST /api/orders rooted at webapp 13139ms services api-gateway, order-service, payment-service, webapp matched spans [handle POST /api/orders 9461ms service.name=order-service]; trace cbcc14e2e1bc1e1dbd0b5488875ae9a3 POST /api/orders rooted at webapp 845ms services api-gateway, order-service, webapp matched spans [handle POST /api/orders 609ms service.name=order-service]; trace d929224eb9caa3d5b498ff3424f670a7 POST /api/payments rooted at webapp 680ms services api-gateway, payment-service, webapp matched spans [handle POST /api/payments 490.2ms service.name=payment-service]; trace 8df24c9a494129703fa2aa0e18536000 POST /api/orders rooted at webapp 1668ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 1201ms service.name=order-service]; trace 5e9d86a61bf3860144cfb929f6d72941 POST /api/orders rooted at webapp 1253ms services api-gateway, order-service, webapp matched spans [handle POST /api/orders 902.7ms service.name=order-service]; trace 134db24c1405400f9452d417f458a179 POST /api/payments rooted at webapp 3275ms services api-gateway, payment-service, webapp matched spans [handle POST /api/payments 2358ms service.name=payment-service]; trace 4a79d73fdc112b0afb4b695723403014 POST /api/orders rooted at webapp 2495ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 1796ms service.name=order-service]; trace 78727a8eef902f59deffcface51ae47d POST /api/orders rooted at webapp 2223ms services api-gateway, order-service, user-service, webapp matched spans [handle POST /api/orders 1601ms service.name=order-service]; trace 3c9f6fcaed9eebf1fe8203eb0971cec5 POST /api/orders rooted at webapp 2741ms services api-gateway, order-service, payment-service, webapp matched spans [handle POST /api/orders 1974ms service.name=order-service]; trace a5b6a3e6d08ea9ffcca5a7b7fcb43358 POST /api/payments rooted at webapp 773ms services api-gateway, payment-service, webapp matched spans [handle POST /api/payments 556.7ms service.name=payment-service] (the query stops at 20 results, so more may match)",
+        "debug": {
+          "backend": "tempo",
+          "query": "{ resource.service.name =~ \"order-service|payment-service\" && name =~ \"handle POST /api/(orders|payments)\" && duration > 300ms } | select(resource.service.name, name)",
+          "result": {
+            "shape": "traces",
+            "traces": [
+              {
+                "traceID": "2ca41344161ae0a94675bf3d2aa2f4f1",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793260684243659008",
+                "durationMs": 797,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "48f9b4afef524dc7",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793260684246659008",
+                      "durationNanos": "573914390",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "48f9b4afef524dc7",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793260684246659008",
+                        "durationNanos": "573914390",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "b9bba1a8dfa73acd91d12a35d784cb27",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793252529003802112",
+                "durationMs": 11325,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "4c4652fca4d00d69",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793252529006802112",
+                      "durationNanos": "8154443764",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "4c4652fca4d00d69",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793252529006802112",
+                        "durationNanos": "8154443764",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "39d7c610a3f37cf522920f8ba0fbe6e8",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793252407342070016",
+                "durationMs": 5926,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "8d20a98db1c4b6f2",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793252407345070016",
+                      "durationNanos": "4267023974",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "8d20a98db1c4b6f2",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793252407345070016",
+                        "durationNanos": "4267023974",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "cb9eadb0737414c030d459fce7f9edb8",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793252338459846912",
+                "durationMs": 10168,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "20b8fcc5ed17f317",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793252338462846912",
+                      "durationNanos": "7321118316",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "20b8fcc5ed17f317",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793252338462846912",
+                        "durationNanos": "7321118316",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "4715b7764646608b1a48f1b3a2cec04b",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793252301115115776",
+                "durationMs": 17647,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "07092fceefdb7922",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793252301118115776",
+                      "durationNanos": "12706344890",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "07092fceefdb7922",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793252301118115776",
+                        "durationNanos": "12706344890",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "a07bbb1502f458fab4bf5423b7c7d3f9",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793251775267034880",
+                "durationMs": 6973,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "c1d200b4b470d50f",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793251775270034880",
+                      "durationNanos": "5020826526",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "c1d200b4b470d50f",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793251775270034880",
+                        "durationNanos": "5020826526",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "2d2f740e400bf8bc6d52304406e1ee47",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793251741204235008",
+                "durationMs": 11010,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "987d38e4d10a2fb8",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793251741207235008",
+                      "durationNanos": "7927741636",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "987d38e4d10a2fb8",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793251741207235008",
+                        "durationNanos": "7927741636",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "d52095905065127073157ffa3399fc8",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/payments",
+                "startTimeUnixNano": "1793251668021872896",
+                "durationMs": 1858,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "10490bedf68ea0d5",
+                      "name": "handle POST /api/payments",
+                      "startTimeUnixNano": "1793251668024872896",
+                      "durationNanos": "1338392500",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "payment-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "10490bedf68ea0d5",
+                        "name": "handle POST /api/payments",
+                        "startTimeUnixNano": "1793251668024872896",
+                        "durationNanos": "1338392500",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "payment-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "payment-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "47abe06ecd31833974a2217543eb4112",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793251366927307008",
+                "durationMs": 16142,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "b632dc0ab9dbab14",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793251366930307008",
+                      "durationNanos": "11622670438",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "b632dc0ab9dbab14",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793251366930307008",
+                        "durationNanos": "11622670438",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "3a404358416132d75892f66997a2a8c5",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793251291108094976",
+                "durationMs": 4029,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "7b0bd9a81d6a2c9f",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793251291111094976",
+                      "durationNanos": "2900910953",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "7b0bd9a81d6a2c9f",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793251291111094976",
+                        "durationNanos": "2900910953",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "6134496a81a6ec7230c2d8fc4cd13853",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793251275472615936",
+                "durationMs": 13139,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "71b724453a87d922",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793251275475615936",
+                      "durationNanos": "9460780671",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "71b724453a87d922",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793251275475615936",
+                        "durationNanos": "9460780671",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "payment-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "cbcc14e2e1bc1e1dbd0b5488875ae9a3",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793227553372293888",
+                "durationMs": 845,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "2382320c777fa334",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793227553375293888",
+                      "durationNanos": "609027908",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "2382320c777fa334",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793227553375293888",
+                        "durationNanos": "609027908",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "d929224eb9caa3d5b498ff3424f670a7",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/payments",
+                "startTimeUnixNano": "1793226994537307136",
+                "durationMs": 680,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "3de35f7f14f80042",
+                      "name": "handle POST /api/payments",
+                      "startTimeUnixNano": "1793226994540307136",
+                      "durationNanos": "490219444",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "payment-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "3de35f7f14f80042",
+                        "name": "handle POST /api/payments",
+                        "startTimeUnixNano": "1793226994540307136",
+                        "durationNanos": "490219444",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "payment-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "payment-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "8df24c9a494129703fa2aa0e18536000",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793221763917169152",
+                "durationMs": 1668,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "1a23e86bc070ac99",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793221763920169152",
+                      "durationNanos": "1201244935",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "1a23e86bc070ac99",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793221763920169152",
+                        "durationNanos": "1201244935",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "5e9d86a61bf3860144cfb929f6d72941",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793221744651233024",
+                "durationMs": 1253,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "75dae60e83b99cda",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793221744654233024",
+                      "durationNanos": "902651128",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "75dae60e83b99cda",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793221744654233024",
+                        "durationNanos": "902651128",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "134db24c1405400f9452d417f458a179",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/payments",
+                "startTimeUnixNano": "1793215431477155072",
+                "durationMs": 3275,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "8947527974939b9f",
+                      "name": "handle POST /api/payments",
+                      "startTimeUnixNano": "1793215431480155072",
+                      "durationNanos": "2358034912",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "payment-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "8947527974939b9f",
+                        "name": "handle POST /api/payments",
+                        "startTimeUnixNano": "1793215431480155072",
+                        "durationNanos": "2358034912",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "payment-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "payment-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "4a79d73fdc112b0afb4b695723403014",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793214429516338176",
+                "durationMs": 2495,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "66278e47446dc4a7",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793214429519338176",
+                      "durationNanos": "1796453772",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "66278e47446dc4a7",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793214429519338176",
+                        "durationNanos": "1796453772",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "78727a8eef902f59deffcface51ae47d",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793210386040178176",
+                "durationMs": 2223,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "6f1c6eff10e02305",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793210386043178176",
+                      "durationNanos": "1601065152",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "6f1c6eff10e02305",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793210386043178176",
+                        "durationNanos": "1601065152",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "user-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "3c9f6fcaed9eebf1fe8203eb0971cec5",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/orders",
+                "startTimeUnixNano": "1793197226577667840",
+                "durationMs": 2741,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "69650599b8dc5512",
+                      "name": "handle POST /api/orders",
+                      "startTimeUnixNano": "1793197226580667840",
+                      "durationNanos": "1974153408",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "order-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "69650599b8dc5512",
+                        "name": "handle POST /api/orders",
+                        "startTimeUnixNano": "1793197226580667840",
+                        "durationNanos": "1974153408",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "order-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "order-service": {
+                    "spanCount": 1
+                  },
+                  "payment-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              },
+              {
+                "traceID": "a5b6a3e6d08ea9ffcca5a7b7fcb43358",
+                "rootServiceName": "webapp",
+                "rootTraceName": "POST /api/payments",
+                "startTimeUnixNano": "1793191745838430976",
+                "durationMs": 773,
+                "spanSet": {
+                  "spans": [
+                    {
+                      "spanID": "23f19702496767d0",
+                      "name": "handle POST /api/payments",
+                      "startTimeUnixNano": "1793191745841430976",
+                      "durationNanos": "556720178",
+                      "attributes": [
+                        {
+                          "key": "service.name",
+                          "value": {
+                            "stringValue": "payment-service"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "matched": 1
+                },
+                "spanSets": [
+                  {
+                    "spans": [
+                      {
+                        "spanID": "23f19702496767d0",
+                        "name": "handle POST /api/payments",
+                        "startTimeUnixNano": "1793191745841430976",
+                        "durationNanos": "556720178",
+                        "attributes": [
+                          {
+                            "key": "service.name",
+                            "value": {
+                              "stringValue": "payment-service"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "matched": 1
+                  }
+                ],
+                "serviceStats": {
+                  "api-gateway": {
+                    "spanCount": 1
+                  },
+                  "payment-service": {
+                    "spanCount": 1
+                  },
+                  "webapp": {
+                    "spanCount": 1
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    },
+    {
+      "criterion": "What the final response says about its example slow trace, its duration and which service or span the time goes to, agrees with that trace in the Source of truth",
+      "evidence": {
+        "summary": "The example traces the final response cites, read back from Tempo: 4715b7764646608b1a48f1b3a2cec04b, 6661aabbc96f535480066bbe28c66e55, the cited IDs that match { name =~ \"handle POST /api/(orders|payments)\" && duration > 300ms }. A claim about an example trace is checked against the trace it names.\nTrace 4715b7764646608b1a48f1b3a2cec04b:\n- root span: webapp `POST /api/orders`, 17648ms\n- services, outermost first: webapp, api-gateway, order-service\n- spans with error status: none\n- error origin (the deepest span with error status): none, no span has error status\n- most own time (duration minus its child spans): order-service `handle POST /api/orders`, 12706 of 17648ms\ntrace 4715b7764646608b1a48f1b3a2cec04b: 3 spans, 17648ms\n  webapp | POST /api/orders | server | 17648ms | starts +0ms | http 200\n    api-gateway | route /api/orders | server | 15883ms | starts +2ms | http 200\n      order-service | handle POST /api/orders | server | 12706ms | starts +3ms | http 200\nTrace 6661aabbc96f535480066bbe28c66e55:\n- root span: webapp `POST /api/payments`, 3181ms\n- services, outermost first: webapp, api-gateway, payment-service\n- spans with error status: none\n- error origin (the deepest span with error status): none, no span has error status\n- most own time (duration minus its child spans): payment-service `handle POST /api/payments`, 2290 of 3181ms\ntrace 6661aabbc96f535480066bbe28c66e55: 3 spans, 3181ms\n  webapp | POST /api/payments | server | 3181ms | starts +0ms | http 200\n    api-gateway | route /api/payments | server | 2863ms | starts +2ms | http 200\n      payment-service | handle POST /api/payments | server | 2290ms | starts +3ms | http 200",
+        "debug": {
+          "trace_ids": [
+            "4715b7764646608b1a48f1b3a2cec04b",
+            "6661aabbc96f535480066bbe28c66e55"
+          ],
+          "examples": [
+            "4715b7764646608b1a48f1b3a2cec04b",
+            "6661aabbc96f535480066bbe28c66e55"
+          ]
+        },
+        "error": null,
+        "fails": false
+      }
+    }
+  ],
+  "checks": {
+    "scores": {
+      "The final response cites a slow checkout or payment trace by its full ID": 1.0
+    },
+    "explanations": {
+      "The final response cites a slow checkout or payment trace by its full ID": "Cited trace 4715b7764646608b1a48f1b3a2cec04b is in Tempo and matches { name =~ \"handle POST /api/(orders|payments)\" && duration > 300ms }."
+    }
+  },
+  "engineeringReview": [
+    "Supported: checkout trace 4715b7764646608b1a48f1b3a2cec04b is 17.648s, including 12.706s in order-service; payment trace 6661aabbc96f535480066bbe28c66e55 is 3.181s, including 2.290s in payment-service. The deterministic full-ID check passed.",
+    "Incorrect: the answer says user-service occurs in 10/20 checkout search results and payment-service in 6/20. Actual Tool Run 4 contains 12/20 and 5/20 respectively. The judge used a different nondeterministic search sample and did not catch this mismatch.",
+    "Unproven: all-route, job-level P99 and service presence do not establish user-service as responsible for checkout latency. No user-service checkout span was fetched to demonstrate that claim.",
+    "Scope: 20 checkout and 5 payment results are returned subsets, not exhaustive day-wide totals. Hitting the limit conservatively means possibly incomplete; it does not prove more results exist. Existing Agent feedback misleadingly states that the source held more.",
+    "Three empty reads remain: invented checkout/payment service identifiers and a guessed route label. TraceQL syntax was valid and there were no model-observation cuts."
+  ]
+}

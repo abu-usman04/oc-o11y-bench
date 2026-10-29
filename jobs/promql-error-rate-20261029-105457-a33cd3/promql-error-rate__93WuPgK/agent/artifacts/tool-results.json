@@ -1,0 +1,411 @@
+{
+  "complete": true,
+  "errors": [],
+  "provenance": "Bounded Tool observations as submitted to the real provider adapter; HTTP read metadata from the benchmark recorder. No private model reasoning or headers.",
+  "toolResults": [
+    {
+      "arguments": "{\"input\": {\"hint\": \"http_requests_total\", \"selector\": \"{job=~\\\"user-service|order-service|payment-service\\\"}\"}, \"purpose\": \"Confirm http_requests_total metric exists for the three target services\"}",
+      "callId": "call_9d1b55ce31b442d19d44d766",
+      "content": "[run 1] prometheus_discover_metrics {\"hint\":\"http_requests_total\",\"selector\":\"{job=~\\\"user-service|order-service|payment-service\\\"}\"}\nWINDOW: this read covered 2026-10-29T09:54:29Z to 2026-10-29T10:54:29Z\nSUMMARY: Prometheus metric discovery \"http_requests_total\": 1 names, 2026-10-29T09:54:29Z to 2026-10-29T10:54:29Z; incomplete=false\nCONTENT: {\"selector\":\"{__name__=~\\\".*http_requests_total.*\\\",job=~\\\"user-service|order-service|payment-service\\\"}\",\"names\":[\"http_requests_total\"],\"from\":\"2026-10-29T09:54:29.760429Z\",\"until\":\"2026-10-29T10:54:29.760429Z\",\"incomplete\":false}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T10:55:50.373807702Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T10:55:50.397217818Z",
+      "position": 0,
+      "tool": "prometheus_discover_metrics",
+      "traceId": "adcb8f7e2471db64b904d3ac46d348a6",
+      "turn": 0,
+      "investigationId": "d55580ba-8843-44be-ab11-c3e67feac50c",
+      "ordinal": 1,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T10:55:50.384677172Z",
+          "kind": "request",
+          "method": "GET",
+          "origin": "http://o11y-stack-promql-error-rate__93wupgk__env:9090",
+          "parameters": {
+            "end": [
+              "1793271269.760429"
+            ],
+            "limit": [
+              "51"
+            ],
+            "match[]": [
+              "{__name__=~\".*http_requests_total.*\",job=~\"user-service|order-service|payment-service\"}"
+            ],
+            "start": [
+              "1793267669.760429"
+            ]
+          },
+          "path": "/api/v1/label/__name__/values",
+          "startedAt": "2026-10-29T10:55:50.378723911Z",
+          "status": 200,
+          "traceId": "adcb8f7e2471db64b904d3ac46d348a6"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"mode\": \"instant\", \"query\": \"http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}\", \"end\": \"2026-10-29T10:54:29Z\"}, \"purpose\": \"Sample http_requests_total labels to identify the status code label name\"}",
+      "callId": "call_bbf19fcfff5744dc85bc2c37",
+      "content": "[run 2] prometheus_query {\"end\":\"2026-10-29T10:54:29Z\",\"mode\":\"instant\",\"query\":\"http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}\"}\nWINDOW: this read covered 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z\nSUMMARY: Prometheus instant \"http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}\": 6 series, 6 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained http_requests_total{instance=\"order-service:8083\", job=\"order-service\", status=\"…=2863 at 2026-10-29T10:54:29Z\nCONTENT: {\"query\":\"http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}\",\"mode\":\"instant\",\"resultType\":\"vector\",\"from\":\"2026-10-29T10:54:29Z\",\"until\":\"2026-10-29T10:54:29Z\",\"series\":[{\"labels\":{\"__name__\":\"http_requests_total\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"status\":\"200\"},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"2863\"}]},{\"labels\":{\"__name__\":\"http_requests_total\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"status\":\"500\"},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"72\"}]},{\"labels\":{\"__name__\":\"http_requests_total\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"status\":\"200\"},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"983\"}]},{\"labels\":{\"__name__\":\"http_requests_total\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"status\":\"500\"},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"38\"}]},{\"labels\":{\"__name__\":\"http_requests_total\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"status\":\"200\"},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"891\"}]},{\"labels\":{\"__name__\":\"http_requests_total\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"status\":\"500\"},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"16\"}]}],\"incomplete\":false}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T10:55:57.942898411Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T10:55:57.996790892Z",
+      "position": 0,
+      "tool": "prometheus_query",
+      "traceId": "adcb8f7e2471db64b904d3ac46d348a6",
+      "turn": 1,
+      "investigationId": "d55580ba-8843-44be-ab11-c3e67feac50c",
+      "ordinal": 2,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T10:55:57.971697745Z",
+          "kind": "request",
+          "method": "POST",
+          "origin": "http://o11y-stack-promql-error-rate__93wupgk__env:9090",
+          "parameters": {
+            "limit": [
+              "51"
+            ],
+            "query": [
+              "http_requests_total{job=~\"user-service|order-service|payment-service\"}"
+            ],
+            "time": [
+              "1793271269"
+            ],
+            "timeout": [
+              "5s"
+            ]
+          },
+          "path": "/api/v1/query",
+          "startedAt": "2026-10-29T10:55:57.966206674Z",
+          "status": 200,
+          "traceId": "adcb8f7e2471db64b904d3ac46d348a6"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"end\": \"2026-10-29T10:54:29Z\", \"mode\": \"instant\", \"query\": \"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\"}, \"purpose\": \"Total HTTP requests across the three services over 60 minutes\"}",
+      "callId": "call_f07b4d1618b646a7979fbb2b",
+      "content": "[run 3] prometheus_query {\"end\":\"2026-10-29T10:54:29Z\",\"mode\":\"instant\",\"query\":\"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\"}\nWINDOW: this read covered 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z\nSUMMARY: Prometheus instant \"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\": 1 series, 1 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained {}=59.266666666666666 at 2026-10-29T10:54:29Z\nCONTENT: {\"query\":\"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\",\"mode\":\"instant\",\"resultType\":\"vector\",\"from\":\"2026-10-29T10:54:29Z\",\"until\":\"2026-10-29T10:54:29Z\",\"series\":[{\"labels\":{},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"59.266666666666666\"}]}],\"incomplete\":false}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T10:56:03.937962788Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T10:56:03.965441496Z",
+      "position": 0,
+      "tool": "prometheus_query",
+      "traceId": "adcb8f7e2471db64b904d3ac46d348a6",
+      "turn": 2,
+      "investigationId": "d55580ba-8843-44be-ab11-c3e67feac50c",
+      "ordinal": 3,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T10:56:03.945474733Z",
+          "kind": "request",
+          "method": "POST",
+          "origin": "http://o11y-stack-promql-error-rate__93wupgk__env:9090",
+          "parameters": {
+            "limit": [
+              "51"
+            ],
+            "query": [
+              "sum(increase(http_requests_total{job=~\"user-service|order-service|payment-service\"}[60m]))"
+            ],
+            "time": [
+              "1793271269"
+            ],
+            "timeout": [
+              "5s"
+            ]
+          },
+          "path": "/api/v1/query",
+          "startedAt": "2026-10-29T10:56:03.941463446Z",
+          "status": 200,
+          "traceId": "adcb8f7e2471db64b904d3ac46d348a6"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"end\": \"2026-10-29T10:54:29Z\", \"mode\": \"instant\", \"query\": \"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m]))\"}, \"purpose\": \"5xx HTTP requests across the three services over 60 minutes\"}",
+      "callId": "call_3d9d2be1beba400ab04283e7",
+      "content": "[run 4] prometheus_query {\"end\":\"2026-10-29T10:54:29Z\",\"mode\":\"instant\",\"query\":\"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m]))\"}\nWINDOW: this read covered 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z\nSUMMARY: Prometheus instant \"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m]))\": 1 series, 1 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained {}=2.009039548022599 at 2026-10-29T10:54:29Z\nCONTENT: {\"query\":\"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m]))\",\"mode\":\"instant\",\"resultType\":\"vector\",\"from\":\"2026-10-29T10:54:29Z\",\"until\":\"2026-10-29T10:54:29Z\",\"series\":[{\"labels\":{},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"2.009039548022599\"}]}],\"incomplete\":false}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T10:56:03.937962788Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T10:56:03.965639976Z",
+      "position": 1,
+      "tool": "prometheus_query",
+      "traceId": "adcb8f7e2471db64b904d3ac46d348a6",
+      "turn": 2,
+      "investigationId": "d55580ba-8843-44be-ab11-c3e67feac50c",
+      "ordinal": 4,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T10:56:03.958125837Z",
+          "kind": "request",
+          "method": "POST",
+          "origin": "http://o11y-stack-promql-error-rate__93wupgk__env:9090",
+          "parameters": {
+            "limit": [
+              "51"
+            ],
+            "query": [
+              "sum(increase(http_requests_total{job=~\"user-service|order-service|payment-service\",status=~\"5..\"}[60m]))"
+            ],
+            "time": [
+              "1793271269"
+            ],
+            "timeout": [
+              "5s"
+            ]
+          },
+          "path": "/api/v1/query",
+          "startedAt": "2026-10-29T10:56:03.95637127Z",
+          "status": 200,
+          "traceId": "adcb8f7e2471db64b904d3ac46d348a6"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"end\": \"2026-10-29T10:54:29Z\", \"mode\": \"instant\", \"query\": \"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\"}, \"purpose\": \"Total requests per service over 60 minutes\"}",
+      "callId": "call_52f2bf9b71244ecb84a11dc8",
+      "content": "[run 5] prometheus_query {\"end\":\"2026-10-29T10:54:29Z\",\"mode\":\"instant\",\"query\":\"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\"}\nWINDOW: this read covered 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z\nSUMMARY: Prometheus instant \"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\": 3 series, 3 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained {job=\"order-service\"}=39.17627118644068 at 2026-10-29T10:54:29Z\nCONTENT: {\"query\":\"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\",\"mode\":\"instant\",\"resultType\":\"vector\",\"from\":\"2026-10-29T10:54:29Z\",\"until\":\"2026-10-29T10:54:29Z\",\"series\":[{\"labels\":{\"job\":\"order-service\"},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"39.17627118644068\"}]},{\"labels\":{\"job\":\"payment-service\"},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"11.049717514124294\"}]},{\"labels\":{\"job\":\"user-service\"},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"9.040677966101695\"}]}],\"incomplete\":false}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T10:56:13.203983744Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T10:56:13.23707647Z",
+      "position": 0,
+      "tool": "prometheus_query",
+      "traceId": "adcb8f7e2471db64b904d3ac46d348a6",
+      "turn": 3,
+      "investigationId": "d55580ba-8843-44be-ab11-c3e67feac50c",
+      "ordinal": 5,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T10:56:13.215785457Z",
+          "kind": "request",
+          "method": "POST",
+          "origin": "http://o11y-stack-promql-error-rate__93wupgk__env:9090",
+          "parameters": {
+            "limit": [
+              "51"
+            ],
+            "query": [
+              "sum by (job) (increase(http_requests_total{job=~\"user-service|order-service|payment-service\"}[60m]))"
+            ],
+            "time": [
+              "1793271269"
+            ],
+            "timeout": [
+              "5s"
+            ]
+          },
+          "path": "/api/v1/query",
+          "startedAt": "2026-10-29T10:56:13.208170941Z",
+          "status": 200,
+          "traceId": "adcb8f7e2471db64b904d3ac46d348a6"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"end\": \"2026-10-29T10:54:29Z\", \"mode\": \"instant\", \"query\": \"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m]))\"}, \"purpose\": \"5xx requests per service over 60 minutes\"}",
+      "callId": "call_9550cbf0a053442db652a269",
+      "content": "[run 6] prometheus_query {\"end\":\"2026-10-29T10:54:29Z\",\"mode\":\"instant\",\"query\":\"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m]))\"}\nWINDOW: this read covered 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z\nSUMMARY: Prometheus instant \"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m]))\": 3 series, 3 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained {job=\"order-service\"}=1.0045197740112994 at 2026-10-29T10:54:29Z\nCONTENT: {\"query\":\"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m]))\",\"mode\":\"instant\",\"resultType\":\"vector\",\"from\":\"2026-10-29T10:54:29Z\",\"until\":\"2026-10-29T10:54:29Z\",\"series\":[{\"labels\":{\"job\":\"order-service\"},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"1.0045197740112994\"}]},{\"labels\":{\"job\":\"payment-service\"},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"1.0045197740112994\"}]},{\"labels\":{\"job\":\"user-service\"},\"samples\":[{\"timestamp\":\"2026-10-29T10:54:29Z\",\"value\":\"0\"}]}],\"incomplete\":false}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T10:56:13.203983744Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T10:56:13.237162324Z",
+      "position": 1,
+      "tool": "prometheus_query",
+      "traceId": "adcb8f7e2471db64b904d3ac46d348a6",
+      "turn": 3,
+      "investigationId": "d55580ba-8843-44be-ab11-c3e67feac50c",
+      "ordinal": 6,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T10:56:13.230212019Z",
+          "kind": "request",
+          "method": "POST",
+          "origin": "http://o11y-stack-promql-error-rate__93wupgk__env:9090",
+          "parameters": {
+            "limit": [
+              "51"
+            ],
+            "query": [
+              "sum by (job) (increase(http_requests_total{job=~\"user-service|order-service|payment-service\",status=~\"5..\"}[60m]))"
+            ],
+            "time": [
+              "1793271269"
+            ],
+            "timeout": [
+              "5s"
+            ]
+          },
+          "path": "/api/v1/query",
+          "startedAt": "2026-10-29T10:56:13.227493897Z",
+          "status": 200,
+          "traceId": "adcb8f7e2471db64b904d3ac46d348a6"
+        }
+      ],
+      "requestStatus": "matched"
+    }
+  ],
+  "unmatchedRequests": [
+    {
+      "headersAt": "2026-10-29T10:55:44.934436347Z",
+      "kind": "request",
+      "method": "POST",
+      "origin": "http://o11y-stack-promql-error-rate__93wupgk__env:9090",
+      "parameters": {
+        "limit": [
+          "1"
+        ],
+        "query": [
+          "vector(1)"
+        ],
+        "time": [
+          "1793271344.9295197"
+        ],
+        "timeout": [
+          "5s"
+        ]
+      },
+      "path": "/api/v1/query",
+      "startedAt": "2026-10-29T10:55:44.929735527Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T10:55:44.957960374Z",
+      "kind": "request",
+      "method": "POST",
+      "origin": "http://o11y-stack-promql-error-rate__93wupgk__env:9090",
+      "parameters": {
+        "limit": [
+          "1"
+        ],
+        "query": [
+          "vector(1)"
+        ],
+        "time": [
+          "1793271344.9560716"
+        ],
+        "timeout": [
+          "5s"
+        ]
+      },
+      "path": "/api/v1/query",
+      "startedAt": "2026-10-29T10:55:44.956151695Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T10:55:44.987835188Z",
+      "kind": "request",
+      "method": "GET",
+      "origin": "http://o11y-stack-promql-error-rate__93wupgk__env:3100",
+      "parameters": {
+        "direction": [
+          "backward"
+        ],
+        "end": [
+          "1793271344972129004"
+        ],
+        "limit": [
+          "1"
+        ],
+        "query": [
+          "{job=~\".+\"}"
+        ],
+        "start": [
+          "1793271284972129004"
+        ]
+      },
+      "path": "/loki/api/v1/query_range",
+      "startedAt": "2026-10-29T10:55:44.972208194Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T10:55:45.012841007Z",
+      "kind": "request",
+      "method": "GET",
+      "origin": "http://o11y-stack-promql-error-rate__93wupgk__env:3100",
+      "parameters": {
+        "direction": [
+          "backward"
+        ],
+        "end": [
+          "1793271345002468375"
+        ],
+        "limit": [
+          "1"
+        ],
+        "query": [
+          "{job=~\".+\"}"
+        ],
+        "start": [
+          "1793271285002468375"
+        ]
+      },
+      "path": "/loki/api/v1/query_range",
+      "startedAt": "2026-10-29T10:55:45.002577086Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T10:55:45.028211634Z",
+      "kind": "request",
+      "method": "GET",
+      "origin": "http://o11y-stack-promql-error-rate__93wupgk__env:3200",
+      "parameters": {
+        "end": [
+          "1793271345"
+        ],
+        "limit": [
+          "1"
+        ],
+        "q": [
+          "{}"
+        ],
+        "start": [
+          "1793271285"
+        ]
+      },
+      "path": "/api/search",
+      "startedAt": "2026-10-29T10:55:45.023478894Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T10:55:45.059097088Z",
+      "kind": "request",
+      "method": "GET",
+      "origin": "http://o11y-stack-promql-error-rate__93wupgk__env:3200",
+      "parameters": {
+        "end": [
+          "1793271345"
+        ],
+        "limit": [
+          "1"
+        ],
+        "q": [
+          "{}"
+        ],
+        "start": [
+          "1793271285"
+        ]
+      },
+      "path": "/api/search",
+      "startedAt": "2026-10-29T10:55:45.056743374Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    }
+  ]
+}

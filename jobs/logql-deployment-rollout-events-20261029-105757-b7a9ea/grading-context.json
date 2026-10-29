@@ -1,0 +1,11 @@
+{
+  "route": "OpenRouter Anthropic Messages compatibility endpoint",
+  "endpoint": "https://openrouter.ai/api/v1/messages",
+  "model": "anthropic/claude-haiku-5.5@high",
+  "upstreamDefault": "claude-haiku-5-5@high",
+  "scope": "Local selected-case evaluation; no official leaderboard submission",
+  "benchmarkCommit": "b66d8cfbbe309d2e03e9a301baea056d9718b71b",
+  "scenarioTime": "2026-10-29T10:57:28.970090+00:00",
+  "answerSource": "logql-deployment-rollout-events__onqUNci\\agent\\trajectory.json",
+  "agentRerun": false
+}

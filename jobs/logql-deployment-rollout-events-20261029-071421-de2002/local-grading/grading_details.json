@@ -1,0 +1,19 @@
+{
+  "score": 1.0,
+  "status": "passed",
+  "grading_model": "anthropic/claude-haiku-5.5@high",
+  "checks_passed": 1,
+  "rubric_passed": 1,
+  "The final response states Count of v2.5.0 deployment log lines accurately.": 1.0,
+  "The final response names every service that logged a v2.5.0 deployment in the Source of truth, and no other": 1.0,
+  "The response includes the approximate deployment time, or a close relative time, tied to the rollout itself rather than only the search window": 1.0,
+  "outcome:The final response states Count of v2.5.0 deployment log lines accurately.": "pass",
+  "explanation:The final response states Count of v2.5.0 deployment log lines accurately.": "The response states three deployment log entries, which matches the source-of-truth count of 3 exactly.",
+  "quote:The final response states Count of v2.5.0 deployment log lines accurately.": "Loki log query matching v2.5.0 across all jobs returned three deployment log entries",
+  "outcome:The final response names every service that logged a v2.5.0 deployment in the Source of truth, and no other": "pass",
+  "explanation:The final response names every service that logged a v2.5.0 deployment in the Source of truth, and no other": "The response names exactly user-service, order-service and payment-service, which are the three services in the source of truth, and no others.",
+  "quote:The final response names every service that logged a v2.5.0 deployment in the Source of truth, and no other": "user-service at 2026-10-28T22:03:00Z, order-service at 2026-10-29T04:11:00Z, and payment-service at 2026-10-29T04:11:00Z",
+  "outcome:The response includes the approximate deployment time, or a close relative time, tied to the rollout itself rather than only the search window": "pass",
+  "explanation:The response includes the approximate deployment time, or a close relative time, tied to the rollout itself rather than only the search window": "The response gives specific deployment timestamps for each service (for example 22:03 UTC for user-service), tied to the v2.4.1\u2192v2.5.0 rollout rather than to the query window.",
+  "quote:The response includes the approximate deployment time, or a close relative time, tied to the rollout itself rather than only the search window": "| **user-service** | 2026-10-28 22:03:00 | v2.4.1 \u2192 v2.5.0 |"
+}

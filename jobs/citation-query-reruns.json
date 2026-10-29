@@ -1,0 +1,26 @@
+[
+  {
+    "case": "promql-error-rate",
+    "job": "promql-error-rate-20261029-105457-a33cd3",
+    "executionExitCode": 0,
+    "gradingExitCode": 0
+  },
+  {
+    "case": "logql-deployment-rollout-events",
+    "job": "logql-deployment-rollout-events-20261029-105757-b7a9ea",
+    "executionExitCode": 0,
+    "gradingExitCode": 0
+  },
+  {
+    "case": "find-slow-traces",
+    "job": "find-slow-traces-20261029-110031-61566d",
+    "executionExitCode": 0,
+    "gradingExitCode": 0
+  },
+  {
+    "case": "service-degradation-rca",
+    "job": "service-degradation-rca-20261029-110353-fca189",
+    "executionExitCode": 0,
+    "gradingExitCode": 0
+  }
+]

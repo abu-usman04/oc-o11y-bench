@@ -1,0 +1,759 @@
+{
+  "complete": true,
+  "errors": [],
+  "provenance": "Bounded Tool observations as submitted to the real provider adapter; HTTP read metadata from the benchmark recorder. No private model reasoning or headers.",
+  "toolResults": [
+    {
+      "arguments": "{\"input\": {\"query\": \"{resource.service.name=\\\"checkout\\\" && name=\\\"POST /api/orders\\\"}\", \"start\": \"2026-10-28T07:15:51Z\", \"end\": \"2026-10-29T07:15:51Z\", \"limit\": 20}, \"purpose\": \"Find slow checkout traces (POST /api/orders) over the last day\"}",
+      "callId": "call_69fddca6101d47bcb787b691",
+      "content": "[run 1] tempo_search_traces {\"end\":\"2026-10-29T07:15:51Z\",\"limit\":20,\"query\":\"{resource.service.name=\\\"checkout\\\" \\u0026\\u0026 name=\\\"POST /api/orders\\\"}\",\"start\":\"2026-10-28T07:15:51Z\"}\nWINDOW: this read covered 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nSUMMARY: Tempo search empty: 0 traces, 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nCONTENT: {\"query\":\"{resource.service.name=\\\"checkout\\\" \\u0026\\u0026 name=\\\"POST /api/orders\\\"}\",\"from\":\"2026-10-28T07:15:52Z\",\"until\":\"2026-10-29T07:15:51Z\",\"limit\":20,\"traces\":[],\"outcome\":\"empty\",\"incomplete\":false}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:16:40.00658028Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:16:40.043534155Z",
+      "position": 0,
+      "tool": "tempo_search_traces",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 0,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 1,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:16:40.019343079Z",
+          "kind": "request",
+          "method": "GET",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:3200",
+          "parameters": {
+            "end": [
+              "1793258151"
+            ],
+            "limit": [
+              "20"
+            ],
+            "q": [
+              "{resource.service.name=\"checkout\" && name=\"POST /api/orders\"}"
+            ],
+            "start": [
+              "1793171752"
+            ]
+          },
+          "path": "/api/search",
+          "startedAt": "2026-10-29T07:16:40.010049813Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"query\": \"{resource.service.name=\\\"payment\\\" && name=\\\"POST /api/payments\\\"}\", \"start\": \"2026-10-28T07:15:51Z\", \"end\": \"2026-10-29T07:15:51Z\", \"limit\": 20}, \"purpose\": \"Find slow payment traces (POST /api/payments) over the last day\"}",
+      "callId": "call_00dac27ca34b4438926f33b6",
+      "content": "[run 2] tempo_search_traces {\"end\":\"2026-10-29T07:15:51Z\",\"limit\":20,\"query\":\"{resource.service.name=\\\"payment\\\" \\u0026\\u0026 name=\\\"POST /api/payments\\\"}\",\"start\":\"2026-10-28T07:15:51Z\"}\nWINDOW: this read covered 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nSUMMARY: Tempo search empty: 0 traces, 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nCONTENT: {\"query\":\"{resource.service.name=\\\"payment\\\" \\u0026\\u0026 name=\\\"POST /api/payments\\\"}\",\"from\":\"2026-10-28T07:15:52Z\",\"until\":\"2026-10-29T07:15:51Z\",\"limit\":20,\"traces\":[],\"outcome\":\"empty\",\"incomplete\":false}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:16:40.00658028Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:16:40.043594005Z",
+      "position": 1,
+      "tool": "tempo_search_traces",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 0,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 2,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:16:40.036627232Z",
+          "kind": "request",
+          "method": "GET",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:3200",
+          "parameters": {
+            "end": [
+              "1793258151"
+            ],
+            "limit": [
+              "20"
+            ],
+            "q": [
+              "{resource.service.name=\"payment\" && name=\"POST /api/payments\"}"
+            ],
+            "start": [
+              "1793171752"
+            ]
+          },
+          "path": "/api/search",
+          "startedAt": "2026-10-29T07:16:40.029677493Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"end\": \"2026-10-29T07:15:51Z\", \"limit\": 20, \"query\": \"{name=\\\"POST /api/orders\\\"}\", \"start\": \"2026-10-28T07:15:51Z\"}, \"purpose\": \"Search for any trace with POST /api/orders operation regardless of service name\"}",
+      "callId": "call_3e0cc097d0f54438beab9c76",
+      "content": "[run 3] tempo_search_traces {\"end\":\"2026-10-29T07:15:51Z\",\"limit\":20,\"query\":\"{name=\\\"POST /api/orders\\\"}\",\"start\":\"2026-10-28T07:15:51Z\"}\nWINDOW: this read covered 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nSUMMARY: Tempo search incomplete: 20 traces, 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nTRUNCATED: the source held more than this read returned.\nCONTENT: {\"query\":\"{name=\\\"POST /api/orders\\\"}\",\"from\":\"2026-10-28T07:15:52Z\",\"until\":\"2026-10-29T07:15:51Z\",\"limit\":20,\"traces\":[{\"traceId\":\"24f8a0c21778743a335c50c1a228f3f9\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T06:42:52.570210816Z\",\"durationMs\":31,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"0ab0f164e34382b2b379a55391b03fa3\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T06:35:14.567147008Z\",\"durationMs\":26,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"1d93655b65daa76b077a8f7d3507c5a2\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T06:30:18.655579136Z\",\"durationMs\":14,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"33d66a35fda44956c7727b4c9026f546\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T06:28:28.762923008Z\",\"durationMs\":38,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"03d88a93f087b5f8326928535ae61e06\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T06:21:10.888250112Z\",\"durationMs\":18,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"54e84f1a0e999e22b9b569e05a05a7e8\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T05:54:22.018297856Z\",\"durationMs\":19,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"521918efe1b1f2f8382c2faabf48d38d\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T05:41:26.553276928Z\",\"durationMs\":27,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"1084785028f028f8d86b191fff938c18\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T05:31:00.606530816Z\",\"durationMs\":46,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"0446e1dacbd3ca28f420eec856cc47dc\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T05:30:00.72399104Z\",\"durationMs\":51,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"2d848ea6933aa861036b7a013771a17a\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T05:27:26.399815168Z\",\"durationMs\":43,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"3c0aa1834602285b02dc652eaac4a38b\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T05:08:55.671734016Z\",\"durationMs\":24,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"0987c1d0b9b55f1306144380dfb438fe\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T05:03:44.073508864Z\",\"durationMs\":12,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"4148e72418a673c52f7585049da1e298\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T04:57:54.934284032Z\",\"durationMs\":42,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"40f41f63e1b74042aa5bb269bd8c9370\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T04:51:52.261267968Z\",\"durationMs\":13,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"134bacfa5167100283091f38aa5e095e\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T04:46:06.608316928Z\",\"durationMs\":24,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"4dfd3dd42c654575c85047c5f1d14c65\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T04:44:10.628667136Z\",\"durationMs\":32,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"33403d8025fa3857072d86081ee48d72\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T04:34:12.296263936Z\",\"durationMs\":44,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"33aac40965c091a28a4a604089f5b355\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T04:30:44.419102976Z\",\"durationMs\":44,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"256d3c850af55d6f97ef0d725e05766d\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T04:27:00.93845504Z\",\"durationMs\":12,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"2b9d02d16f00ed145a09ed232d54b153\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T04:22:34.540250112Z\",\"durationMs\":33,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}}],\"outcome\":\"incomplete\",\"incomplete\":true}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:16:44.302734043Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:16:44.358805079Z",
+      "position": 0,
+      "tool": "tempo_search_traces",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 1,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 3,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:16:44.330319352Z",
+          "kind": "request",
+          "method": "GET",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:3200",
+          "parameters": {
+            "end": [
+              "1793258151"
+            ],
+            "limit": [
+              "20"
+            ],
+            "q": [
+              "{name=\"POST /api/orders\"}"
+            ],
+            "start": [
+              "1793171752"
+            ]
+          },
+          "path": "/api/search",
+          "startedAt": "2026-10-29T07:16:44.305929911Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"end\": \"2026-10-29T07:15:51Z\", \"limit\": 20, \"query\": \"{name=\\\"POST /api/payments\\\"}\", \"start\": \"2026-10-28T07:15:51Z\"}, \"purpose\": \"Search for any trace with POST /api/payments operation regardless of service name\"}",
+      "callId": "call_71c7410aa06d487880fae784",
+      "content": "[run 4] tempo_search_traces {\"end\":\"2026-10-29T07:15:51Z\",\"limit\":20,\"query\":\"{name=\\\"POST /api/payments\\\"}\",\"start\":\"2026-10-28T07:15:51Z\"}\nWINDOW: this read covered 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nSUMMARY: Tempo search incomplete: 20 traces, 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nTRUNCATED: the source held more than this read returned.\nCONTENT: {\"query\":\"{name=\\\"POST /api/payments\\\"}\",\"from\":\"2026-10-28T07:15:52Z\",\"until\":\"2026-10-29T07:15:51Z\",\"limit\":20,\"traces\":[{\"traceId\":\"3d5a72b734ecd2acc19b5a02261d4ab1\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T07:14:46.638406912Z\",\"durationMs\":26,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"1d9df68f7616c5b6605db34eac6d66b8\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T06:56:38.647649024Z\",\"durationMs\":39,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"536b654767ea8f586f09abe65456f33a\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T06:25:11.324292864Z\",\"durationMs\":25,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"116aa3ab8e4cf88cbfcfafe0cc4c8287\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T06:01:36.164029952Z\",\"durationMs\":56,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"032d3044fc5fb019bca84c3f32f39f2c\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T05:57:30.18786304Z\",\"durationMs\":28,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"1c808f6cad79cde211e79a1bfb194ef2\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T05:43:34.120300032Z\",\"durationMs\":52,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"18d903304d3c6f57e8e282e01a19caaa\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T05:40:36.255311872Z\",\"durationMs\":35,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"0f4dd6e13d0d5cd7a4754bcf2276f717\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T05:38:35.589342976Z\",\"durationMs\":18,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"5053101512b3a23b0c6951cffc51c569\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T05:36:38.928514048Z\",\"durationMs\":38,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"4680d5e4663b1bf3bc0e77c1fa56c8be\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T05:25:53.771361024Z\",\"durationMs\":12,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"50bfbfb05aaa7d6460426b9860caea75\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T05:22:55.994816Z\",\"durationMs\":25,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"0897ccae3db50b81df87a0f2b042940f\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T05:15:58.465177088Z\",\"durationMs\":13,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"46b2787a5bf203ba73d544331faa0e4b\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T05:12:54.038168064Z\",\"durationMs\":44,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"05c489e0e623dd1fae6f06cc769fe504\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T05:12:10.353996032Z\",\"durationMs\":43,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"1e0bba895ef908c6dec990eef2d4fe54\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T05:10:05.326214144Z\",\"durationMs\":48,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"115d81dc780f9a501f7ee98d0ad09bbb\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T05:04:30.759865088Z\",\"durationMs\":38,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"1a717108ea4eb470c4f426457307d120\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T04:46:10.829958912Z\",\"durationMs\":43,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"43acc07bef930f45db8e0a1916cf4a72\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T04:39:11.900484096Z\",\"durationMs\":56,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":1},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"13ef9f8367cf3808fc4a3b6f77843b40\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T04:27:47.669886976Z\",\"durationMs\":33,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"0efdf3d7fc9794be682f5164c404afa1\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T04:24:40.715358976Z\",\"durationMs\":46,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":1},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}}],\"outcome\":\"incomplete\",\"incomplete\":true}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:16:44.302734043Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:16:44.358883906Z",
+      "position": 1,
+      "tool": "tempo_search_traces",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 1,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 4,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:16:44.352763924Z",
+          "kind": "request",
+          "method": "GET",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:3200",
+          "parameters": {
+            "end": [
+              "1793258151"
+            ],
+            "limit": [
+              "20"
+            ],
+            "q": [
+              "{name=\"POST /api/payments\"}"
+            ],
+            "start": [
+              "1793171752"
+            ]
+          },
+          "path": "/api/search",
+          "startedAt": "2026-10-29T07:16:44.337897836Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"end\": \"2026-10-29T07:15:51Z\", \"limit\": 20, \"query\": \"{name=\\\"POST /api/orders\\\" && duration>1s}\", \"start\": \"2026-10-28T07:15:51Z\"}, \"purpose\": \"Find checkout traces slower than 1 second\"}",
+      "callId": "call_14c2f9be3418448a805d0bdc",
+      "content": "[run 5] tempo_search_traces {\"end\":\"2026-10-29T07:15:51Z\",\"limit\":20,\"query\":\"{name=\\\"POST /api/orders\\\" \\u0026\\u0026 duration\\u003e1s}\",\"start\":\"2026-10-28T07:15:51Z\"}\nWINDOW: this read covered 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nSUMMARY: Tempo search incomplete: 20 traces, 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nTRUNCATED: the source held more than this read returned.\nCONTENT: {\"query\":\"{name=\\\"POST /api/orders\\\" \\u0026\\u0026 duration\\u003e1s}\",\"from\":\"2026-10-28T07:15:52Z\",\"until\":\"2026-10-29T07:15:51Z\",\"limit\":20,\"traces\":[{\"traceId\":\"f057d51cb33aaa19326a8e457af41d91\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T07:13:29.207180032Z\",\"durationMs\":2225,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"ec4d78d2e67f3e20edf1ef54c707fa40\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:59:11.546731008Z\",\"durationMs\":5264,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":1},\"payment-service\":{\"spanCount\":1,\"errorCount\":1},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"b9bba1a8dfa73acd91d12a35d784cb27\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:58:09.003802112Z\",\"durationMs\":11325,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"f860802294ea3e4719f6e0ad0f0fec73\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:57:42.082045184Z\",\"durationMs\":7902,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"d3968e161942dfcfb46eb31405e6bdcb\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:56:27.596293888Z\",\"durationMs\":15252,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"39d7c610a3f37cf522920f8ba0fbe6e8\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:56:07.342070016Z\",\"durationMs\":5926,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"cb9eadb0737414c030d459fce7f9edb8\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:54:58.459846912Z\",\"durationMs\":10168,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"4715b7764646608b1a48f1b3a2cec04b\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:54:21.115115776Z\",\"durationMs\":17647,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"d4215cd143ec469220aa20dbb6966c31\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:46:57.450299904Z\",\"durationMs\":13297,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"a07bbb1502f458fab4bf5423b7c7d3f9\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:45:35.26703488Z\",\"durationMs\":6973,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"2d2f740e400bf8bc6d52304406e1ee47\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:45:01.204235008Z\",\"durationMs\":11010,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"47abe06ecd31833974a2217543eb4112\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:38:46.927307008Z\",\"durationMs\":16142,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"3a404358416132d75892f66997a2a8c5\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:37:31.108094976Z\",\"durationMs\":4029,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"6134496a81a6ec7230c2d8fc4cd13853\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:37:15.472615936Z\",\"durationMs\":13139,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"53f10edfcf0168abaf07e2035bd6dce7\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:33:14.028687872Z\",\"durationMs\":6656,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"0595f4e097fcacc5724644e76d76ad60\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:29:18.254429184Z\",\"durationMs\":8139,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":1},\"user-service\":{\"spanCount\":1,\"errorCount\":1},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"cfc5000f5c9c36e7741b27e9ecf8c87b\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:28:58.699239936Z\",\"durationMs\":11208,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"4a79d73fdc112b0afb4b695723403014\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-28T15:23:09.516338176Z\",\"durationMs\":2495,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"78727a8eef902f59deffcface51ae47d\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-28T14:15:46.040178176Z\",\"durationMs\":2223,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"user-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"3c9f6fcaed9eebf1fe8203eb0971cec5\",\"rootService\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-28T10:36:26.57766784Z\",\"durationMs\":2741,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"order-service\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}}],\"outcome\":\"incomplete\",\"incomplete\":true}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:16:53.209210007Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:16:53.298142379Z",
+      "position": 0,
+      "tool": "tempo_search_traces",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 2,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 5,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:16:53.247459771Z",
+          "kind": "request",
+          "method": "GET",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:3200",
+          "parameters": {
+            "end": [
+              "1793258151"
+            ],
+            "limit": [
+              "20"
+            ],
+            "q": [
+              "{name=\"POST /api/orders\" && duration>1s}"
+            ],
+            "start": [
+              "1793171752"
+            ]
+          },
+          "path": "/api/search",
+          "startedAt": "2026-10-29T07:16:53.212708006Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"end\": \"2026-10-29T07:15:51Z\", \"limit\": 20, \"query\": \"{name=\\\"POST /api/payments\\\" && duration>1s}\", \"start\": \"2026-10-28T07:15:51Z\"}, \"purpose\": \"Find payment traces slower than 1 second\"}",
+      "callId": "call_253cb2d57bf64e1f934b0e8e",
+      "content": "[run 6] tempo_search_traces {\"end\":\"2026-10-29T07:15:51Z\",\"limit\":20,\"query\":\"{name=\\\"POST /api/payments\\\" \\u0026\\u0026 duration\\u003e1s}\",\"start\":\"2026-10-28T07:15:51Z\"}\nWINDOW: this read covered 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nSUMMARY: Tempo search data: 5 traces, 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nCONTENT: {\"query\":\"{name=\\\"POST /api/payments\\\" \\u0026\\u0026 duration\\u003e1s}\",\"from\":\"2026-10-28T07:15:52Z\",\"until\":\"2026-10-29T07:15:51Z\",\"limit\":20,\"traces\":[{\"traceId\":\"0d52095905065127073157ffa3399fc8\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-29T01:43:48.021872896Z\",\"durationMs\":1858,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"33404aa118606a46c301ddf51876f64e\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-28T22:09:48.89613696Z\",\"durationMs\":2076,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"bab2f00d384e20d4956aefbc975652c3\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-28T22:06:39.735572224Z\",\"durationMs\":2871,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"6661aabbc96f535480066bbe28c66e55\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-28T20:00:01.845252864Z\",\"durationMs\":3180,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}},{\"traceId\":\"134db24c1405400f9452d417f458a179\",\"rootService\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-28T15:39:51.477155072Z\",\"durationMs\":3275,\"serviceStats\":{\"api-gateway\":{\"spanCount\":1,\"errorCount\":0},\"payment-service\":{\"spanCount\":1,\"errorCount\":0},\"webapp\":{\"spanCount\":1,\"errorCount\":0}}}],\"outcome\":\"data\",\"incomplete\":false}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:16:53.209210007Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:16:53.29827854Z",
+      "position": 1,
+      "tool": "tempo_search_traces",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 2,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 6,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:16:53.271902256Z",
+          "kind": "request",
+          "method": "GET",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:3200",
+          "parameters": {
+            "end": [
+              "1793258151"
+            ],
+            "limit": [
+              "20"
+            ],
+            "q": [
+              "{name=\"POST /api/payments\" && duration>1s}"
+            ],
+            "start": [
+              "1793171752"
+            ]
+          },
+          "path": "/api/search",
+          "startedAt": "2026-10-29T07:16:53.255953312Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"hint\": \"http_request_duration\", \"selector\": \"\"}, \"purpose\": \"Discover latency metrics for checkout and payment endpoints\"}",
+      "callId": "call_9f364b98a94144ec8b0807c2",
+      "content": "[run 7] prometheus_discover_metrics {\"hint\":\"http_request_duration\",\"selector\":\"\"}\nWINDOW: this read covered 2026-10-28T07:15:51Z to 2026-10-29T07:15:51Z\nSUMMARY: Prometheus metric discovery \"http_request_duration\": 3 names, 2026-10-28T07:15:51Z to 2026-10-29T07:15:51Z; incomplete=false\nCONTENT: {\"selector\":\"{__name__=~\\\".*http_request_duration.*\\\"}\",\"names\":[\"http_request_duration_seconds_bucket\",\"http_request_duration_seconds_count\",\"http_request_duration_seconds_sum\"],\"from\":\"2026-10-28T07:15:51.133937Z\",\"until\":\"2026-10-29T07:15:51.133937Z\",\"incomplete\":false}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:16:53.209210007Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:16:53.298304933Z",
+      "position": 2,
+      "tool": "prometheus_discover_metrics",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 2,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 7,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:16:53.284646346Z",
+          "kind": "request",
+          "method": "GET",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:9090",
+          "parameters": {
+            "end": [
+              "1793258151.133937"
+            ],
+            "limit": [
+              "51"
+            ],
+            "match[]": [
+              "{__name__=~\".*http_request_duration.*\"}"
+            ],
+            "start": [
+              "1793171751.133937"
+            ]
+          },
+          "path": "/api/v1/label/__name__/values",
+          "startedAt": "2026-10-29T07:16:53.279765432Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"hint\": \"http_server_requests\", \"selector\": \"\"}, \"purpose\": \"Discover HTTP request latency metrics\"}",
+      "callId": "call_2bf68a6361c04915bde672e0",
+      "content": "[run 8] prometheus_discover_metrics {\"hint\":\"http_server_requests\",\"selector\":\"\"}\nWINDOW: this read covered 2026-10-28T07:15:51Z to 2026-10-29T07:15:51Z\nSUMMARY: Prometheus metric discovery \"http_server_requests\": 0 names, 2026-10-28T07:15:51Z to 2026-10-29T07:15:51Z; incomplete=false\nCONTENT: {\"selector\":\"{__name__=~\\\".*http_server_requests.*\\\"}\",\"names\":[],\"from\":\"2026-10-28T07:15:51.133937Z\",\"until\":\"2026-10-29T07:15:51.133937Z\",\"incomplete\":false}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:16:53.209210007Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:16:53.298326987Z",
+      "position": 3,
+      "tool": "prometheus_discover_metrics",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 2,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 8,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:16:53.292667967Z",
+          "kind": "request",
+          "method": "GET",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:9090",
+          "parameters": {
+            "end": [
+              "1793258151.133937"
+            ],
+            "limit": [
+              "51"
+            ],
+            "match[]": [
+              "{__name__=~\".*http_server_requests.*\"}"
+            ],
+            "start": [
+              "1793171751.133937"
+            ]
+          },
+          "path": "/api/v1/label/__name__/values",
+          "startedAt": "2026-10-29T07:16:53.291428928Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"traceId\": \"4715b7764646608b1a48f1b3a2cec04b\"}, \"purpose\": \"Get span-level detail for the slowest checkout trace (17.6s)\"}",
+      "callId": "call_8130f0346992446aa0f6103e",
+      "content": "[run 9] tempo_get_trace {\"traceId\":\"4715b7764646608b1a48f1b3a2cec04b\"}\nWINDOW: this read covered 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nSUMMARY: Tempo trace 4715b7764646608b1a48f1b3a2cec04b: data, 3 spans; searched 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z; backend bounds are not a completeness guarantee\nCONTENT: {\"traceId\":\"4715b7764646608b1a48f1b3a2cec04b\",\"backendStatus\":\"COMPLETE\",\"spans\":[{\"id\":\"89cec30d2e1a64c1\",\"service\":\"webapp\",\"operation\":\"POST /api/orders\",\"start\":\"2026-10-29T01:54:21.115115776Z\",\"end\":\"2026-10-29T01:54:38.762817013Z\",\"durationNanos\":17647701237,\"status\":\"unset\"},{\"id\":\"2a49fb5acfe1d074\",\"parentId\":\"89cec30d2e1a64c1\",\"service\":\"api-gateway\",\"operation\":\"route /api/orders\",\"start\":\"2026-10-29T01:54:21.117115776Z\",\"end\":\"2026-10-29T01:54:37.000046889Z\",\"durationNanos\":15882931113,\"status\":\"unset\"},{\"id\":\"07092fceefdb7922\",\"parentId\":\"2a49fb5acfe1d074\",\"service\":\"order-service\",\"operation\":\"handle POST /api/orders\",\"start\":\"2026-10-29T01:54:21.118115776Z\",\"end\":\"2026-10-29T01:54:33.824460666Z\",\"durationNanos\":12706344890,\"status\":\"unset\"}],\"incomplete\":false,\"from\":\"2026-10-28T07:15:52Z\",\"until\":\"2026-10-29T07:15:51Z\",\"outcome\":\"data\"}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:17:03.021708116Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:17:03.107949335Z",
+      "position": 0,
+      "tool": "tempo_get_trace",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 3,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 9,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:17:03.086810339Z",
+          "kind": "request",
+          "method": "GET",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:3200",
+          "parameters": {
+            "end": [
+              "1793258151"
+            ],
+            "span_pruning": [
+              "false"
+            ],
+            "start": [
+              "1793171752"
+            ]
+          },
+          "path": "/api/v2/traces/4715b7764646608b1a48f1b3a2cec04b",
+          "startedAt": "2026-10-29T07:17:03.02915782Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"mode\": \"range\", \"query\": \"histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{method=\\\"POST\\\",handler=~\\\"/api/orders|/api/payments\\\"}[5m])) by (le, handler))\", \"start\": \"2026-10-28T07:15:51Z\", \"end\": \"2026-10-29T07:15:51Z\", \"step\": 300}, \"purpose\": \"Get p99 latency for POST /api/orders and POST /api/payments over the last day\"}",
+      "callId": "call_9e08c8320a01442e92944fe9",
+      "content": "[run 10] prometheus_query {\"end\":\"2026-10-29T07:15:51Z\",\"mode\":\"range\",\"query\":\"histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{method=\\\"POST\\\",handler=~\\\"/api/orders|/api/payments\\\"}[5m])) by (le, handler))\",\"start\":\"2026-10-28T07:15:51Z\",\"step\":300}\nWINDOW: this read covered 2026-10-28T07:15:51Z to 2026-10-29T07:15:51Z\nSUMMARY: Prometheus range \"histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{method=\\\"POST\\\",handler=~\\\"/api/orders|/api/payments…\": 0 series, 0 samples; 2026-10-28T07:15:51Z to 2026-10-29T07:15:51Z; incomplete=true\nTRUNCATED: the source held more than this read returned.\nCONTENT: {\"query\":\"histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{method=\\\"POST\\\",handler=~\\\"/api/orders|/api/payments\\\"}[5m])) by (le, handler))\",\"mode\":\"range\",\"resultType\":\"matrix\",\"from\":\"2026-10-28T07:15:51.133937Z\",\"until\":\"2026-10-29T07:15:51Z\",\"stepSeconds\":362,\"series\":[],\"incomplete\":true}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:17:03.021708116Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:17:03.108014865Z",
+      "position": 1,
+      "tool": "prometheus_query",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 3,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 10,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:17:03.101531614Z",
+          "kind": "request",
+          "method": "POST",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:9090",
+          "parameters": {
+            "end": [
+              "1793258151"
+            ],
+            "limit": [
+              "51"
+            ],
+            "query": [
+              "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{method=\"POST\",handler=~\"/api/orders|/api/payments\"}[5m])) by (le, handler))"
+            ],
+            "start": [
+              "1793171751.133937"
+            ],
+            "step": [
+              "362"
+            ],
+            "timeout": [
+              "5s"
+            ]
+          },
+          "path": "/api/v1/query_range",
+          "startedAt": "2026-10-29T07:17:03.099003531Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"mode\": \"instant\", \"query\": \"http_request_duration_seconds_bucket\", \"end\": \"2026-10-29T07:15:51Z\"}, \"purpose\": \"Discover label names on http_request_duration_seconds_bucket\"}",
+      "callId": "call_b01323220fd64842ae8f5d42",
+      "content": "[run 11] prometheus_query {\"end\":\"2026-10-29T07:15:51Z\",\"mode\":\"instant\",\"query\":\"http_request_duration_seconds_bucket\"}\nWINDOW: this read covered 2026-10-29T07:15:51Z to 2026-10-29T07:15:51Z\nSUMMARY: Prometheus instant \"http_request_duration_seconds_bucket\": 50 series, 50 samples; 2026-10-29T07:15:51Z to 2026-10-29T07:15:51Z; incomplete=true; retained http_request_duration_seconds_bucket{instance=\"api-gateway:8081\", job=\"api-gatew…=0 at 2026-10-29T07:15:51Z\nTRUNCATED: the source held more than this read returned.\nCONTENT: {\"query\":\"http_request_duration_seconds_bucket\",\"mode\":\"instant\",\"resultType\":\"vector\",\"from\":\"2026-10-29T07:15:51Z\",\"until\":\"2026-10-29T07:15:51Z\",\"series\":[{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"api-gateway:8081\",\"job\":\"api-gateway\",\"le\":\"+Inf\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"api-gateway:8081\",\"job\":\"api-gateway\",\"le\":\"0.005\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"api-gateway:8081\",\"job\":\"api-gateway\",\"le\":\"0.01\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"api-gateway:8081\",\"job\":\"api-gateway\",\"le\":\"0.025\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"api-gateway:8081\",\"job\":\"api-gateway\",\"le\":\"0.05\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"api-gateway:8081\",\"job\":\"api-gateway\",\"le\":\"0.1\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"api-gateway:8081\",\"job\":\"api-gateway\",\"le\":\"0.25\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"api-gateway:8081\",\"job\":\"api-gateway\",\"le\":\"0.5\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"api-gateway:8081\",\"job\":\"api-gateway\",\"le\":\"1.0\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"api-gateway:8081\",\"job\":\"api-gateway\",\"le\":\"10.0\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"api-gateway:8081\",\"job\":\"api-gateway\",\"le\":\"2.5\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"api-gateway:8081\",\"job\":\"api-gateway\",\"le\":\"5.0\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"le\":\"+Inf\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"2935\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"le\":\"0.005\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"le\":\"0.01\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"64\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"le\":\"0.025\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"1075\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"le\":\"0.05\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"2793\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"le\":\"0.1\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"2809\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"le\":\"0.25\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"2878\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"le\":\"0.5\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"2878\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"le\":\"1.0\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"2883\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"le\":\"10.0\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"2923\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"le\":\"2.5\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"2903\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"order-service:8083\",\"job\":\"order-service\",\"le\":\"5.0\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"2911\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"le\":\"+Inf\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"1021\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"le\":\"0.005\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"le\":\"0.01\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"20\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"le\":\"0.025\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"383\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"le\":\"0.05\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"1013\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"le\":\"0.1\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"1013\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"le\":\"0.25\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"1013\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"le\":\"0.5\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"1013\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"le\":\"1.0\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"1015\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"le\":\"10.0\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"1021\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"le\":\"2.5\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"1019\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"payment-service:8084\",\"job\":\"payment-service\",\"le\":\"5.0\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"1021\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"le\":\"+Inf\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"907\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"le\":\"0.005\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"le\":\"0.01\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"17\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"le\":\"0.025\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"359\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"le\":\"0.05\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"851\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"le\":\"0.1\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"860\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"le\":\"0.25\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"875\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"le\":\"0.5\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"875\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"le\":\"1.0\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"877\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"le\":\"10.0\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"904\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"le\":\"2.5\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"883\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"user-service:8082\",\"job\":\"user-service\",\"le\":\"5.0\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"892\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"webapp:8080\",\"job\":\"webapp\",\"le\":\"+Inf\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]},{\"labels\":{\"__name__\":\"http_request_duration_seconds_bucket\",\"instance\":\"webapp:8080\",\"job\":\"webapp\",\"le\":\"0.005\"},\"samples\":[{\"timestamp\":\"2026-10-29T07:15:51Z\",\"value\":\"0\"}]}],\"warnings\":[\"results truncated due to limit\"],\"incomplete\":true}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:17:06.878745307Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:17:06.921860876Z",
+      "position": 0,
+      "tool": "prometheus_query",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 4,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 11,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:17:06.884822695Z",
+          "kind": "request",
+          "method": "POST",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:9090",
+          "parameters": {
+            "limit": [
+              "51"
+            ],
+            "query": [
+              "http_request_duration_seconds_bucket"
+            ],
+            "time": [
+              "1793258151"
+            ],
+            "timeout": [
+              "5s"
+            ]
+          },
+          "path": "/api/v1/query",
+          "startedAt": "2026-10-29T07:17:06.881986111Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"traceId\": \"6661aabbc96f535480066bbe28c66e55\"}, \"purpose\": \"Get span detail for one of the slowest payment traces (3.2s)\"}",
+      "callId": "call_a155642c0e8c47c6aa4e297d",
+      "content": "[run 12] tempo_get_trace {\"traceId\":\"6661aabbc96f535480066bbe28c66e55\"}\nWINDOW: this read covered 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z\nSUMMARY: Tempo trace 6661aabbc96f535480066bbe28c66e55: data, 3 spans; searched 2026-10-28T07:15:52Z to 2026-10-29T07:15:51Z; backend bounds are not a completeness guarantee\nCONTENT: {\"traceId\":\"6661aabbc96f535480066bbe28c66e55\",\"backendStatus\":\"COMPLETE\",\"spans\":[{\"id\":\"377d891dfc458c87\",\"service\":\"webapp\",\"operation\":\"POST /api/payments\",\"start\":\"2026-10-28T20:00:01.845252864Z\",\"end\":\"2026-10-28T20:00:05.026007456Z\",\"durationNanos\":3180754592,\"status\":\"unset\"},{\"id\":\"89cef7f0b00f9e14\",\"parentId\":\"377d891dfc458c87\",\"service\":\"api-gateway\",\"operation\":\"route /api/payments\",\"start\":\"2026-10-28T20:00:01.847252864Z\",\"end\":\"2026-10-28T20:00:04.709931996Z\",\"durationNanos\":2862679132,\"status\":\"unset\"},{\"id\":\"f585a27f2fec7742\",\"parentId\":\"89cef7f0b00f9e14\",\"service\":\"payment-service\",\"operation\":\"handle POST /api/payments\",\"start\":\"2026-10-28T20:00:01.848252864Z\",\"end\":\"2026-10-28T20:00:04.138396169Z\",\"durationNanos\":2290143305,\"status\":\"unset\"}],\"incomplete\":false,\"from\":\"2026-10-28T07:15:52Z\",\"until\":\"2026-10-29T07:15:51Z\",\"outcome\":\"data\"}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:17:06.878745307Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:17:06.921981295Z",
+      "position": 1,
+      "tool": "tempo_get_trace",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 4,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 12,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:17:06.916563733Z",
+          "kind": "request",
+          "method": "GET",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:3200",
+          "parameters": {
+            "end": [
+              "1793258151"
+            ],
+            "span_pruning": [
+              "false"
+            ],
+            "start": [
+              "1793171752"
+            ]
+          },
+          "path": "/api/v2/traces/6661aabbc96f535480066bbe28c66e55",
+          "startedAt": "2026-10-29T07:17:06.89366291Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"end\": \"2026-10-29T07:15:51Z\", \"mode\": \"range\", \"query\": \"histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\\\"order-service\\\"}[5m])) by (le, job))\", \"start\": \"2026-10-28T07:15:51Z\", \"step\": 300}, \"purpose\": \"p99 latency for order-service over the last day\"}",
+      "callId": "call_7d0147477dfe46d4bdac1742",
+      "content": "[run 13] prometheus_query {\"end\":\"2026-10-29T07:15:51Z\",\"mode\":\"range\",\"query\":\"histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\\\"order-service\\\"}[5m])) by (le, job))\",\"start\":\"2026-10-28T07:15:51Z\",\"step\":300}\nWINDOW: this read covered 2026-10-28T07:15:51Z to 2026-10-29T07:15:51Z\nSUMMARY: Prometheus range \"histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\\\"order-service\\\"}[5m])) by (le, job))\": 1 series, 239 samples; 2026-10-28T07:15:51Z to 2026-10-29T07:15:51Z; incomplete=true; retained {job=\"order-service\"}=0.04975 at 2026-10-29T07:11:47Z\nTRUNCATED: the source held more than this read returned.\nCONTENT: {\"query\":\"histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\\\"order-service\\\"}[5m])) by (le, job))\",\"mode\":\"range\",\"resultType\":\"matrix\",\"from\":\"2026-10-28T07:15:51.133937Z\",\"until\":\"2026-10-29T07:15:51Z\",\"stepSeconds\":362,\"series\":[{\"labels\":{\"job\":\"order-service\"},\"samples\":[{\"timestamp\":\"2026-10-28T07:15:51.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T07:21:53.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T07:27:55.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T07:33:57.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T07:39:59.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T07:46:01.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T07:52:03.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T07:58:05.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T08:04:07.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T08:10:09.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T08:16:11.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T08:22:13.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T08:28:15.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T08:34:17.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T08:40:19.134Z\",\"value\":\"0.024850000000000004\"},{\"timestamp\":\"2026-10-28T08:46:21.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T08:52:23.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T08:58:25.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T09:04:27.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T09:10:29.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T09:16:31.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T09:22:33.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T09:28:35.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T09:34:37.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T09:40:39.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T09:46:41.134Z\",\"value\":\"0.04925000000000001\"},{\"timestamp\":\"2026-10-28T09:52:43.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T09:58:45.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T10:04:47.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T10:10:49.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T10:16:51.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T10:22:53.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T10:28:55.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T10:34:57.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T10:40:59.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T10:47:01.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T10:53:03.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T10:59:05.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T11:05:07.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T11:11:09.134Z\",\"value\":\"0.0496875\"},{\"timestamp\":\"2026-10-28T11:17:11.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T11:23:13.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T11:29:15.134Z\",\"value\":\"0.04925000000000001\"},{\"timestamp\":\"2026-10-28T11:35:17.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T11:41:19.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T11:47:21.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T11:53:23.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T11:59:25.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T12:05:27.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T12:11:29.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T12:17:31.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T12:23:33.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T12:29:35.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T12:35:37.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T12:41:39.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T12:47:41.134Z\",\"value\":\"0.04925000000000001\"},{\"timestamp\":\"2026-10-28T12:53:43.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T12:59:45.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T13:05:47.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T13:11:49.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T13:17:51.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T13:23:53.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T13:29:55.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T13:35:57.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T13:41:59.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T13:48:01.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T13:54:03.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T14:00:05.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T14:06:07.134Z\",\"value\":\"0.04937500000000001\"},{\"timestamp\":\"2026-10-28T14:12:09.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T14:18:11.134Z\",\"value\":\"2.394999999999999\"},{\"timestamp\":\"2026-10-28T14:24:13.134Z\",\"value\":\"0.049416666666666664\"},{\"timestamp\":\"2026-10-28T14:30:15.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T14:36:17.134Z\",\"value\":\"0.048999999999999995\"},{\"timestamp\":\"2026-10-28T14:42:19.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T14:48:21.134Z\",\"value\":\"0.04970833333333333\"},{\"timestamp\":\"2026-10-28T14:54:23.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T15:00:25.134Z\",\"value\":\"0.0495625\"},{\"timestamp\":\"2026-10-28T15:06:27.134Z\",\"value\":\"0.0496875\"},{\"timestamp\":\"2026-10-28T15:12:29.134Z\",\"value\":\"0.0495625\"},{\"timestamp\":\"2026-10-28T15:18:31.134Z\",\"value\":\"0.04964285714285715\"},{\"timestamp\":\"2026-10-28T15:24:33.134Z\",\"value\":\"2.350000000000001\"},{\"timestamp\":\"2026-10-28T15:30:35.134Z\",\"value\":\"0.04958333333333334\"},{\"timestamp\":\"2026-10-28T15:36:37.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T15:42:39.134Z\",\"value\":\"0.049600000000000005\"},{\"timestamp\":\"2026-10-28T15:48:41.134Z\",\"value\":\"0.04937500000000001\"},{\"timestamp\":\"2026-10-28T15:54:43.134Z\",\"value\":\"0.04970000000000001\"},{\"timestamp\":\"2026-10-28T16:00:45.134Z\",\"value\":\"0.049600000000000005\"},{\"timestamp\":\"2026-10-28T16:06:47.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T16:12:49.134Z\",\"value\":\"0.049694444444444444\"},{\"timestamp\":\"2026-10-28T16:18:51.134Z\",\"value\":\"0.0495625\"},{\"timestamp\":\"2026-10-28T16:24:53.134Z\",\"value\":\"0.049416666666666664\"},{\"timestamp\":\"2026-10-28T16:30:55.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T16:36:57.134Z\",\"value\":\"0.04966666666666667\"},{\"timestamp\":\"2026-10-28T16:42:59.134Z\",\"value\":\"0.04945000000000001\"},{\"timestamp\":\"2026-10-28T16:49:01.134Z\",\"value\":\"0.04967857142857143\"},{\"timestamp\":\"2026-10-28T16:55:03.134Z\",\"value\":\"0.049673076923076924\"},{\"timestamp\":\"2026-10-28T17:01:05.134Z\",\"value\":\"0.049593750000000006\"},{\"timestamp\":\"2026-10-28T17:07:07.134Z\",\"value\":\"0.049416666666666664\"},{\"timestamp\":\"2026-10-28T17:13:09.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T17:19:11.134Z\",\"value\":\"0.04968181818181818\"},{\"timestamp\":\"2026-10-28T17:25:13.134Z\",\"value\":\"2.379999999999999\"},{\"timestamp\":\"2026-10-28T17:31:15.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T17:37:17.134Z\",\"value\":\"0.04960416666666667\"},{\"timestamp\":\"2026-10-28T17:43:19.134Z\",\"value\":\"2.2300000000000013\"},{\"timestamp\":\"2026-10-28T17:49:21.134Z\",\"value\":\"0.04963888888888889\"},{\"timestamp\":\"2026-10-28T17:55:23.134Z\",\"value\":\"0.04963461538461539\"},{\"timestamp\":\"2026-10-28T18:01:25.134Z\",\"value\":\"0.04956818181818182\"},{\"timestamp\":\"2026-10-28T18:07:27.134Z\",\"value\":\"0.04963461538461539\"},{\"timestamp\":\"2026-10-28T18:13:29.134Z\",\"value\":\"0.049645833333333333\"},{\"timestamp\":\"2026-10-28T18:19:31.134Z\",\"value\":\"0.049535714285714294\"},{\"timestamp\":\"2026-10-28T18:25:33.134Z\",\"value\":\"0.04925000000000001\"},{\"timestamp\":\"2026-10-28T18:31:35.134Z\",\"value\":\"0.04954166666666667\"},{\"timestamp\":\"2026-10-28T18:37:37.134Z\",\"value\":\"0.0496875\"},{\"timestamp\":\"2026-10-28T18:43:39.134Z\",\"value\":\"2.2899999999999987\"},{\"timestamp\":\"2026-10-28T18:49:41.134Z\",\"value\":\"0.04963888888888889\"},{\"timestamp\":\"2026-10-28T18:55:43.134Z\",\"value\":\"0.048833333333333326\"},{\"timestamp\":\"2026-10-28T19:01:45.134Z\",\"value\":\"0.9149999999999997\"},{\"timestamp\":\"2026-10-28T19:07:47.134Z\",\"value\":\"0.04963636363636364\"},{\"timestamp\":\"2026-10-28T19:13:49.134Z\",\"value\":\"0.049555555555555554\"},{\"timestamp\":\"2026-10-28T19:19:51.134Z\",\"value\":\"0.9299999999999996\"},{\"timestamp\":\"2026-10-28T19:25:53.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T19:31:55.134Z\",\"value\":\"0.049593750000000006\"},{\"timestamp\":\"2026-10-28T19:37:57.134Z\",\"value\":\"0.049607142857142864\"},{\"timestamp\":\"2026-10-28T19:43:59.134Z\",\"value\":\"0.049694444444444444\"},{\"timestamp\":\"2026-10-28T19:50:01.134Z\",\"value\":\"0.049525\"},{\"timestamp\":\"2026-10-28T19:56:03.134Z\",\"value\":\"0.049645833333333333\"},{\"timestamp\":\"2026-10-28T20:02:05.134Z\",\"value\":\"0.049600000000000005\"},{\"timestamp\":\"2026-10-28T20:08:07.134Z\",\"value\":\"0.049555555555555554\"},{\"timestamp\":\"2026-10-28T20:14:09.134Z\",\"value\":\"2.2899999999999987\"},{\"timestamp\":\"2026-10-28T20:20:11.134Z\",\"value\":\"0.0496875\"},{\"timestamp\":\"2026-10-28T20:26:13.134Z\",\"value\":\"0.049575\"},{\"timestamp\":\"2026-10-28T20:32:15.134Z\",\"value\":\"0.04943750000000001\"},{\"timestamp\":\"2026-10-28T20:38:17.134Z\",\"value\":\"0.04964285714285715\"},{\"timestamp\":\"2026-10-28T20:44:19.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T20:50:21.134Z\",\"value\":\"0.9199999999999995\"},{\"timestamp\":\"2026-10-28T20:56:23.134Z\",\"value\":\"0.049124999999999995\"},{\"timestamp\":\"2026-10-28T21:02:25.134Z\",\"value\":\"0.04963636363636364\"},{\"timestamp\":\"2026-10-28T21:08:27.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T21:14:29.134Z\",\"value\":\"0.04972222222222222\"},{\"timestamp\":\"2026-10-28T21:20:31.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T21:26:33.134Z\",\"value\":\"0.04953125\"},{\"timestamp\":\"2026-10-28T21:32:35.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T21:38:37.134Z\",\"value\":\"0.0493\"},{\"timestamp\":\"2026-10-28T21:44:39.134Z\",\"value\":\"0.04945833333333334\"},{\"timestamp\":\"2026-10-28T21:50:41.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T21:56:43.134Z\",\"value\":\"0.04957142857142858\"},{\"timestamp\":\"2026-10-28T22:02:45.134Z\",\"value\":\"0.04953125\"},{\"timestamp\":\"2026-10-28T22:08:47.134Z\",\"value\":\"0.04957142857142858\"},{\"timestamp\":\"2026-10-28T22:14:49.134Z\",\"value\":\"0.0496875\"},{\"timestamp\":\"2026-10-28T22:20:51.134Z\",\"value\":\"0.04961111111111111\"},{\"timestamp\":\"2026-10-28T22:26:53.134Z\",\"value\":\"0.04961111111111111\"},{\"timestamp\":\"2026-10-28T22:32:55.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T22:38:57.134Z\",\"value\":\"0.049600000000000005\"},{\"timestamp\":\"2026-10-28T22:44:59.134Z\",\"value\":\"0.04957142857142858\"},{\"timestamp\":\"2026-10-28T22:51:01.134Z\",\"value\":\"0.049673076923076924\"},{\"timestamp\":\"2026-10-28T22:57:03.134Z\",\"value\":\"0.0492\"},{\"timestamp\":\"2026-10-28T23:03:05.134Z\",\"value\":\"0.04970000000000001\"},{\"timestamp\":\"2026-10-28T23:09:07.134Z\",\"value\":\"0.04965384615384616\"},{\"timestamp\":\"2026-10-28T23:15:09.134Z\",\"value\":\"0.04961363636363637\"},{\"timestamp\":\"2026-10-28T23:21:11.134Z\",\"value\":\"0.049600000000000005\"},{\"timestamp\":\"2026-10-28T23:27:13.134Z\",\"value\":\"0.049590909090909095\"},{\"timestamp\":\"2026-10-28T23:33:15.134Z\",\"value\":\"0.04965\"},{\"timestamp\":\"2026-10-28T23:39:17.134Z\",\"value\":\"0.04963636363636364\"},{\"timestamp\":\"2026-10-28T23:45:19.134Z\",\"value\":\"0.049607142857142864\"},{\"timestamp\":\"2026-10-28T23:51:21.134Z\",\"value\":\"0.04961111111111111\"},{\"timestamp\":\"2026-10-28T23:57:23.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T00:03:25.134Z\",\"value\":\"0.049400000000000006\"},{\"timestamp\":\"2026-10-29T00:09:27.134Z\",\"value\":\"0.04970000000000001\"},{\"timestamp\":\"2026-10-29T00:15:29.134Z\",\"value\":\"2.2300000000000013\"},{\"timestamp\":\"2026-10-29T00:21:31.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-29T00:27:33.134Z\",\"value\":\"2.320000000000001\"},{\"timestamp\":\"2026-10-29T00:33:35.134Z\",\"value\":\"0.0495625\"},{\"timestamp\":\"2026-10-29T00:39:37.134Z\",\"value\":\"0.04965909090909091\"},{\"timestamp\":\"2026-10-29T00:45:39.134Z\",\"value\":\"0.04900000000000001\"},{\"timestamp\":\"2026-10-29T00:51:41.134Z\",\"value\":\"0.049675000000000004\"},{\"timestamp\":\"2026-10-29T00:57:43.134Z\",\"value\":\"0.049675000000000004\"},{\"timestamp\":\"2026-10-29T01:03:45.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-29T01:09:47.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-29T01:15:49.134Z\",\"value\":\"10\"},{\"timestamp\":\"2026-10-29T01:21:51.134Z\",\"value\":\"9.649999999999999\"},{\"timestamp\":\"2026-10-29T01:27:53.134Z\",\"value\":\"10\"},{\"timestamp\":\"2026-10-29T01:33:55.134Z\",\"value\":\"9.599999999999998\"},{\"timestamp\":\"2026-10-29T01:39:57.134Z\",\"value\":\"10\"},{\"timestamp\":\"2026-10-29T01:45:59.134Z\",\"value\":\"9.700000000000003\"},{\"timestamp\":\"2026-10-29T01:52:01.134Z\",\"value\":\"4.700000000000001\"},{\"timestamp\":\"2026-10-29T01:58:03.134Z\",\"value\":\"10\"},{\"timestamp\":\"2026-10-29T02:04:05.134Z\",\"value\":\"0.049600000000000005\"},{\"timestamp\":\"2026-10-29T02:10:07.134Z\",\"value\":\"0.04965384615384616\"},{\"timestamp\":\"2026-10-29T02:16:09.134Z\",\"value\":\"0.0495625\"},{\"timestamp\":\"2026-10-29T02:22:11.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T02:28:13.134Z\",\"value\":\"0.049535714285714294\"},{\"timestamp\":\"2026-10-29T02:34:15.134Z\",\"value\":\"0.04963636363636364\"},{\"timestamp\":\"2026-10-29T02:40:17.134Z\",\"value\":\"0.04965\"},{\"timestamp\":\"2026-10-29T02:46:19.134Z\",\"value\":\"0.04957142857142858\"},{\"timestamp\":\"2026-10-29T02:52:21.134Z\",\"value\":\"0.04952777777777778\"},{\"timestamp\":\"2026-10-29T02:58:23.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T03:04:25.134Z\",\"value\":\"2.350000000000001\"},{\"timestamp\":\"2026-10-29T03:10:27.134Z\",\"value\":\"2.2899999999999987\"},{\"timestamp\":\"2026-10-29T03:16:29.134Z\",\"value\":\"0.04958333333333334\"},{\"timestamp\":\"2026-10-29T03:22:31.134Z\",\"value\":\"0.9350000000000004\"},{\"timestamp\":\"2026-10-29T03:28:33.134Z\",\"value\":\"0.049675000000000004\"},{\"timestamp\":\"2026-10-29T03:34:35.134Z\",\"value\":\"0.049550000000000004\"},{\"timestamp\":\"2026-10-29T03:40:37.134Z\",\"value\":\"0.04967857142857143\"},{\"timestamp\":\"2026-10-29T03:46:39.134Z\",\"value\":\"0.0495625\"},{\"timestamp\":\"2026-10-29T03:52:41.134Z\",\"value\":\"0.04925000000000001\"},{\"timestamp\":\"2026-10-29T03:58:43.134Z\",\"value\":\"0.049600000000000005\"},{\"timestamp\":\"2026-10-29T04:04:45.134Z\",\"value\":\"0.04958333333333334\"},{\"timestamp\":\"2026-10-29T04:10:47.134Z\",\"value\":\"0.04937500000000001\"},{\"timestamp\":\"2026-10-29T04:16:49.134Z\",\"value\":\"0.9599999999999997\"},{\"timestamp\":\"2026-10-29T04:22:51.134Z\",\"value\":\"0.04967857142857143\"},{\"timestamp\":\"2026-10-29T04:28:53.134Z\",\"value\":\"0.04933333333333333\"},{\"timestamp\":\"2026-10-29T04:34:55.134Z\",\"value\":\"2.4100000000000006\"},{\"timestamp\":\"2026-10-29T04:40:57.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-29T04:46:59.134Z\",\"value\":\"0.04937500000000001\"},{\"timestamp\":\"2026-10-29T04:53:01.134Z\",\"value\":\"0.049535714285714294\"},{\"timestamp\":\"2026-10-29T04:59:03.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-29T05:05:05.134Z\",\"value\":\"0.049600000000000005\"},{\"timestamp\":\"2026-10-29T05:11:07.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T05:17:09.134Z\",\"value\":\"0.0495625\"},{\"timestamp\":\"2026-10-29T05:23:11.134Z\",\"value\":\"0.04925000000000001\"},{\"timestamp\":\"2026-10-29T05:29:13.134Z\",\"value\":\"0.04875000000000001\"},{\"timestamp\":\"2026-10-29T05:35:15.134Z\",\"value\":\"0.0495625\"},{\"timestamp\":\"2026-10-29T05:41:17.134Z\",\"value\":\"0.04958333333333334\"},{\"timestamp\":\"2026-10-29T05:47:19.134Z\",\"value\":\"0.04958333333333334\"},{\"timestamp\":\"2026-10-29T05:53:21.134Z\",\"value\":\"0.04970000000000001\"},{\"timestamp\":\"2026-10-29T05:59:23.134Z\",\"value\":\"0.048500000000000015\"},{\"timestamp\":\"2026-10-29T06:05:25.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T06:11:27.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-29T06:17:29.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T06:23:31.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-29T06:29:33.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T06:35:35.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-29T06:41:37.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-29T06:47:39.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-29T06:53:41.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T06:59:43.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-29T07:05:45.134Z\",\"value\":\"0.048999999999999995\"},{\"timestamp\":\"2026-10-29T07:11:47.134Z\",\"value\":\"0.04975\"}]}],\"incomplete\":true}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:17:11.30247486Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:17:11.332382953Z",
+      "position": 0,
+      "tool": "prometheus_query",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 5,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 13,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:17:11.311908008Z",
+          "kind": "request",
+          "method": "POST",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:9090",
+          "parameters": {
+            "end": [
+              "1793258151"
+            ],
+            "limit": [
+              "51"
+            ],
+            "query": [
+              "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\"order-service\"}[5m])) by (le, job))"
+            ],
+            "start": [
+              "1793171751.133937"
+            ],
+            "step": [
+              "362"
+            ],
+            "timeout": [
+              "5s"
+            ]
+          },
+          "path": "/api/v1/query_range",
+          "startedAt": "2026-10-29T07:17:11.305028661Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    },
+    {
+      "arguments": "{\"input\": {\"end\": \"2026-10-29T07:15:51Z\", \"mode\": \"range\", \"query\": \"histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\\\"payment-service\\\"}[5m])) by (le, job))\", \"start\": \"2026-10-28T07:15:51Z\", \"step\": 300}, \"purpose\": \"p99 latency for payment-service over the last day\"}",
+      "callId": "call_3a0b0d62a11a441389666e0d",
+      "content": "[run 14] prometheus_query {\"end\":\"2026-10-29T07:15:51Z\",\"mode\":\"range\",\"query\":\"histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\\\"payment-service\\\"}[5m])) by (le, job))\",\"start\":\"2026-10-28T07:15:51Z\",\"step\":300}\nWINDOW: this read covered 2026-10-28T07:15:51Z to 2026-10-29T07:15:51Z\nSUMMARY: Prometheus range \"histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\\\"payment-service\\\"}[5m])) by (le, job))\": 1 series, 239 samples; 2026-10-28T07:15:51Z to 2026-10-29T07:15:51Z; incomplete=true; retained {job=\"payment-service\"}=0.04975 at 2026-10-29T07:11:47Z\nTRUNCATED: the source held more than this read returned.\nCONTENT: {\"query\":\"histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\\\"payment-service\\\"}[5m])) by (le, job))\",\"mode\":\"range\",\"resultType\":\"matrix\",\"from\":\"2026-10-28T07:15:51.133937Z\",\"until\":\"2026-10-29T07:15:51Z\",\"stepSeconds\":362,\"series\":[{\"labels\":{\"job\":\"payment-service\"},\"samples\":[{\"timestamp\":\"2026-10-28T07:15:51.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T07:21:53.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T07:27:55.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T07:33:57.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T07:39:59.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T07:46:01.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T07:52:03.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T07:58:05.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T08:04:07.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T08:10:09.134Z\",\"value\":\"0.04925000000000001\"},{\"timestamp\":\"2026-10-28T08:16:11.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T08:22:13.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T08:28:15.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T08:34:17.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T08:40:19.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T08:46:21.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T08:52:23.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T08:58:25.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T09:04:27.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T09:10:29.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T09:16:31.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T09:22:33.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T09:28:35.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T09:34:37.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T09:40:39.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T09:46:41.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T09:52:43.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T09:58:45.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T10:04:47.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T10:10:49.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T10:16:51.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T10:22:53.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T10:28:55.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T10:34:57.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T10:40:59.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T10:47:01.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T10:53:03.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T10:59:05.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T11:05:07.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T11:11:09.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T11:17:11.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T11:23:13.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T11:29:15.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T11:35:17.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T11:41:19.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T11:47:21.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T11:53:23.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T11:59:25.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T12:05:27.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T12:11:29.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T12:17:31.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T12:23:33.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T12:29:35.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T12:35:37.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T12:41:39.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T12:47:41.134Z\",\"value\":\"0.00995\"},{\"timestamp\":\"2026-10-28T12:53:43.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T12:59:45.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T13:05:47.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T13:11:49.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T13:17:51.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T13:23:53.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T13:29:55.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T13:35:57.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T13:41:59.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T13:48:01.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T13:54:03.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T14:00:05.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T14:06:07.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T14:12:09.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T14:18:11.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T14:24:13.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T14:30:15.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T14:36:17.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T14:42:19.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T14:48:21.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-28T14:54:23.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T15:00:25.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T15:06:27.134Z\",\"value\":\"0.048999999999999995\"},{\"timestamp\":\"2026-10-28T15:12:29.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T15:18:31.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T15:24:33.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T15:30:35.134Z\",\"value\":\"0.04925000000000001\"},{\"timestamp\":\"2026-10-28T15:36:37.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T15:42:39.134Z\",\"value\":\"4.850000000000001\"},{\"timestamp\":\"2026-10-28T15:48:41.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T15:54:43.134Z\",\"value\":\"0.04958333333333334\"},{\"timestamp\":\"2026-10-28T16:00:45.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T16:06:47.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T16:12:49.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T16:18:51.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T16:24:53.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T16:30:55.134Z\",\"value\":\"0.049124999999999995\"},{\"timestamp\":\"2026-10-28T16:36:57.134Z\",\"value\":\"0.04958333333333334\"},{\"timestamp\":\"2026-10-28T16:42:59.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T16:49:01.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T16:55:03.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T17:01:05.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T17:07:07.134Z\",\"value\":\"0.0496875\"},{\"timestamp\":\"2026-10-28T17:13:09.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T17:19:11.134Z\",\"value\":\"0.04967857142857143\"},{\"timestamp\":\"2026-10-28T17:25:13.134Z\",\"value\":\"0.048999999999999995\"},{\"timestamp\":\"2026-10-28T17:31:15.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T17:37:17.134Z\",\"value\":\"0.04958333333333334\"},{\"timestamp\":\"2026-10-28T17:43:19.134Z\",\"value\":\"0.04937500000000001\"},{\"timestamp\":\"2026-10-28T17:49:21.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T17:55:23.134Z\",\"value\":\"0.04925000000000001\"},{\"timestamp\":\"2026-10-28T18:01:25.134Z\",\"value\":\"0.0496875\"},{\"timestamp\":\"2026-10-28T18:07:27.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T18:13:29.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T18:19:31.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T18:25:33.134Z\",\"value\":\"0.049416666666666664\"},{\"timestamp\":\"2026-10-28T18:31:35.134Z\",\"value\":\"0.04965\"},{\"timestamp\":\"2026-10-28T18:37:37.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T18:43:39.134Z\",\"value\":\"0.04937500000000001\"},{\"timestamp\":\"2026-10-28T18:49:41.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T18:55:43.134Z\",\"value\":\"0.99\"},{\"timestamp\":\"2026-10-28T19:01:45.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T19:07:47.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T19:13:49.134Z\",\"value\":\"0.0496875\"},{\"timestamp\":\"2026-10-28T19:19:51.134Z\",\"value\":\"0.04958333333333334\"},{\"timestamp\":\"2026-10-28T19:25:53.134Z\",\"value\":\"0.04937500000000001\"},{\"timestamp\":\"2026-10-28T19:31:55.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T19:37:57.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T19:43:59.134Z\",\"value\":\"0.04937500000000001\"},{\"timestamp\":\"2026-10-28T19:50:01.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T19:56:03.134Z\",\"value\":\"0.04965\"},{\"timestamp\":\"2026-10-28T20:02:05.134Z\",\"value\":\"4.875000000000001\"},{\"timestamp\":\"2026-10-28T20:08:07.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T20:14:09.134Z\",\"value\":\"0.04958333333333334\"},{\"timestamp\":\"2026-10-28T20:20:11.134Z\",\"value\":\"0.04875000000000001\"},{\"timestamp\":\"2026-10-28T20:26:13.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T20:32:15.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T20:38:17.134Z\",\"value\":\"0.04943750000000001\"},{\"timestamp\":\"2026-10-28T20:44:19.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T20:50:21.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T20:56:23.134Z\",\"value\":\"0.04970833333333333\"},{\"timestamp\":\"2026-10-28T21:02:25.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T21:08:27.134Z\",\"value\":\"0.0496875\"},{\"timestamp\":\"2026-10-28T21:14:29.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T21:20:31.134Z\",\"value\":\"0.04970833333333333\"},{\"timestamp\":\"2026-10-28T21:26:33.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T21:32:35.134Z\",\"value\":\"0.04971428571428571\"},{\"timestamp\":\"2026-10-28T21:38:37.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T21:44:39.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T21:50:41.134Z\",\"value\":\"0.04958333333333334\"},{\"timestamp\":\"2026-10-28T21:56:43.134Z\",\"value\":\"0.0496875\"},{\"timestamp\":\"2026-10-28T22:02:45.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T22:08:47.134Z\",\"value\":\"2.4100000000000006\"},{\"timestamp\":\"2026-10-28T22:14:49.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-28T22:20:51.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-28T22:26:53.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T22:32:55.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-28T22:38:57.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T22:44:59.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T22:51:01.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T22:57:03.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-28T23:03:05.134Z\",\"value\":\"0.04965\"},{\"timestamp\":\"2026-10-28T23:09:07.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T23:15:09.134Z\",\"value\":\"0.0496875\"},{\"timestamp\":\"2026-10-28T23:21:11.134Z\",\"value\":\"0.04965\"},{\"timestamp\":\"2026-10-28T23:27:13.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-28T23:33:15.134Z\",\"value\":\"0.04970000000000001\"},{\"timestamp\":\"2026-10-28T23:39:17.134Z\",\"value\":\"0.0495625\"},{\"timestamp\":\"2026-10-28T23:45:19.134Z\",\"value\":\"0.049416666666666664\"},{\"timestamp\":\"2026-10-28T23:51:21.134Z\",\"value\":\"0.04964285714285715\"},{\"timestamp\":\"2026-10-28T23:57:23.134Z\",\"value\":\"0.0496875\"},{\"timestamp\":\"2026-10-29T00:03:25.134Z\",\"value\":\"0.049600000000000005\"},{\"timestamp\":\"2026-10-29T00:09:27.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-29T00:15:29.134Z\",\"value\":\"0.04937500000000001\"},{\"timestamp\":\"2026-10-29T00:21:31.134Z\",\"value\":\"0.04970000000000001\"},{\"timestamp\":\"2026-10-29T00:27:33.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T00:33:35.134Z\",\"value\":\"0.048999999999999995\"},{\"timestamp\":\"2026-10-29T00:39:37.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T00:45:39.134Z\",\"value\":\"0.04958333333333334\"},{\"timestamp\":\"2026-10-29T00:51:41.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-29T00:57:43.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-29T01:03:45.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T01:09:47.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T01:15:49.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-29T01:21:51.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T01:27:53.134Z\",\"value\":\"0.0496875\"},{\"timestamp\":\"2026-10-29T01:33:55.134Z\",\"value\":\"0.04965\"},{\"timestamp\":\"2026-10-29T01:39:57.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T01:45:59.134Z\",\"value\":\"2.4100000000000006\"},{\"timestamp\":\"2026-10-29T01:52:01.134Z\",\"value\":\"0.048500000000000015\"},{\"timestamp\":\"2026-10-29T01:58:03.134Z\",\"value\":\"0.04970833333333333\"},{\"timestamp\":\"2026-10-29T02:04:05.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T02:10:07.134Z\",\"value\":\"0.04937500000000001\"},{\"timestamp\":\"2026-10-29T02:16:09.134Z\",\"value\":\"0.04970833333333333\"},{\"timestamp\":\"2026-10-29T02:22:11.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T02:28:13.134Z\",\"value\":\"0.048500000000000015\"},{\"timestamp\":\"2026-10-29T02:34:15.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-29T02:40:17.134Z\",\"value\":\"0.04875000000000001\"},{\"timestamp\":\"2026-10-29T02:46:19.134Z\",\"value\":\"0.048999999999999995\"},{\"timestamp\":\"2026-10-29T02:52:21.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-29T02:58:23.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-29T03:04:25.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-29T03:10:27.134Z\",\"value\":\"0.04970000000000001\"},{\"timestamp\":\"2026-10-29T03:16:29.134Z\",\"value\":\"0.0495625\"},{\"timestamp\":\"2026-10-29T03:22:31.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T03:28:33.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T03:34:35.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-29T03:40:37.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T03:46:39.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T03:52:41.134Z\",\"value\":\"0.024775000000000005\"},{\"timestamp\":\"2026-10-29T03:58:43.134Z\",\"value\":\"0.049666666666666665\"},{\"timestamp\":\"2026-10-29T04:04:45.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T04:10:47.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-29T04:16:49.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T04:22:51.134Z\",\"value\":\"0.04925000000000001\"},{\"timestamp\":\"2026-10-29T04:28:53.134Z\",\"value\":\"0.049625\"},{\"timestamp\":\"2026-10-29T04:34:55.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T04:40:57.134Z\",\"value\":\"0.04925000000000001\"},{\"timestamp\":\"2026-10-29T04:46:59.134Z\",\"value\":\"0.04958333333333334\"},{\"timestamp\":\"2026-10-29T04:53:01.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-29T04:59:03.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T05:05:05.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T05:11:07.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T05:17:09.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-29T05:23:11.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-29T05:29:13.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T05:35:15.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-29T05:41:17.134Z\",\"value\":\"0.04925000000000001\"},{\"timestamp\":\"2026-10-29T05:47:19.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T05:53:21.134Z\",\"value\":\"0.0495\"},{\"timestamp\":\"2026-10-29T05:59:23.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-29T06:05:25.134Z\",\"value\":\"0.04925000000000001\"},{\"timestamp\":\"2026-10-29T06:11:27.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T06:17:29.134Z\",\"value\":\"0.02485\"},{\"timestamp\":\"2026-10-29T06:23:31.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T06:29:33.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T06:35:35.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T06:41:37.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T06:47:39.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-29T06:53:41.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-29T06:59:43.134Z\",\"value\":\"0.04975\"},{\"timestamp\":\"2026-10-29T07:05:45.134Z\",\"value\":\"NaN\"},{\"timestamp\":\"2026-10-29T07:11:47.134Z\",\"value\":\"0.04975\"}]}],\"incomplete\":true}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T07:17:11.30247486Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T07:17:11.332520918Z",
+      "position": 1,
+      "tool": "prometheus_query",
+      "traceId": "e34e793e209d2bb90b0d1ca6d965b561",
+      "turn": 5,
+      "investigationId": "87efb4ba-2c6b-4ba0-90aa-bcf45e4f6da3",
+      "ordinal": 14,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T07:17:11.325699387Z",
+          "kind": "request",
+          "method": "POST",
+          "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:9090",
+          "parameters": {
+            "end": [
+              "1793258151"
+            ],
+            "limit": [
+              "51"
+            ],
+            "query": [
+              "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\"payment-service\"}[5m])) by (le, job))"
+            ],
+            "start": [
+              "1793171751.133937"
+            ],
+            "step": [
+              "362"
+            ],
+            "timeout": [
+              "5s"
+            ]
+          },
+          "path": "/api/v1/query_range",
+          "startedAt": "2026-10-29T07:17:11.320520092Z",
+          "status": 200,
+          "traceId": "e34e793e209d2bb90b0d1ca6d965b561"
+        }
+      ],
+      "requestStatus": "matched"
+    }
+  ],
+  "unmatchedRequests": [
+    {
+      "headersAt": "2026-10-29T07:16:34.925834288Z",
+      "kind": "request",
+      "method": "POST",
+      "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:9090",
+      "parameters": {
+        "limit": [
+          "1"
+        ],
+        "query": [
+          "vector(1)"
+        ],
+        "time": [
+          "1793258194.9219723"
+        ],
+        "timeout": [
+          "5s"
+        ]
+      },
+      "path": "/api/v1/query",
+      "startedAt": "2026-10-29T07:16:34.922033892Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T07:16:34.940553732Z",
+      "kind": "request",
+      "method": "POST",
+      "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:9090",
+      "parameters": {
+        "limit": [
+          "1"
+        ],
+        "query": [
+          "vector(1)"
+        ],
+        "time": [
+          "1793258194.9393282"
+        ],
+        "timeout": [
+          "5s"
+        ]
+      },
+      "path": "/api/v1/query",
+      "startedAt": "2026-10-29T07:16:34.939413891Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T07:16:34.959485771Z",
+      "kind": "request",
+      "method": "GET",
+      "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:3100",
+      "parameters": {
+        "direction": [
+          "backward"
+        ],
+        "end": [
+          "1793258194949655614"
+        ],
+        "limit": [
+          "1"
+        ],
+        "query": [
+          "{job=~\".+\"}"
+        ],
+        "start": [
+          "1793258134949655614"
+        ]
+      },
+      "path": "/loki/api/v1/query_range",
+      "startedAt": "2026-10-29T07:16:34.949809713Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T07:16:34.988910195Z",
+      "kind": "request",
+      "method": "GET",
+      "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:3100",
+      "parameters": {
+        "direction": [
+          "backward"
+        ],
+        "end": [
+          "1793258194979797730"
+        ],
+        "limit": [
+          "1"
+        ],
+        "query": [
+          "{job=~\".+\"}"
+        ],
+        "start": [
+          "1793258134979797730"
+        ]
+      },
+      "path": "/loki/api/v1/query_range",
+      "startedAt": "2026-10-29T07:16:34.979881828Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T07:16:35.002019037Z",
+      "kind": "request",
+      "method": "GET",
+      "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:3200",
+      "parameters": {
+        "end": [
+          "1793258194"
+        ],
+        "limit": [
+          "1"
+        ],
+        "q": [
+          "{}"
+        ],
+        "start": [
+          "1793258134"
+        ]
+      },
+      "path": "/api/search",
+      "startedAt": "2026-10-29T07:16:34.998876889Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T07:16:35.011399246Z",
+      "kind": "request",
+      "method": "GET",
+      "origin": "http://o11y-stack-find-slow-traces__apknhqq__env:3200",
+      "parameters": {
+        "end": [
+          "1793258195"
+        ],
+        "limit": [
+          "1"
+        ],
+        "q": [
+          "{}"
+        ],
+        "start": [
+          "1793258135"
+        ]
+      },
+      "path": "/api/search",
+      "startedAt": "2026-10-29T07:16:35.009585397Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    }
+  ]
+}

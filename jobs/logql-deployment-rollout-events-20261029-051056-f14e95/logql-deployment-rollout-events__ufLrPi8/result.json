@@ -1,0 +1,120 @@
+{
+    "id": "d3279963-946c-40f9-ac3b-f54b3d074d52",
+    "task_name": "logql-deployment-rollout-events",
+    "trial_name": "logql-deployment-rollout-events__ufLrPi8",
+    "trial_uri": "file:///D:/Development/oc-o11y-bench/jobs/logql-deployment-rollout-events-20261029-051056-f14e95/logql-deployment-rollout-events__ufLrPi8",
+    "task_id": {
+        "path": "D:\\Development\\oc-o11y-bench\\.work\\tasks\\logql-deployment-rollout-events"
+    },
+    "source": "tasks",
+    "task_checksum": "b4e2c2c32db39c0490d1f013b6cf33132661620748620efb57a5fb40e12db194",
+    "config": {
+        "task": {
+            "path": "D:\\Development\\oc-o11y-bench\\.work\\tasks\\logql-deployment-rollout-events",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "tasks"
+        },
+        "trial_name": "logql-deployment-rollout-events__ufLrPi8",
+        "trials_dir": "D:\\Development\\oc-o11y-bench\\jobs\\logql-deployment-rollout-events-20261029-051056-f14e95",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "opencluster_bench.agent:OpenClusterAgent",
+            "import_path": null,
+            "model_name": "openrouter/z-ai/glm-5.1",
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "stream": false,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [
+                "D:\\Development\\oc-o11y-bench\\environment\\compose.override.yaml"
+            ],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": true
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "0f10b322-9840-437f-bab5-e1c7f8880e51",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "opencluster",
+        "version": "f3f0e700c5927f94e893681e4b12bf40b741ebff",
+        "model_info": {
+            "name": "z-ai/glm-5.1",
+            "provider": "openrouter"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 12196,
+        "n_cache_tokens": null,
+        "n_output_tokens": 1676,
+        "cost_usd": null,
+        "model_usage": null,
+        "rollout_details": null,
+        "metadata": {
+            "controlplaneCommit": "f3f0e700c5927f94e893681e4b12bf40b741ebff",
+            "trajectorySource": "public Investigation and durable Tool Runs",
+            "fullToolResultsAvailable": false,
+            "smoke": false,
+            "elapsedSeconds": 37.238856062000195
+        }
+    },
+    "verifier_result": null,
+    "verifier_environment_mode": "shared",
+    "exception_info": null,
+    "started_at": "2026-10-29T05:11:01.178310Z",
+    "finished_at": "2026-10-29T05:12:11.220411Z",
+    "environment_setup": {
+        "started_at": "2026-10-29T05:11:02.527909Z",
+        "finished_at": "2026-10-29T05:11:14.108677Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-10-29T05:11:14.108750Z",
+        "finished_at": "2026-10-29T05:11:15.750853Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-10-29T05:11:15.751040Z",
+        "finished_at": "2026-10-29T05:12:02.530702Z"
+    },
+    "verifier": null,
+    "step_results": null
+}

@@ -1,0 +1,49 @@
+{
+  "case": "promql-error-rate",
+  "scenarioTime": "2026-10-29T07:06:58.981457+00:00",
+  "mode": "canonical facts and deterministic checks only; no judge verdict",
+  "benchmarkCommit": "b66d8cfbbe309d2e03e9a301baea056d9718b71b",
+  "facts": [
+    {
+      "criterion": "The final response states 5xx share accurately.",
+      "definition": {
+        "kind": "query",
+        "backend": "prometheus",
+        "query": "sum(rate(http_requests_total{status=~\"5..\",job=~\"user-service|order-service|payment-service\"}[1h])) / sum(rate(http_requests_total{job=~\"user-service|order-service|payment-service\"}[1h]))",
+        "allow_empty": false,
+        "time_unix": null,
+        "limit": null,
+        "lookback_hours": null,
+        "start_sec": null,
+        "end_sec": null
+      },
+      "evidence": {
+        "summary": "Matching metrics exist in the snapshot window: Query returned 1 result: 0.034483",
+        "debug": {
+          "backend": "prometheus",
+          "query": "sum(rate(http_requests_total{status=~\"5..\",job=~\"user-service|order-service|payment-service\"}[1h])) / sum(rate(http_requests_total{job=~\"user-service|order-service|payment-service\"}[1h]))",
+          "result": {
+            "shape": "items",
+            "items": [
+              {
+                "labels": {},
+                "value": 0.03448275862068966
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    }
+  ],
+  "checks": {
+    "scores": {},
+    "explanations": {}
+  },
+  "engineeringReview": [
+    "FAILED ATTEMPT: no valid final answer. The native Agent rejected unavailable prior-evidence citations after 10 successful backend reads. This is a conclusion-contract failure, not a connectivity or capture failure.",
+    "Tool Run #8 measured 0.034482758620689655 (3.4483%), matching the canonical ratio at this scenario clock. A correct intermediate measurement does not turn the failed trial into a pass.",
+    "The Agent repeatedly guessed the code label before inspecting actual labels in #7. The metric uses status. Keep the read budget; improve label discovery and current-versus-prior citation guidance. This failed attempt was not retried."
+  ]
+}

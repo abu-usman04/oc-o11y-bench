@@ -1,0 +1,64 @@
+{
+  "mode": "Canonical facts and checks from local upstream grading",
+  "facts": [
+    {
+      "criterion": "The final response states Count of v2.5.0 deployment log lines accurately.",
+      "evidence": {
+        "summary": "Grouped counts from the snapshot window: Query returned 1 result: 3",
+        "debug": {
+          "backend": "loki",
+          "query": "sum(count_over_time({job=~\".+\"} |= \"v2.5.0\" |= \"deployment\" [24h]))",
+          "result": {
+            "shape": "scalar",
+            "value": 3.0
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    },
+    {
+      "criterion": "The final response names every service that logged a v2.5.0 deployment in the Source of truth, and no other",
+      "evidence": {
+        "summary": "Grouped counts from the snapshot window: Query returned 3 results: {job=\"order-service\"} 1; {job=\"payment-service\"} 1; {job=\"user-service\"} 1",
+        "debug": {
+          "backend": "loki",
+          "query": "sum by (job) (count_over_time({job=~\".+\"} |= \"v2.5.0\" |= \"deployment\" [24h]))",
+          "result": {
+            "shape": "items",
+            "items": [
+              {
+                "labels": {
+                  "job": "order-service"
+                },
+                "value": 1.0
+              },
+              {
+                "labels": {
+                  "job": "payment-service"
+                },
+                "value": 1.0
+              },
+              {
+                "labels": {
+                  "job": "user-service"
+                },
+                "value": 1.0
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    }
+  ],
+  "checks": {
+    "scores": {},
+    "explanations": {}
+  },
+  "engineeringReview": [
+    "Supported: exactly three returned deployment log lines name user-service (01:47 UTC), order-service and payment-service (07:55 UTC); canonical counts and service names agree.",
+    "The shared deployment time suggests coordination but does not prove coordination or an incident trigger."
+  ]
+}

@@ -1,0 +1,74 @@
+{
+    "schema_version": 3,
+    "created_at": "2026-10-29T10:58:02.204763Z",
+    "harbor": {
+        "version": "0.24.0",
+        "is_editable": false
+    },
+    "n_concurrent_trials": 1,
+    "retry": {
+        "max_retries": 0,
+        "exclude_exceptions": [
+            "VerifierOutputParseError",
+            "RewardFileEmptyError",
+            "AgentSafetyRefusalError",
+            "RewardFileNotFoundError",
+            "AgentTimeoutError",
+            "ApiUsageLimitError",
+            "AgentAuthenticationError",
+            "VerifierTimeoutError",
+            "ModelNotFoundError"
+        ],
+        "wait_multiplier": 1.0,
+        "min_wait_sec": 1.0,
+        "max_wait_sec": 60.0
+    },
+    "trials": [
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "logql-deployment-rollout-events",
+                "type": "local",
+                "digest": "sha256:fbbc66d5a93da5d47520b848ce08c6769a78ef21dbfbb246b68439487719fb0d",
+                "source": "tasks",
+                "path": "D:\\Development\\oc-o11y-bench\\.work\\tasks\\logql-deployment-rollout-events"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "opencluster_bench.agent:OpenClusterAgent",
+                "model_name": "openrouter/z-ai/glm-5.1",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {},
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "stream": false,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [
+                    "D:\\Development\\oc-o11y-bench\\environment\\compose.override.yaml"
+                ],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "extra_docker_compose": [
+                {
+                    "path": "D:\\Development\\oc-o11y-bench\\environment\\compose.override.yaml",
+                    "digest": "sha256:5b3ca4ecdd233f57e875ec76af58c95c0d818f5a14cbb2ac74452271105df1ae"
+                }
+            ],
+            "verifier": {
+                "disable": true,
+                "environment_mode": "shared"
+            }
+        }
+    ]
+}

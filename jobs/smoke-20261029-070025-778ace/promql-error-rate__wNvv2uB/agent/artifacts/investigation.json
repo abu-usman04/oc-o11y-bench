@@ -1,0 +1,92 @@
+{
+  "id": "950005ec-0781-4c14-a71c-a3064e04a3fc",
+  "status": "concluded",
+  "subject": "Observability benchmark",
+  "windowFrom": "2026-10-28T06:59:55.766071Z",
+  "windowUntil": "2026-10-29T06:59:55.766071Z",
+  "conclusionStatus": "answer_only",
+  "summary": "**Tempo search with {} succeeded** — returned 5 traces in the window (more exist; result marked incomplete due to the limit). **Retrieving one trace by ID succeeded** — trace 03d88a93f087b5f8326928535ae61e06 returned 4 spans (webapp → api-gateway → order-service → user-service), all with status 'unset', backend status COMPLETE, outcome 'data'. Spans were returned successfully.",
+  "impact": {
+    "summary": "No incident impact — this was an observability benchmark exercise confirming Tempo search and trace retrieval work correctly.",
+    "runRefs": [
+      1,
+      2
+    ]
+  },
+  "findings": [
+    {
+      "statement": "Tempo search with {} in the window 2026-10-28T06:59:55Z–2026-10-29T06:59:55Z returned 5 traces (result marked incomplete because more existed). Trace IDs: 03d88a93f087b5f8326928535ae61e06, 041ae5f7fa3f95ce73d3055bc02f42c8, 0473ad3e4f0a824d6f4e75c38ac884ae, 032d3044fc5fb019bca84c3f32f39f2c, 0446e1dacbd3ca28f420eec856cc47dc.",
+      "kind": "observation",
+      "mechanism": "Tempo search with {} returned traces in the window",
+      "runRefs": [
+        1
+      ]
+    },
+    {
+      "statement": "Retrieving trace 03d88a93f087b5f8326928535ae61e06 returned 4 spans with parent-child relationships: webapp → api-gateway → order-service → user-service. All spans had status 'unset' (no errors). Backend status was COMPLETE, outcome was 'data'.",
+      "kind": "observation",
+      "mechanism": "tempo_get_trace returned complete span data for the requested trace",
+      "runRefs": [
+        2
+      ]
+    }
+  ],
+  "hypotheses": null,
+  "actions": null,
+  "limitations": null,
+  "usage": {
+    "inputTokens": 18837,
+    "outputTokens": 1912
+  },
+  "createdAt": "2026-10-29T07:02:27Z",
+  "concludedAt": "2026-10-29T07:03:11Z",
+  "runs": [
+    {
+      "ordinal": 1,
+      "integrationId": "7cd24078-b18a-4dd4-af67-817ea32568bb",
+      "tool": "tempo_search_traces",
+      "purpose": "Search Tempo for a few traces in the investigation window using {}",
+      "arguments": {
+        "end": "2026-10-29T06:59:55Z",
+        "limit": 5,
+        "query": "{}",
+        "start": "2026-10-28T06:59:55Z"
+      },
+      "windowFrom": "2026-10-28T06:59:56Z",
+      "windowUntil": "2026-10-29T06:59:55Z",
+      "outcome": "succeeded",
+      "truncated": true,
+      "summary": "Tempo search incomplete: 5 traces, 2026-10-28T06:59:56Z to 2026-10-29T06:59:55Z",
+      "sources": [
+        "tempo:7cd24078-b18a-4dd4-af67-817ea32568bb:trace:03d88a93f087b5f8326928535ae61e06",
+        "tempo:7cd24078-b18a-4dd4-af67-817ea32568bb:trace:041ae5f7fa3f95ce73d3055bc02f42c8",
+        "tempo:7cd24078-b18a-4dd4-af67-817ea32568bb:trace:0473ad3e4f0a824d6f4e75c38ac884ae",
+        "tempo:7cd24078-b18a-4dd4-af67-817ea32568bb:trace:032d3044fc5fb019bca84c3f32f39f2c",
+        "tempo:7cd24078-b18a-4dd4-af67-817ea32568bb:trace:0446e1dacbd3ca28f420eec856cc47dc"
+      ],
+      "startedAt": "2026-10-29T07:02:30Z",
+      "finishedAt": "2026-10-29T07:02:30Z"
+    },
+    {
+      "ordinal": 2,
+      "integrationId": "7cd24078-b18a-4dd4-af67-817ea32568bb",
+      "tool": "tempo_get_trace",
+      "purpose": "Retrieve spans for one of the trace IDs returned by the search",
+      "arguments": {
+        "end": "2026-10-29T06:59:55Z",
+        "start": "2026-10-28T06:59:55Z",
+        "traceId": "03d88a93f087b5f8326928535ae61e06"
+      },
+      "windowFrom": "2026-10-28T06:59:56Z",
+      "windowUntil": "2026-10-29T06:59:55Z",
+      "outcome": "succeeded",
+      "summary": "Tempo trace 03d88a93f087b5f8326928535ae61e06: data, 4 spans; searched 2026-10-28T06:59:56Z to 2026-10-29T06:59:55Z; backend bounds are not a completeness guarantee",
+      "sources": [
+        "tempo:7cd24078-b18a-4dd4-af67-817ea32568bb:trace:03d88a93f087b5f8326928535ae61e06"
+      ],
+      "startedAt": "2026-10-29T07:02:33Z",
+      "finishedAt": "2026-10-29T07:02:33Z"
+    }
+  ],
+  "adapterElapsedSeconds": 44.24624399999993
+}

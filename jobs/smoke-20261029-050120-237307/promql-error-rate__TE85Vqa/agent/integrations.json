@@ -1,0 +1,69 @@
+{
+  "prometheus": {
+    "id": "a1f994ce-e446-4420-8c9a-217309e28fd5",
+    "type": "prometheus",
+    "name": "Prometheus",
+    "status": "verified",
+    "disabled": false,
+    "configuration": {
+      "url": "http://o11y-stack-promql-error-rate__te85vqa__env:9090"
+    },
+    "verifiedAt": "2026-10-29T05:01:46Z",
+    "verificationNote": "Prometheus query access verified",
+    "toolAvailability": [
+      {
+        "tool": "prometheus_discover_metrics",
+        "available": true
+      },
+      {
+        "tool": "prometheus_query",
+        "available": true
+      }
+    ],
+    "createdAt": "2026-10-29T05:01:46Z"
+  },
+  "loki": {
+    "id": "34bfab21-86b9-48f7-a63f-92be37e007a0",
+    "type": "loki",
+    "name": "Loki",
+    "status": "verified",
+    "disabled": false,
+    "configuration": {
+      "auth": "bearer",
+      "url": "http://o11y-stack-promql-error-rate__te85vqa__env:3100"
+    },
+    "verifiedAt": "2026-10-29T05:01:46Z",
+    "verificationNote": "Loki log query access verified",
+    "toolAvailability": [
+      {
+        "tool": "loki_query_logs",
+        "available": true
+      }
+    ],
+    "createdAt": "2026-10-29T05:01:46Z"
+  },
+  "tempo": {
+    "id": "3ab18422-92b0-4376-90fa-63da49f720d2",
+    "type": "tempo",
+    "name": "Tempo",
+    "status": "verified",
+    "disabled": false,
+    "configuration": {
+      "auth": "bearer",
+      "url": "http://o11y-stack-promql-error-rate__te85vqa__env:3200"
+    },
+    "verifiedAt": "2026-10-29T05:01:46Z",
+    "verificationNote": "Tempo trace search access verified",
+    "toolAvailability": [
+      {
+        "tool": "tempo_get_trace",
+        "available": true
+      },
+      {
+        "tool": "tempo_search_traces",
+        "available": true
+      }
+    ],
+    "createdAt": "2026-10-29T05:01:46Z"
+  }
+}

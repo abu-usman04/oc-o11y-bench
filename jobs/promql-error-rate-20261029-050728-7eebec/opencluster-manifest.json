@@ -1,0 +1,16 @@
+{
+  "controlplaneCommit": "f3f0e700c5927f94e893681e4b12bf40b741ebff",
+  "binarySHA256": "1ae6c3ea7f79737b6e617368d8996b862a9f02722fed848127eccda552fb36c2",
+  "benchmarkCommit": "b66d8cfbbe309d2e03e9a301baea056d9718b71b",
+  "provider": "openrouter",
+  "model": "z-ai/glm-5.1",
+  "scenarioTime": "2026-10-29T05:07:04.927965+00:00",
+  "case": "promql-error-rate",
+  "attempts": 1,
+  "concurrentTrials": 1,
+  "harborVersion": "0.24.0",
+  "gradingEnabled": false,
+  "omittedTaskMetadata": [
+    "environment.mcp_servers"
+  ]
+}

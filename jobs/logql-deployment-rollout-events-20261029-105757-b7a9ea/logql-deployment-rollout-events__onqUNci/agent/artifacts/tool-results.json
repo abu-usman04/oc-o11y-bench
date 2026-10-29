@@ -1,0 +1,204 @@
+{
+  "complete": true,
+  "errors": [],
+  "provenance": "Bounded Tool observations as submitted to the real provider adapter; HTTP read metadata from the benchmark recorder. No private model reasoning or headers.",
+  "toolResults": [
+    {
+      "arguments": "{\"input\": {\"query\": \"{job=~\\\".+\\\"} |~ \\\"v2.5.0\\\"\", \"limit\": 200, \"start\": \"2026-10-28T10:57:28Z\", \"end\": \"2026-10-29T10:57:28Z\", \"direction\": \"forward\"}, \"purpose\": \"Find all services that logged a v2.5.0 deployment in the last ~24 hours\"}",
+      "callId": "call_47494a28414a46a09d0ecfe0",
+      "content": "[run 1] loki_query_logs {\"direction\":\"forward\",\"end\":\"2026-10-29T10:57:28Z\",\"limit\":200,\"query\":\"{job=~\\\".+\\\"} |~ \\\"v2.5.0\\\"\",\"start\":\"2026-10-28T10:57:28Z\"}\nWINDOW: this read covered 2026-10-28T10:57:28Z to 2026-10-29T10:57:28Z\nSUMMARY: Loki data: 3 log excerpts, 2026-10-28T10:57:28.97009Z to 2026-10-29T10:57:28Z (exclusive end), direction=forward\nCONTENT: {\"query\":\"{job=~\\\".+\\\"} |~ \\\"v2.5.0\\\"\",\"from\":\"2026-10-28T10:57:28.97009Z\",\"until\":\"2026-10-29T10:57:28Z\",\"direction\":\"forward\",\"limit\":200,\"entries\":[{\"timestamp\":\"2026-10-29T01:47:00Z\",\"line\":\"{\\\"timestamp\\\": \\\"2026-10-29T01:47:00.000Z\\\", \\\"level\\\": \\\"info\\\", \\\"service\\\": \\\"user-service\\\", \\\"message\\\": \\\"deployment started: user-service v2.4.1 -\\u003e v2.5.0\\\", \\\"event\\\": \\\"deployment\\\", \\\"version\\\": \\\"v2.5.0\\\"}\",\"labels\":{\"detected_level\":\"info\",\"job\":\"user-service\",\"level\":\"info\",\"service\":\"user-service\",\"service_name\":\"user-service\"}},{\"timestamp\":\"2026-10-29T07:55:00Z\",\"line\":\"{\\\"timestamp\\\": \\\"2026-10-29T07:55:00.000Z\\\", \\\"level\\\": \\\"info\\\", \\\"service\\\": \\\"order-service\\\", \\\"message\\\": \\\"deployment started: order-service v2.4.1 -\\u003e v2.5.0\\\", \\\"event\\\": \\\"deployment\\\", \\\"version\\\": \\\"v2.5.0\\\"}\",\"labels\":{\"detected_level\":\"info\",\"job\":\"order-service\",\"level\":\"info\",\"service\":\"order-service\",\"service_name\":\"order-service\"}},{\"timestamp\":\"2026-10-29T07:55:00Z\",\"line\":\"{\\\"timestamp\\\": \\\"2026-10-29T07:55:00.000Z\\\", \\\"level\\\": \\\"info\\\", \\\"service\\\": \\\"payment-service\\\", \\\"message\\\": \\\"deployment started: payment-service v2.4.1 -\\u003e v2.5.0\\\", \\\"event\\\": \\\"deployment\\\", \\\"version\\\": \\\"v2.5.0\\\"}\",\"labels\":{\"detected_level\":\"info\",\"job\":\"payment-service\",\"level\":\"info\",\"service\":\"payment-service\",\"service_name\":\"payment-service\"}}],\"outcome\":\"data\",\"incomplete\":false}\n",
+      "isError": false,
+      "issuedAt": "2026-10-29T10:58:31.414436492Z",
+      "kind": "observation",
+      "observedAt": "2026-10-29T10:58:31.625227417Z",
+      "position": 0,
+      "tool": "loki_query_logs",
+      "traceId": "91b1769f28ce534e63b547be1174dc0a",
+      "turn": 0,
+      "investigationId": "6d62e626-2887-4572-89bf-a7d4fb8c455c",
+      "ordinal": 1,
+      "requests": [
+        {
+          "headersAt": "2026-10-29T10:58:31.615278063Z",
+          "kind": "request",
+          "method": "GET",
+          "origin": "http://o11y-stack-logql-deployment-rollout-events__onqunci__env:3100",
+          "parameters": {
+            "direction": [
+              "forward"
+            ],
+            "end": [
+              "1793271448000000000"
+            ],
+            "limit": [
+              "200"
+            ],
+            "query": [
+              "{job=~\".+\"} |~ \"v2.5.0\""
+            ],
+            "start": [
+              "1793185048970090000"
+            ]
+          },
+          "path": "/loki/api/v1/query_range",
+          "startedAt": "2026-10-29T10:58:31.41990098Z",
+          "status": 200,
+          "traceId": "91b1769f28ce534e63b547be1174dc0a"
+        }
+      ],
+      "requestStatus": "matched"
+    }
+  ],
+  "unmatchedRequests": [
+    {
+      "headersAt": "2026-10-29T10:58:27.111723574Z",
+      "kind": "request",
+      "method": "POST",
+      "origin": "http://o11y-stack-logql-deployment-rollout-events__onqunci__env:9090",
+      "parameters": {
+        "limit": [
+          "1"
+        ],
+        "query": [
+          "vector(1)"
+        ],
+        "time": [
+          "1793271507.1072273"
+        ],
+        "timeout": [
+          "5s"
+        ]
+      },
+      "path": "/api/v1/query",
+      "startedAt": "2026-10-29T10:58:27.107348644Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T10:58:27.132163499Z",
+      "kind": "request",
+      "method": "POST",
+      "origin": "http://o11y-stack-logql-deployment-rollout-events__onqunci__env:9090",
+      "parameters": {
+        "limit": [
+          "1"
+        ],
+        "query": [
+          "vector(1)"
+        ],
+        "time": [
+          "1793271507.1304271"
+        ],
+        "timeout": [
+          "5s"
+        ]
+      },
+      "path": "/api/v1/query",
+      "startedAt": "2026-10-29T10:58:27.130540379Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T10:58:27.153343111Z",
+      "kind": "request",
+      "method": "GET",
+      "origin": "http://o11y-stack-logql-deployment-rollout-events__onqunci__env:3100",
+      "parameters": {
+        "direction": [
+          "backward"
+        ],
+        "end": [
+          "1793271507142417091"
+        ],
+        "limit": [
+          "1"
+        ],
+        "query": [
+          "{job=~\".+\"}"
+        ],
+        "start": [
+          "1793271447142417091"
+        ]
+      },
+      "path": "/loki/api/v1/query_range",
+      "startedAt": "2026-10-29T10:58:27.142469579Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T10:58:27.169766972Z",
+      "kind": "request",
+      "method": "GET",
+      "origin": "http://o11y-stack-logql-deployment-rollout-events__onqunci__env:3100",
+      "parameters": {
+        "direction": [
+          "backward"
+        ],
+        "end": [
+          "1793271507162403410"
+        ],
+        "limit": [
+          "1"
+        ],
+        "query": [
+          "{job=~\".+\"}"
+        ],
+        "start": [
+          "1793271447162403410"
+        ]
+      },
+      "path": "/loki/api/v1/query_range",
+      "startedAt": "2026-10-29T10:58:27.16251462Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T10:58:27.181598857Z",
+      "kind": "request",
+      "method": "GET",
+      "origin": "http://o11y-stack-logql-deployment-rollout-events__onqunci__env:3200",
+      "parameters": {
+        "end": [
+          "1793271507"
+        ],
+        "limit": [
+          "1"
+        ],
+        "q": [
+          "{}"
+        ],
+        "start": [
+          "1793271447"
+        ]
+      },
+      "path": "/api/search",
+      "startedAt": "2026-10-29T10:58:27.177694254Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    },
+    {
+      "headersAt": "2026-10-29T10:58:27.192550796Z",
+      "kind": "request",
+      "method": "GET",
+      "origin": "http://o11y-stack-logql-deployment-rollout-events__onqunci__env:3200",
+      "parameters": {
+        "end": [
+          "1793271507"
+        ],
+        "limit": [
+          "1"
+        ],
+        "q": [
+          "{}"
+        ],
+        "start": [
+          "1793271447"
+        ]
+      },
+      "path": "/api/search",
+      "startedAt": "2026-10-29T10:58:27.190376593Z",
+      "status": 200,
+      "traceId": "00000000000000000000000000000000"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "id": "6d62e626-2887-4572-89bf-a7d4fb8c455c",
+  "status": "concluded",
+  "subject": "Observability benchmark",
+  "windowFrom": "2026-10-28T10:57:28.97009Z",
+  "windowUntil": "2026-10-29T10:57:28.97009Z",
+  "conclusionStatus": "answer_only",
+  "summary": "Three services logged a v2.5.0 deployment over the last ~24 hours, all upgrading from v2.4.1:\n\n1. **user-service** — at **2026-10-29 01:47 UTC**\n2. **order-service** — at **2026-10-29 07:55 UTC**\n3. **payment-service** — at **2026-10-29 07:55 UTC**\n\norder-service and payment-service deployed at the same time, suggesting a coordinated rollout. The Loki result set was complete (3 of 200 limit, no truncation), so no other services logged a v2.5.0 deployment in this window.",
+  "impact": {
+    "summary": "Three services deployed v2.5.0 in the window; no impact assessment was requested or needed.",
+    "runRefs": [
+      1
+    ]
+  },
+  "findings": [
+    {
+      "statement": "user-service logged a v2.5.0 deployment (upgrading from v2.4.1) at 2026-10-29T01:47:00Z.",
+      "kind": "observation",
+      "mechanism": "Deployment log entry in Loki",
+      "runRefs": [
+        1
+      ]
+    },
+    {
+      "statement": "order-service logged a v2.5.0 deployment (upgrading from v2.4.1) at 2026-10-29T07:55:00Z.",
+      "kind": "observation",
+      "mechanism": "Deployment log entry in Loki",
+      "runRefs": [
+        1
+      ]
+    },
+    {
+      "statement": "payment-service logged a v2.5.0 deployment (upgrading from v2.4.1) at 2026-10-29T07:55:00Z.",
+      "kind": "observation",
+      "mechanism": "Deployment log entry in Loki",
+      "runRefs": [
+        1
+      ]
+    }
+  ],
+  "hypotheses": null,
+  "actions": null,
+  "limitations": null,
+  "usage": {
+    "inputTokens": 9036,
+    "outputTokens": 827
+  },
+  "createdAt": "2026-10-29T10:58:27Z",
+  "concludedAt": "2026-10-29T10:58:46Z",
+  "runs": [
+    {
+      "ordinal": 1,
+      "integrationId": "09afd0d9-ebb3-4864-b483-54b9701d73db",
+      "tool": "loki_query_logs",
+      "purpose": "Find all services that logged a v2.5.0 deployment in the last ~24 hours",
+      "arguments": {
+        "direction": "forward",
+        "end": "2026-10-29T10:57:28Z",
+        "limit": 200,
+        "query": "{job=~\".+\"} |~ \"v2.5.0\"",
+        "start": "2026-10-28T10:57:28Z"
+      },
+      "windowFrom": "2026-10-28T10:57:28.97009Z",
+      "windowUntil": "2026-10-29T10:57:28Z",
+      "outcome": "succeeded",
+      "summary": "Loki data: 3 log excerpts, 2026-10-28T10:57:28.97009Z to 2026-10-29T10:57:28Z (exclusive end), direction=forward",
+      "sources": [
+        "loki:09afd0d9-ebb3-4864-b483-54b9701d73db:logs"
+      ],
+      "startedAt": "2026-10-29T10:58:31Z",
+      "finishedAt": "2026-10-29T10:58:31Z"
+    }
+  ],
+  "adapterElapsedSeconds": 20.22786419199838
+}

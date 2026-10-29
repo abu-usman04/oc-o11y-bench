@@ -1,0 +1,15 @@
+{
+  "score": 1.0,
+  "status": "passed",
+  "grading_model": "anthropic/claude-haiku-5.5@high",
+  "checks_passed": 1,
+  "rubric_passed": 1,
+  "The final response states 5xx share accurately.": 1.0,
+  "The response expresses the result as a percentage, ratio, or share": 1.0,
+  "outcome:The final response states 5xx share accurately.": "pass",
+  "explanation:The final response states 5xx share accurately.": "The truth is 0.033898 (3.39%), and the response's 3.4% and 3.39% figures both agree within 1%, derived from 2.01 of 59.27 requests, which matches.",
+  "quote:The final response states 5xx share accurately.": "approximately **3.4%** (2.01 out of 59.27 total requests)",
+  "outcome:The response expresses the result as a percentage, ratio, or share": "pass",
+  "explanation:The response expresses the result as a percentage, ratio, or share": "The response expresses the share as a percentage (3.4%, also given as 3.39%), which meets the criterion.",
+  "quote:The response expresses the result as a percentage, ratio, or share": "approximately **3.4%**"
+}

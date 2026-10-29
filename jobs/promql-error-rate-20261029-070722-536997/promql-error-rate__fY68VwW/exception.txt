@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "D:\Development\oc-o11y-bench\.venv\Lib\site-packages\harbor\trial\single_step.py", line 76, in _run_agent
+    await self._run_agent_phase(
+    ...<5 lines>...
+    )
+  File "D:\Development\oc-o11y-bench\.venv\Lib\site-packages\harbor\trial\trial.py", line 651, in _run_agent_phase
+    await asyncio.wait_for(
+    ...<6 lines>...
+    )
+  File "D:\Development\oc-o11y-bench\.work\python\cpython-3.14-windows-x86_64-none\Lib\asyncio\tasks.py", line 488, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "D:\Development\oc-o11y-bench\opencluster_bench\agent.py", line 88, in run
+    raise NonZeroAgentExitCodeError(
+        "OpenCluster execution failed; inspect its collected artifacts"
+    )
+harbor.agents.installed.base.NonZeroAgentExitCodeError: OpenCluster execution failed; inspect its collected artifacts

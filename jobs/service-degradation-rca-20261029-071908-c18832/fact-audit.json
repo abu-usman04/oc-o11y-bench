@@ -1,0 +1,98 @@
+{
+  "case": "service-degradation-rca",
+  "scenarioTime": "2026-10-29T07:18:48.025409+00:00",
+  "mode": "canonical facts and deterministic checks only; no judge verdict",
+  "benchmarkCommit": "b66d8cfbbe309d2e03e9a301baea056d9718b71b",
+  "facts": [
+    {
+      "criterion": "The final response characterizes the slowdown as a severe multi-second issue, consistent with the order-service p95 peak in the Source of truth.",
+      "definition": {
+        "kind": "query",
+        "backend": "prometheus",
+        "query": "max_over_time(histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{job=\"order-service\"}[5m])))[8h:1m])",
+        "allow_empty": false,
+        "time_unix": null,
+        "limit": null,
+        "lookback_hours": null,
+        "start_sec": null,
+        "end_sec": null
+      },
+      "evidence": {
+        "summary": "Matching metrics exist in the snapshot window: Query returned 1 result: 10",
+        "debug": {
+          "backend": "prometheus",
+          "query": "max_over_time(histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{job=\"order-service\"}[5m])))[8h:1m])",
+          "result": {
+            "shape": "items",
+            "items": [
+              {
+                "labels": {},
+                "value": 10.0
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    },
+    {
+      "criterion": "The final response names the job with the highest peak p95 in the Source of truth as the primary bottleneck and explains how symptoms in other services or layers connect to it",
+      "definition": {
+        "kind": "query",
+        "backend": "prometheus",
+        "query": "topk(3, max_over_time(histogram_quantile(0.95, sum by (job, le) (rate(http_request_duration_seconds_bucket[5m])))[8h:1m]))",
+        "allow_empty": false,
+        "time_unix": null,
+        "limit": null,
+        "lookback_hours": null,
+        "start_sec": null,
+        "end_sec": null
+      },
+      "evidence": {
+        "summary": "Ranking from the snapshot window: Query returned 3 results: {job=\"order-service\"} 10; {job=\"user-service\"} 4.5; {job=\"payment-service\"} 2.2",
+        "debug": {
+          "backend": "prometheus",
+          "query": "topk(3, max_over_time(histogram_quantile(0.95, sum by (job, le) (rate(http_request_duration_seconds_bucket[5m])))[8h:1m]))",
+          "result": {
+            "shape": "items",
+            "items": [
+              {
+                "labels": {
+                  "job": "order-service"
+                },
+                "value": 10.0
+              },
+              {
+                "labels": {
+                  "job": "user-service"
+                },
+                "value": 4.5
+              },
+              {
+                "labels": {
+                  "job": "payment-service"
+                },
+                "value": 2.1999999999999997
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    }
+  ],
+  "checks": {
+    "scores": {},
+    "explanations": {}
+  },
+  "engineeringReview": [
+    "SUPPORTED: order-service is the main bottleneck and its canonical peak p95 is 10 seconds. The representative 00f1b1940a94a193ea48c57e693863bb is GET /api/products (15.221 seconds), with about 10.959 seconds in order-service and a 25 ms user-service child. The secondary 0595f4e097fcacc5724644e76d76ad60 is POST /api/orders and supports the checkout path.",
+    "NOT ESTABLISHED: connection-pool exhaustion, thread-pool exhaustion or lock contention. Low process CPU and RSS plus a short recorded child span do not prove an internal blocking mechanism or rule out uninstrumented dependencies. These must remain hypotheses.",
+    "The earlier user-service incident has no demonstrated mechanism connecting it to the checkout spike; classifying it as a contributing factor is unsupported. A missing code label also does not mean HTTP-status telemetry is unavailable: the dataset uses status.",
+    "The read budget was exhausted again: 31 recorded attempts, 30 source requests, 12 empty returns, two HTTP 400 query rejections and one blocked final read. Guessed checkout labels persisted even after real service names were available, and invalid LogQL was repeated.",
+    "The exact model-visible observations for #11 (grouped latency) and #19 (50 log entries) were cut by the Agent at 16 KiB. Recording retained those bounded inputs faithfully. Prefer compact ranking, a focused range and smaller filtered excerpts; more reads do not restore data already cut.",
+    "The final log read was blocked by the local budget, not by source authorization. Its missing_access classification is misleading. No read-limit increase, model switch or retry was used in this rerun."
+  ]
+}

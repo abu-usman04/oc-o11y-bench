@@ -12,7 +12,7 @@ The production repository is read through Git; its working-directory edits are n
 Launchers clone upstream with core.autocrlf=false so its Linux shell scripts retain LF line endings.
 The harness uses UTF-8 mode so Unicode Findings and traces work on Windows.
 
-1. Edit the prepared, Git-ignored `config.toml`:
+1. Copy `config.example.toml` to `config.toml`, then fill the Git-ignored file:
    - Set `model.name` to an exact model ID and `model.api_key` to its API key.
    - Use `model.provider = "anthropic"` or `"openrouter"`.
    - For scored runs, set `grading.anthropic_api_key`. A blank value reuses the Agent key
@@ -69,6 +69,11 @@ It creates and verifies Integrations, checks their query availability, and submi
 with the exact benchmark question and an explicit scenario-time window. It never seeds application SQL.
 
 ## Usage and Results
+
+See the [job index](jobs/README.md) for recorded runs, category statistics and the capability audit.
+The latest four selected rubrics passed; the audit also records material errors in two answers.
+Recorded production revisions belong to the separate control-plane repository and must be available
+locally to reproduce a particular run.
 
 ```powershell
 .\run.ps1 logql-deployment-rollout-events --no-grade
@@ -148,7 +153,8 @@ uv run --locked ruff format --check opencluster_bench tests
 uv run --locked mypy opencluster_bench
 ```
 
-Keep completed config files, secrets, generated tasks, binaries and results out of Git.
+Keep completed config files, secrets, generated tasks and binaries out of Git.
+Job results under `jobs/` are versioned for analysis; check new artifacts for credentials before committing.
 Provider credentials are mounted as files; temporary database credentials are removed after the job.
 Bootstrap credentials and sealing keys are generated per trial. Report genuine product defects
 with a reproducer before proposing production changes.

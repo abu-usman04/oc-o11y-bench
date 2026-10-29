@@ -1,0 +1,49 @@
+[
+  {
+    "key": "{\"backend\": \"loki\", \"kind\": \"query\", \"query\": \"sum by (job) (count_over_time({job=~\\\".+\\\"} |= \\\"v2.5.0\\\" |= \\\"deployment\\\" [24h]))\"}",
+    "summary": "Grouped counts from the snapshot window: Query returned 3 results: {job=\"order-service\"} 1; {job=\"payment-service\"} 1; {job=\"user-service\"} 1",
+    "error": null,
+    "fails": false,
+    "debug": {
+      "backend": "loki",
+      "query": "sum by (job) (count_over_time({job=~\".+\"} |= \"v2.5.0\" |= \"deployment\" [24h]))",
+      "result": {
+        "shape": "items",
+        "items": [
+          {
+            "labels": {
+              "job": "order-service"
+            },
+            "value": 1.0
+          },
+          {
+            "labels": {
+              "job": "payment-service"
+            },
+            "value": 1.0
+          },
+          {
+            "labels": {
+              "job": "user-service"
+            },
+            "value": 1.0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "key": "{\"backend\": \"loki\", \"kind\": \"query\", \"query\": \"sum(count_over_time({job=~\\\".+\\\"} |= \\\"v2.5.0\\\" |= \\\"deployment\\\" [24h]))\"}",
+    "summary": "Grouped counts from the snapshot window: Query returned 1 result: 3",
+    "error": null,
+    "fails": false,
+    "debug": {
+      "backend": "loki",
+      "query": "sum(count_over_time({job=~\".+\"} |= \"v2.5.0\" |= \"deployment\" [24h]))",
+      "result": {
+        "shape": "scalar",
+        "value": 3.0
+      }
+    }
+  }
+]

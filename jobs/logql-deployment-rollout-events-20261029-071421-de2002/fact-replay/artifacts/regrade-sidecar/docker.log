@@ -1,0 +1,24 @@
+=== o11y-bench Environment ===
+Sidecar file logging disabled (set O11Y_STACK_DEBUG_LOGS=1 to enable)
+Starting services...
+Replaying seed data...
+[07:16:24]   Waiting for Loki to serve every line...
+[07:16:24]   Loki ready (11596 lines)
+[07:16:24]   Waiting for Tempo search to become ready...
+[07:16:24]   Waiting for Tempo search (attempt 1/2400): broad=5; error=5; metrics=4706/4863 traces indexed
+[07:16:25]   Tempo search ready (attempt 2/2400, broad=5, error=5, metrics=1)
+[07:16:25]   Metrics import complete
+Starting Prometheus...
+Prometheus ready
+Grafana ready
+No task Grafana resources to provision
+  note: --disable-sift unsupported by this mcp-grafana build; skipping
+Starting mcp-grafana (streamable-http on :8080)...
+  flags: -t streamable-http --address :8080 --disable-oncall --disable-incident --disable-asserts --disable-pyroscope --allowed-hosts *
+mcp-grafana ready
+=== Environment Ready ===
+  Grafana:     http://localhost:3000
+  Prometheus:  http://localhost:9090
+  Loki:        http://localhost:3100
+  Tempo:       http://localhost:3200
+  MCP-Grafana: http://localhost:8080

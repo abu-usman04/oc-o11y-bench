@@ -1,0 +1,120 @@
+{
+    "id": "08819728-8f6d-4065-8a0c-5e2575483186",
+    "task_name": "service-degradation-rca",
+    "trial_name": "service-degradation-rca__e5fLRCX",
+    "trial_uri": "file:///D:/Development/oc-o11y-bench/jobs/service-degradation-rca-20261029-052132-b9aad7/service-degradation-rca__e5fLRCX",
+    "task_id": {
+        "path": "D:\\Development\\oc-o11y-bench\\.work\\tasks\\service-degradation-rca"
+    },
+    "source": "tasks",
+    "task_checksum": "abc833b7da7f9d868b8cea9228736026c7470e30cdc13add63af33813e3d6c18",
+    "config": {
+        "task": {
+            "path": "D:\\Development\\oc-o11y-bench\\.work\\tasks\\service-degradation-rca",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "tasks"
+        },
+        "trial_name": "service-degradation-rca__e5fLRCX",
+        "trials_dir": "D:\\Development\\oc-o11y-bench\\jobs\\service-degradation-rca-20261029-052132-b9aad7",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "opencluster_bench.agent:OpenClusterAgent",
+            "import_path": null,
+            "model_name": "openrouter/z-ai/glm-5.1",
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "stream": false,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [
+                "D:\\Development\\oc-o11y-bench\\environment\\compose.override.yaml"
+            ],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": true
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "c0b399ab-3df3-4921-8977-acc1f22b5cf5",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "opencluster",
+        "version": "f3f0e700c5927f94e893681e4b12bf40b741ebff",
+        "model_info": {
+            "name": "z-ai/glm-5.1",
+            "provider": "openrouter"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 263441,
+        "n_cache_tokens": null,
+        "n_output_tokens": 10246,
+        "cost_usd": null,
+        "model_usage": null,
+        "rollout_details": null,
+        "metadata": {
+            "controlplaneCommit": "f3f0e700c5927f94e893681e4b12bf40b741ebff",
+            "trajectorySource": "public Investigation and durable Tool Runs",
+            "fullToolResultsAvailable": false,
+            "smoke": false,
+            "elapsedSeconds": 230.3593633669998
+        }
+    },
+    "verifier_result": null,
+    "verifier_environment_mode": "shared",
+    "exception_info": null,
+    "started_at": "2026-10-29T05:21:36.477223Z",
+    "finished_at": "2026-10-29T05:25:57.962325Z",
+    "environment_setup": {
+        "started_at": "2026-10-29T05:21:37.645823Z",
+        "finished_at": "2026-10-29T05:21:48.687326Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-10-29T05:21:48.687456Z",
+        "finished_at": "2026-10-29T05:21:50.426403Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-10-29T05:21:50.426603Z",
+        "finished_at": "2026-10-29T05:25:49.415825Z"
+    },
+    "verifier": null,
+    "step_results": null
+}

@@ -1,0 +1,22 @@
+{
+    "task": {
+        "path": "D:\\Development\\oc-o11y-bench\\.work\\tasks\\service-degradation-rca",
+        "source": "tasks"
+    },
+    "trial_name": "service-degradation-rca__e5fLRCX",
+    "trials_dir": "D:\\Development\\oc-o11y-bench\\jobs\\service-degradation-rca-20261029-052132-b9aad7",
+    "agent": {
+        "name": "opencluster_bench.agent:OpenClusterAgent",
+        "model_name": "openrouter/z-ai/glm-5.1"
+    },
+    "environment": {
+        "type": "docker",
+        "extra_docker_compose": [
+            "D:\\Development\\oc-o11y-bench\\environment\\compose.override.yaml"
+        ]
+    },
+    "verifier": {
+        "disable": true
+    },
+    "job_id": "c0b399ab-3df3-4921-8977-acc1f22b5cf5"
+}

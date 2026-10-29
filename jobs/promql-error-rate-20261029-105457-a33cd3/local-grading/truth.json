@@ -1,0 +1,21 @@
+[
+  {
+    "key": "{\"backend\": \"prometheus\", \"kind\": \"query\", \"query\": \"sum(rate(http_requests_total{status=~\\\"5..\\\",job=~\\\"user-service|order-service|payment-service\\\"}[1h])) / sum(rate(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[1h]))\"}",
+    "summary": "Matching metrics exist in the snapshot window: Query returned 1 result: 0.033898",
+    "error": null,
+    "fails": false,
+    "debug": {
+      "backend": "prometheus",
+      "query": "sum(rate(http_requests_total{status=~\"5..\",job=~\"user-service|order-service|payment-service\"}[1h])) / sum(rate(http_requests_total{job=~\"user-service|order-service|payment-service\"}[1h]))",
+      "result": {
+        "shape": "items",
+        "items": [
+          {
+            "labels": {},
+            "value": 0.03389830508474576
+          }
+        ]
+      }
+    }
+  }
+]

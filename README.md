@@ -39,6 +39,13 @@ Use --no-grade to run the original case using only the Agent API key. It preserv
 Investigation, Findings, Tool Runs and ATIF, and skips the judge and correctness score. Omit --no-grade
 when you want upstream scoring and have supplied its Anthropic key.
 
+For OpenRouter, grade the saved job with the existing Agent key:
+`uv run --locked python -m opencluster_bench.grade jobs/<job-name>`.
+This runs the original checks, canonical truth queries, rubric and Anthropic SDK judge through
+OpenRouter's Anthropic-compatible endpoint (`anthropic/claude-haiku-5.5@high`).
+It does not rerun the Agent. Results under `local-grading/` and `grading-context.json` identify
+this local grading route; they do not create a leaderboard submission.
+
 One trial is one attempt, not one model call. Set account spending limits before running;
 connectivity checks and rubric grading also consume model usage. No Grafana Cloud or Harbor Cloud key is needed.
 

@@ -586,6 +586,19 @@ class AdapterTest(unittest.TestCase):
             (logs / "instruction.txt").write_text("Include a trace id if possible.")
             write_artifact(logs, "investigation.json", result)
             write_artifact(logs, "tool-results.json", capture)
+            (job / "local-grading").mkdir()
+            (job / "local-grading/grading_details.json").write_text(
+                json.dumps(
+                    {
+                        "status": "failed",
+                        "score": 0.5,
+                        "grading_model": "judge",
+                        "rubric_passed": 0,
+                        "outcome:Root cause": "not_stated",
+                        "explanation:Root cause": "Mechanism was not established.",
+                    }
+                )
+            )
             report = write_report(job, "model", graded=False, harness_exit_code=0).read_text(
                 encoding="utf-8"
             )
@@ -596,6 +609,10 @@ class AdapterTest(unittest.TestCase):
         self.assertIn(trace_id, examples)
         self.assertIn("model observation clipped", report)
         self.assertNotIn("Evidence capture incomplete", report)
+        self.assertIn("Local rubric verdict: **failed**", report)
+        self.assertIn("Mechanism was not established.", report)
+        self.assertIn("local-grading/grading_details.json", report)
+        self.assertNotIn("no LLM judge verdict", report)
 
     def test_smoke_report_links_all_investigations_to_the_full_smoke_record(self):
         from pathlib import Path
@@ -627,6 +644,24 @@ class AdapterTest(unittest.TestCase):
             )
         self.assertEqual(report.count("[Public result](trial/agent/artifacts/smoke.json)"), 2)
         self.assertNotIn("[Public result](trial/agent/artifacts/investigation.json)", report)
+
+    def test_openrouter_grading_uses_native_anthropic_endpoint_without_exporting_key(self):
+        import os
+        from unittest.mock import patch
+
+        from opencluster_bench.grade import configure_judge
+
+        with patch.dict(os.environ, {}, clear=True):
+            model, context = configure_judge(
+                {"model": {"provider": "openrouter", "api_key": "test-secret"}}
+            )
+            self.assertEqual(model, "anthropic/claude-haiku-5.5@high")
+            self.assertEqual(os.environ["ANTHROPIC_BASE_URL"], "https://openrouter.ai/api")
+            self.assertEqual(os.environ["ANTHROPIC_AUTH_TOKEN"], "test-secret")
+            self.assertEqual(os.environ["ANTHROPIC_API_KEY"], "")
+            self.assertNotIn("test-secret", str(context))
+        with self.assertRaisesRegex(ValueError, "OpenRouter"):
+            configure_judge({"model": {"provider": "anthropic", "api_key": "test-secret"}})
 
     def test_no_grade_cli_does_not_require_a_judge_key(self):
         import subprocess

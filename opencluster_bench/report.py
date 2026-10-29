@@ -286,18 +286,45 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines, pub
 
 def write_report(job_dir: Path, model: str, *, graded: bool, harness_exit_code: int) -> Path:
     trial_stats = _read(job_dir / "result.json", {}).get("stats", {})
+    grading_status = (
+        "Grading requested; see unchanged upstream verifier artifacts."
+        if graded
+        else "**Ungraded: no LLM judge verdict or benchmark pass score.**"
+    )
+    local_grade = _read(job_dir / "local-grading/grading_details.json", {})
+    if local_grade:
+        grading_status = (
+            f"Local rubric verdict: **{local_grade.get('status', 'error')}**; "
+            f"weighted score: {local_grade.get('score', 'unavailable')}. "
+            f"Judge: {local_grade.get('grading_model', 'unavailable')}. "
+            "[Criterion verdicts](local-grading/grading_details.json), "
+            "[canonical truth](local-grading/truth.json), "
+            "[grading route and scope](grading-context.json). "
+            "Saved-answer grading does not constitute an official leaderboard submission."
+        )
     lines = [
         "# OpenCluster benchmark assessment",
         "",
         "Model: " + model,
         "",
-        "Grading requested; see unchanged upstream verifier artifacts."
-        if graded
-        else "**Ungraded: no LLM judge verdict or benchmark pass score.**",
+        grading_status,
         f"Harbor process exit code: {harness_exit_code}",
         f"Harbor trial errors: {trial_stats.get('n_errored_trials', 'unavailable')}",
         "Execution completion, answer correctness and benchmark grading are separate outcomes.",
     ]
+    if local_grade:
+        lines.extend(["", "## Rubric verdicts", ""])
+        for key, outcome in local_grade.items():
+            if key.startswith("outcome:"):
+                name = key.removeprefix("outcome:")
+                lines.extend(
+                    [
+                        "**" + escape(name, quote=False) + ": " + _cell(outcome) + "**",
+                        "",
+                        _block(local_grade.get("explanation:" + name, "")),
+                        "",
+                    ]
+                )
     audit = _read(job_dir / "fact-audit.json", {})
     audit_lines = []
     if audit:

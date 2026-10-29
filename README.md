@@ -92,6 +92,9 @@ Trace examples list IDs stated in the answer; the report never invents an exampl
 An instant Prometheus evaluation can legitimately have equal bounds while `[60m]` reads the preceding hour.
 Public Tool execution timestamps have second precision. HTTP timestamps retain subsecond precision and measure
 request-to-response-headers time, not complete Tool execution.
+Reports name captured trace operations beside IDs and show HTTP timing directly. They also distinguish source
+limits from the Agent's pre-existing 16 KiB model-observation cuts; a complete recording can faithfully contain
+a cut observation. Failed Investigations expose their actual error separately from Harbor's process exit code.
 
 Docker readiness is checked before any build. Application execution has a bounded deadline;
 unfinished Investigations are cancelled, and failures are reported rather than converted into answers.

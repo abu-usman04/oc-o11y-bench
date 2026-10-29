@@ -2,6 +2,8 @@
 
 import json
 import re
+from datetime import datetime
+from html import escape
 from pathlib import Path
 
 
@@ -33,6 +35,25 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines):
         for entry in capture.get("toolResults", [])
         if entry["investigationId"] == result["id"]
     }
+    clipped = {
+        ordinal
+        for ordinal, entry in observations.items()
+        if re.search(r"\[cut at \d+ bytes\]$", entry.get("content", ""))
+    }
+    trace_details = {}
+    for ordinal, entry in observations.items():
+        try:
+            payload = json.loads(entry.get("content", "").partition("\nCONTENT: ")[2])
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(payload, dict) or not payload.get("traceId"):
+            continue
+        root = next((span for span in payload.get("spans", []) if not span.get("parentId")), None)
+        if root:
+            trace_details[payload["traceId"]] = (
+                f"{root['operation']} - {root['durationNanos'] / 1e9:.3f} s "
+                f"(root service {root['service']}; Tool Run #{ordinal})"
+            )
     failed = sum(run["outcome"] != "succeeded" for run in runs)
     limited = sum(bool(run.get("truncated")) for run in runs)
     seen: dict[str, int] = {}
@@ -52,13 +73,18 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines):
             "",
             "## Answer",
             "",
-            _block(result.get("summary") or "No answer was produced."),
+            "\n".join(
+                "> " + line
+                for line in escape(
+                    result.get("summary") or "No answer was produced.", quote=False
+                ).splitlines()
+            ),
             "",
             "### Question",
             "",
             _block(question),
             "",
-            f"Investigation: **{result['status']}**; assessment: "
+            f"Investigation: **{result['status']}**; Agent-claimed assessment: "
             f"**{result.get('conclusionStatus', 'unavailable')}**.",
             f"Tool attempts: **{len(runs)}**, including **{failed} failed/blocked** "
             f"and **{limited} limited**.",
@@ -74,13 +100,19 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines):
             if elapsed is not None
             else "Agent elapsed: unavailable.",
             "Exact repeated requests: " + ("; ".join(duplicate_ordinals) or "none") + ".",
-            "",
-            "### Trace examples in the answer",
-            "",
+            "Model-observation clipping: "
+            + (
+                ", ".join(f"#{n}" for n in sorted(clipped))
+                + ". These observations were cut by the Agent before provider submission; "
+                "capture preserves that exact bounded input."
+                if clipped
+                else "none detected."
+            ),
         ]
     )
     if result.get("error"):
         lines.extend(["", "**Investigation failure:**", "", _block(result["error"])])
+    lines.extend(["", "### Trace examples in the answer", ""])
     answer_text = (
         (result.get("summary") or "")
         + "\n"
@@ -88,7 +120,9 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines):
     )
     trace_ids = list(dict.fromkeys(re.findall(r"\b[0-9a-fA-F]{32}\b", answer_text)))
     if trace_ids:
-        lines.extend("- `" + identifier + "`" for identifier in trace_ids)
+        for identifier in trace_ids:
+            detail = trace_details.get(identifier)
+            lines.append("- `" + identifier + "`" + (" - " + detail if detail else ""))
         lines.append(
             "These IDs were stated by the Agent; IDs appearing only in Tool search output "
             "are not added here."
@@ -97,6 +131,7 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines):
         lines.append("**No trace ID was included in the Agent answer despite the request.**")
     else:
         lines.append("No trace example was stated or requested.")
+    lines.extend(audit_lines)
     lines.extend(["", "### Findings and uncertainty", ""])
     for finding in result.get("findings") or []:
         refs = ", ".join(f"[#{n}](#run-{result['id']}-{n})" for n in finding.get("runRefs", []))
@@ -113,7 +148,6 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines):
         )
     for action in result.get("actions") or []:
         lines.append(f"- **Next diagnostic step**: {action['title']}. {action['verification']}")
-    lines.extend(audit_lines)
     lines.extend(
         [
             "",
@@ -125,8 +159,9 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines):
     )
     for run in runs:
         n = run["ordinal"]
+        outcome = _outcome(run) + ("; model observation clipped" if n in clipped else "")
         lines.append(
-            f"| [#{n}](#run-{result['id']}-{n}) | {_cell(run['tool'])} | {_outcome(run)} | "
+            f"| [#{n}](#run-{result['id']}-{n}) | {_cell(run['tool'])} | {outcome} | "
             f"{_cell(run.get('purpose', ''))} |"
         )
     lines.extend(
@@ -213,6 +248,14 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines):
             )
             if request.get("origin"):
                 lines.append("Configured source: `" + request["origin"] + "`.")
+            if request.get("startedAt") and request.get("headersAt"):
+                started = datetime.fromisoformat(request["startedAt"].replace("Z", "+00:00"))
+                headers = datetime.fromisoformat(request["headersAt"].replace("Z", "+00:00"))
+                duration = (headers - started).total_seconds() * 1000
+                lines.append(
+                    f"HTTP timing: {request['startedAt']} to {request['headersAt']}; "
+                    f"{duration:.3f} ms to response headers."
+                )
             lines.extend(
                 ["", "Actual request parameters:", "", _block(request.get("parameters", {}))]
             )
@@ -221,6 +264,11 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines):
                 "Endpoint association: " + observation.get("requestStatus", "unavailable") + "."
             )
         content = observation.get("content", "")
+        if n in clipped:
+            lines.append(
+                "**Model observation clipped before provider submission.** "
+                "This is separate from source limits and recording completeness."
+            )
         lines.extend(
             [
                 "",

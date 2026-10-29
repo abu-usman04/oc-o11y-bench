@@ -286,6 +286,8 @@ class AdapterTest(unittest.TestCase):
                             "path": "/api/v1/query",
                             "status": 200,
                             "parameters": {"query": ["test[60m]"]},
+                            "startedAt": "2026-10-28T10:00:01.123456Z",
+                            "headersAt": "2026-10-28T10:00:01.126456Z",
                         }
                     ],
                 }
@@ -325,6 +327,7 @@ class AdapterTest(unittest.TestCase):
             "No trace ID was included in the Agent answer",
             "/api/v1/investigations/investigation-1",
             "POST /api/v1/query",
+            "3.000 ms to response headers",
             "0.02",
             "Evaluation at",
             "[60m]",
@@ -525,6 +528,74 @@ class AdapterTest(unittest.TestCase):
         self.assertIn("a finding cites unavailable prior evidence", report)
         self.assertIn("Harbor trial errors: 1", report)
         self.assertNotIn("stopped by: **Agent conclusion**", report)
+
+    def test_report_names_trace_operation_and_separates_model_clipping(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
+        from opencluster_bench.report import write_report
+        from opencluster_bench.runtime import write_artifact
+
+        trace_id = "0" * 31 + "1"
+        with application() as (api, _):
+            result = investigate(api, "Question", "2026-10-28T09:00:00Z", "2026-10-28T10:00:00Z")
+        result["summary"] = f"Representative trace: {trace_id}"
+        result["runs"].append(
+            {
+                "ordinal": 2,
+                "tool": "tempo_get_trace",
+                "outcome": "succeeded",
+                "arguments": {"traceId": trace_id},
+            }
+        )
+        capture = {
+            "complete": True,
+            "toolResults": [
+                {
+                    "investigationId": "investigation-1",
+                    "ordinal": 1,
+                    "content": (
+                        '[run 1] prometheus_query {}\nCONTENT: {"series":[... [cut at 16384 bytes]'
+                    ),
+                    "requests": [],
+                },
+                {
+                    "investigationId": "investigation-1",
+                    "ordinal": 2,
+                    "content": "[run 2] tempo_get_trace {}\nCONTENT: "
+                    + json.dumps(
+                        {
+                            "traceId": trace_id,
+                            "spans": [
+                                {
+                                    "service": "webapp",
+                                    "operation": "GET /api/products",
+                                    "durationNanos": 15220816638,
+                                }
+                            ],
+                        }
+                    ),
+                    "requests": [],
+                },
+            ],
+        }
+        with TemporaryDirectory() as directory:
+            job = Path(directory)
+            logs = job / "trial/agent"
+            logs.mkdir(parents=True)
+            (logs / "instruction.txt").write_text("Include a trace id if possible.")
+            write_artifact(logs, "investigation.json", result)
+            write_artifact(logs, "tool-results.json", capture)
+            report = write_report(job, "model", graded=False, harness_exit_code=0).read_text(
+                encoding="utf-8"
+            )
+        examples = report.split("### Trace examples in the answer", 1)[1].split("### Findings", 1)[
+            0
+        ]
+        self.assertIn("GET /api/products", examples)
+        self.assertIn(trace_id, examples)
+        self.assertIn("model observation clipped", report)
+        self.assertNotIn("Evidence capture incomplete", report)
 
     def test_no_grade_cli_does_not_require_a_judge_key(self):
         import subprocess

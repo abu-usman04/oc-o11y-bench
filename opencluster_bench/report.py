@@ -63,7 +63,10 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines):
             f"Tool attempts: **{len(runs)}**, including **{failed} failed/blocked** "
             f"and **{limited} limited**.",
             "Read budget: **30** (unchanged); stopped by: **"
-            + result.get("stoppedBy", "Agent conclusion")
+            + result.get(
+                "stoppedBy",
+                "Agent conclusion" if result["status"] == "concluded" else "unavailable",
+            )
             + "**.",
             f"Tokens: {usage.get('inputTokens', 'unavailable')} input / "
             f"{usage.get('outputTokens', 'unavailable')} output.",
@@ -76,8 +79,10 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines):
             "",
         ]
     )
+    if result.get("error"):
+        lines.extend(["", "**Investigation failure:**", "", _block(result["error"])])
     answer_text = (
-        result.get("summary", "")
+        (result.get("summary") or "")
         + "\n"
         + "\n".join(finding["statement"] for finding in result.get("findings") or [])
     )
@@ -232,6 +237,7 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines):
 
 
 def write_report(job_dir: Path, model: str, *, graded: bool, harness_exit_code: int) -> Path:
+    trial_stats = _read(job_dir / "result.json", {}).get("stats", {})
     lines = [
         "# OpenCluster benchmark assessment",
         "",
@@ -241,6 +247,7 @@ def write_report(job_dir: Path, model: str, *, graded: bool, harness_exit_code: 
         if graded
         else "**Ungraded: no LLM judge verdict or benchmark pass score.**",
         f"Harbor process exit code: {harness_exit_code}",
+        f"Harbor trial errors: {trial_stats.get('n_errored_trials', 'unavailable')}",
         "Execution completion, answer correctness and benchmark grading are separate outcomes.",
     ]
     audit = _read(job_dir / "fact-audit.json", {})

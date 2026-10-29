@@ -37,6 +37,12 @@ def application(*, status="concluded", delay=0, outcome="succeeded"):
         ],
     }
 
+    if status == "failed":
+        conclusion.pop("summary")
+        conclusion.pop("conclusionStatus")
+        conclusion["findings"] = None
+        conclusion["error"] = "a finding cites unavailable prior evidence"
+
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
             self.respond()
@@ -496,6 +502,29 @@ class AdapterTest(unittest.TestCase):
         self.assertEqual(b["requests"][0]["parameters"]["limit"], ["20"])
         self.assertEqual(skipped["requests"], [])
         self.assertIn("[run 3]", skipped["content"])
+
+    def test_failed_investigation_report_exposes_the_actual_failure(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
+        from opencluster_bench.report import write_report
+        from opencluster_bench.runtime import write_artifact
+
+        with application(status="failed") as (api, _):
+            result = investigate(api, "Question", "2026-10-28T09:00:00Z", "2026-10-28T10:00:00Z")
+        with TemporaryDirectory() as directory:
+            job = Path(directory)
+            logs = job / "trial/agent"
+            logs.mkdir(parents=True)
+            (logs / "instruction.txt").write_text("Question")
+            (job / "result.json").write_text(json.dumps({"stats": {"n_errored_trials": 1}}))
+            write_artifact(logs, "investigation.json", result)
+            report = write_report(job, "model", graded=False, harness_exit_code=0).read_text(
+                encoding="utf-8"
+            )
+        self.assertIn("a finding cites unavailable prior evidence", report)
+        self.assertIn("Harbor trial errors: 1", report)
+        self.assertNotIn("stopped by: **Agent conclusion**", report)
 
     def test_no_grade_cli_does_not_require_a_judge_key(self):
         import subprocess

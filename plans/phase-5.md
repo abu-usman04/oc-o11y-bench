@@ -1,6 +1,6 @@
 # Phase 5: real OpenCluster benchmark
 
-Status: live testing in progress. User approved running benchmark cases without grading on 2026-10-29. Docker now responds; use the existing OpenRouter GLM configuration.
+Status: implementation and live ungraded acceptance completed on 2026-10-29. The user approved skipping grading. Connectivity smoke and all four selected cases concluded using z-ai/glm-5.1 through OpenRouter; each final Harbor run exited successfully. Execution success is not a correctness score.
 
 - Keep all new code and artifacts in this standalone workspace. Build production code from clean commit f3f0e700c5927f94e893681e4b12bf40b741ebff; preserve the existing control-plane working directory.
 - Use o11y-bench commit b66d8cfbbe309d2e03e9a301baea056d9718b71b and Harbor 0.24.0. Reuse upstream task generation, telemetry and grading. Reproducibly remove only the MCP capability declaration from generated task metadata; record that difference. Add PostgreSQL with a run-level Compose overlay.
@@ -12,4 +12,10 @@ User-approved extension: add --no-grade and a deterministic readable result repo
 
 Review: independent Standards and Spec reviews found no residual issues after the credential-safe log correction. Scope and seams match the approved proposal; no production changes or new service abstractions were added.
 
-Verification: nine tests in one focused file, Ruff lint/format, mypy, locked dependency checks, source/wheel builds, real Harbor adapter/schema/parser loading, offline Compose merge validation, and the documented preparation command pass. Live testing has started. Docker responds. A Windows CRLF checkout caused a reproducible Linux shebang failure; restored files match the pinned Git tree exactly, and future clones disable CRLF conversion. The minimized Linux execution check now passes. Next: finish smoke and run promql-error-rate with --no-grade; inspect its real public Findings and Tool Runs.
+Verification: nine tests in one focused file, Ruff lint/format, mypy, locked dependency checks, source/wheel builds, real Harbor adapter/schema/parser loading, offline Compose merge validation, and task preparation pass. The final tests ran against a clean pinned benchmark checkout, preserving the user’s local Tempo-question formatting edit. Both independent reviews found no remaining actionable issues.
+
+Live results: connectivity smoke verified all four native Tools across three concluded Investigations. Prometheus completed with eight Tool attempts and one Finding; Loki with one attempt and three Findings; Tempo with six attempts and six Findings; cross-source with 31 recorded attempts and seven Findings. Cross-source exhausted its 30-read budget: two queries failed, and the extra read was blocked. The Agent identified order-service as the bottleneck but did not establish its underlying internal cause. Findings reference recorded Tool ordinals. JSON, ATIF, logs and readable reports are indexed in jobs/live-results.md. Full Tool-result bodies and private model reasoning are not persisted.
+
+Infrastructure corrections: Windows CRLF conversion prevented Linux script execution; restored files matched the pinned Git tree, and future clones retain LF. Windows cp1252 decoding broke Harbor postprocessing of the initial concluded Tempo Investigation; UTF-8 is now explicit. That failed harness attempt remains available, and one infrastructure-only Tempo rerun completed successfully. No automatic retries or benchmark answer changes were introduced.
+
+Cleanup and security: temporary trial containers and per-job credential files were removed. Existing user containers and production working-directory changes were preserved. Configured API keys were absent from inspected successful job artifacts and distribution archives. The optional upstream grader remains unchanged and disabled for these runs; no Anthropic credential or replacement judge was needed.

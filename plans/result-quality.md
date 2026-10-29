@@ -1,0 +1,37 @@
+# Benchmark evidence and report improvements
+
+Status: authorized by the user on 2026-10-29; plan reviewed before implementation. Review baseline: 01c83dd8da7652b3d2059e07722650b27986bbc7 in this standalone benchmark repository.
+
+## Critique before implementation
+
+The current report reproduces JSON without assessing whether it answers the question. Diagnostic JSON also breaks the unchanged upstream transcript parser. Public Tool Run summaries omit the actual observations and cannot support a complete audit. Raising the read limit or choosing a different model would hide these measurement problems.
+
+Keep these changes outside the production repository. Do not add production persistence, another reasoning loop, a recording proxy, a new judge, or a general observability framework. Use the existing application Completer interface to observe bounded Tool results sent to the real provider. A benchmark-only entry point may record read-request metadata through the standard HTTP transport; it must forward requests and responses unchanged and must never record headers or model messages. Identify that instrumentation in the build manifest.
+
+The previous Tempo and cross-source answers contain full trace IDs. Make them visible instead of changing the original answers. A missing requested trace ID must be reported as missing, never supplied by the report writer.
+
+## Scope and sequence
+
+1. Fix grading compatibility first. Keep trajectory.json as the only root JSON transcript in agent/. Put Investigation, Integration, observation, request and failure artifacts in agent/artifacts/. Keep upstream questions and grader code unchanged. Test the complete exported directory with the real upstream parser.
+2. Make each report readable. Lead with the original answer, execution status, grading status and remaining uncertainty. Show cited Findings, representative trace IDs, one row per Tool attempt, actual observations, failed/empty/truncated results, duplicate calls, budget use, time semantics and links to raw evidence. Explain each artifact's API origin. Do not present model claims as independently verified facts or turn unavailable scores or durations into zero.
+3. Retain real evidence. Build the pinned production source with a small external benchmark entry point using the existing application and real provider adapters. Record the bounded Tool observations as passed to the provider, their real call IDs, and matching observability read method/path/parameters/status/timestamps. Do not record assistant reasoning, Authorization headers or credentials. Store captures privately until runtime redaction/export. Declare any unmatched request or missing observation; do not reconstruct missing payloads from summaries.
+4. Retain the current evaluation conditions. Keep control-plane commit f3f0e700c5927f94e893681e4b12bf40b741ebff, benchmark commit b66d8cfbbe309d2e03e9a301baea056d9718b71b, Harbor 0.24.0, OpenRouter z-ai/glm-5.1, original questions, and the default 30-read budget. Build and record an instrumentation hash. Preserve user files, old jobs and the local upstream formatting edit.
+5. Verify before spending model usage. Follow red then green for each slice. Keep the Python adapter/report tests in their existing file. Add one focused Go httptest.Server file for the new recorder at the real provider SDK seam. Check parser compatibility, exact SDK forwarding, observation fidelity, metadata origin, redaction, trace visibility, failed calls and bounded capture. Run formatting, lint, typing, build and the complete relevant suites.
+6. Rerun connectivity smoke, then Prometheus, Loki, Tempo and cross-source once each, sequentially, without grading. Compare each report with canonical facts read from a disposable original benchmark stack at that run's clock; also run applicable deterministic checks. These checks must remain separate from an LLM judge verdict. Retain failures, do not automatically retry, and do not count ungraded completion as a benchmark pass.
+7. Review the complete change against this plan and repository standards; fix substantive findings, commit the work, and report observed results and limitations. Remove trial containers and temporary credential files. Do not create a PR or merge production changes.
+
+## Test seams and acceptance
+
+The approved seams remain the public control-plane HTTP adapter and exported artifacts. Strengthen the export seam with the real upstream parser over the actual directory layout. The capture requirement additionally uses the existing public Completer interface and real provider SDK against httptest.Server; it does not test private Agent implementation details.
+
+Acceptance requires unchanged upstream parser success over a real new job directory; one readable report per run with visible trace IDs when the Agent supplied them; every native Tool attempt represented, with actual bounded observation or an explicit missing reason; endpoint details distinguished from control-plane API provenance; no configured secrets in artifacts; unchanged default read budget; and clearly separated execution, deterministic checks, canonical facts and judge verdicts.
+
+## Expected folder changes
+
+Keep opencluster_bench/agent.py for Harbor export, runtime.py for API execution and safe artifact export, report.py for readable rendering, and __main__.py for building and running. Add a small evidence.py only if shared capture-reading and matching logic would otherwise be duplicated. Add environment/recorder.go, environment/recorder_test.go and a small benchmark Dockerfile for the instrumented entry point. Keep tests/test_adapter.py as the sole Python test file.
+
+New jobs contain opencluster-result.md and the existing manifest at job level, trajectory.json and instruction.txt at agent level, and explanatory raw evidence under agent/artifacts/. Store fact-only audit outputs alongside each job, outside the transcript directory. JSON stays valid JSON; explanations belong in metadata and the readable report.
+
+## Known limits
+
+This is a selected-case evaluation, not a full benchmark claim. Current Tools do not cover all o11y-bench tasks. A correct bottleneck diagnosis may still leave its internal trigger unknown. The recorder retains bounded observations supplied to the provider adapter, not private model reasoning or an unlimited backend document. HTTP metadata describes actual requests; response timing is time to headers unless explicitly measured otherwise.

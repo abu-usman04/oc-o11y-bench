@@ -56,6 +56,8 @@ Set `grading.anthropic_api_key` only if the grader needs a different key.
 
 Open `jobs/JOB_NAME/opencluster-result.md` for the answer, findings and Tool calls.
 The job also retains JSON observations, endpoint details, logs and grading results.
+New runs compare each authorized, retained observation with the recorder's exact prepared input
+and export `retained-observations.json`; model clipping is separate from source limits.
 See [recorded runs and audits](jobs/README.md) for existing analyses.
 
 Jobs are committed for analysis; keep credentials out of them.

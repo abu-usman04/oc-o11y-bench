@@ -77,6 +77,12 @@ class API:
         finally:
             connection.close()
 
+    def observations(self, result):
+        return [
+            self.request("GET", f"/investigations/{result['id']}/runs/{run['ordinal']}/observation")
+            for run in result.get("runs", [])
+        ]
+
     def bootstrap(self, token, password):
         self.request(
             "POST",
@@ -166,7 +172,11 @@ def trajectory(instruction, result, model, tool_results=()):
         observation = captured.get(run["ordinal"])
         call_id = observation["callId"] if observation else "run-" + str(run["ordinal"])
         recorded = {key: value for key, value in run.items() if key != "arguments"}
-        recorded["contentAvailability"] = "Full Tool-result content is not persisted."
+        recorded["contentAvailability"] = (
+            "Prepared observation is retrieved separately through the authorized run endpoint."
+            if "modelClipped" in run
+            else "Full Tool-result content is not persisted in this legacy record."
+        )
         steps.append(
             {
                 "step_id": len(steps) + 1,
@@ -425,6 +435,26 @@ def main():
                 [item["result"] for item in results] if smoke else [result],
                 verified,
             )
+            retained = [
+                view
+                for completed in ([item["result"] for item in results] if smoke else [result])
+                for view in api.observations(completed)
+            ]
+            write_json("retained-observations.json", retained)
+            prepared = {
+                (view["investigationId"], view["ordinal"]): view["observationText"]
+                for view in retained
+            }
+            matches = len(prepared) == len(captured["toolResults"]) and all(
+                prepared.get((entry["investigationId"], entry["ordinal"])) == entry["content"]
+                for entry in captured["toolResults"]
+            )
+            captured["retainedObservationsMatch"] = matches
+            if not matches:
+                captured["complete"] = False
+                captured["errors"].append(
+                    "Retained observations differ from prepared provider input."
+                )
             write_json("tool-results.json", captured)
             artifact_path(output, "capture.jsonl").write_text(
                 redacted_log(

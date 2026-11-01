@@ -62,6 +62,12 @@ def application(*, status="concluded", delay=0, outcome="succeeded"):
                     "Set-Cookie", "__Host-oc_session=session-secret; Path=/; Secure; HttpOnly"
                 )
                 reply = {"bootstrapped": True}
+            elif self.path.endswith("/observation"):
+                reply = {
+                    "investigationId": "investigation-1",
+                    "ordinal": 1,
+                    "observationText": "[run 1] prometheus_query {}\nCONTENT: 0.02",
+                }
             elif self.path.endswith("/conversations"):
                 reply = {"id": "conversation-1", "turn": {"investigationId": "investigation-1"}}
             elif self.path == "/api/v1/integrations":
@@ -540,6 +546,7 @@ class AdapterTest(unittest.TestCase):
         with application() as (api, _):
             result = investigate(api, "Question", "2026-10-28T09:00:00Z", "2026-10-28T10:00:00Z")
         result["summary"] = f"Representative trace: {trace_id}"
+        result["runs"][0].update(modelClipped=True, durationMs=1.25)
         result["runs"].append(
             {
                 "ordinal": 2,
@@ -554,9 +561,7 @@ class AdapterTest(unittest.TestCase):
                 {
                     "investigationId": "investigation-1",
                     "ordinal": 1,
-                    "content": (
-                        '[run 1] prometheus_query {}\nCONTENT: {"series":[... [cut at 16384 bytes]'
-                    ),
+                    "content": ('[run 1] prometheus_query {}\nCONTENT: {"names":["retained"]}'),
                     "requests": [],
                 },
                 {
@@ -608,6 +613,8 @@ class AdapterTest(unittest.TestCase):
         self.assertIn("GET /api/products", examples)
         self.assertIn(trace_id, examples)
         self.assertIn("model observation clipped", report)
+        self.assertIn("durationMs", report)
+        self.assertNotIn("Public execution timestamps are rounded", report)
         self.assertNotIn("Evidence capture incomplete", report)
         self.assertIn("Local rubric verdict: **failed**", report)
         self.assertIn("Mechanism was not established.", report)
@@ -731,6 +738,22 @@ class AdapterTest(unittest.TestCase):
                 "2026-10-28T10:00:00Z",
                 timeout=2,
             )
+            retained = api.observations(result)
+        self.assertEqual(
+            retained,
+            [
+                {
+                    "investigationId": "investigation-1",
+                    "ordinal": 1,
+                    "observationText": "[run 1] prometheus_query {}\nCONTENT: 0.02",
+                }
+            ],
+        )
+        reads = [r for r in requests if r[1].endswith("/observation")]
+        self.assertEqual(len(reads), 1)
+        self.assertEqual(reads[0][1], "/api/v1/investigations/investigation-1/runs/1/observation")
+        self.assertEqual(reads[0][2]["Cookie"], "__Host-oc_session=session-secret")
+        self.assertNotIn("observationText", result["runs"][0])
         submitted = next(r for r in requests if r[1].endswith("/conversations"))
         self.assertEqual(
             submitted[3],

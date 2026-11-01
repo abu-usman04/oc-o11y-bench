@@ -35,11 +35,16 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines, pub
         for entry in capture.get("toolResults", [])
         if entry["investigationId"] == result["id"]
     }
-    clipped = {
-        ordinal
-        for ordinal, entry in observations.items()
-        if re.search(r"\[cut at \d+ bytes\]$", entry.get("content", ""))
-    }
+    clipped = set()
+    for run in runs:
+        ordinal = run["ordinal"]
+        if "modelClipped" in run:
+            cut = run["modelClipped"]
+        else:
+            content = observations.get(ordinal, {}).get("content", "")
+            cut = bool(re.search(r"\[cut at \d+ bytes\]$", content))
+        if cut:
+            clipped.add(ordinal)
     trace_details = {}
     for ordinal, entry in observations.items():
         try:
@@ -184,9 +189,13 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines, pub
             "",
             "An instant Prometheus read has one evaluation timestamp. A selector such as `[60m]` "
             "reads the preceding hour; equal evaluation bounds do not mean an empty lookback.",
-            "Public execution timestamps are rounded to seconds by the pinned API. Equal "
-            "start/finish values do not prove zero duration. Captured HTTP timestamps retain "
-            "subsecond precision; their elapsed interval measures time to response headers.",
+            (
+                "Execution timestamps preserve stored subsecond precision; durationMs is derived "
+                "from the execution interval. HTTP timing measures time to response headers."
+                if any("durationMs" in run for run in runs)
+                else "This legacy API rounded execution timestamps to seconds. Equal start/finish "
+                "values do not prove zero duration. HTTP timing measures time to response headers."
+            ),
         ]
     )
     for run in runs:
@@ -201,6 +210,11 @@ def _investigation(lines, question, result, artifacts, capture, audit_lines, pub
                 f"**{run['tool']}** — {run.get('purpose', '')}",
             ]
         )
+        if "durationMs" in run:
+            lines.append(
+                f"Execution: {run.get('startedAt')} to {run.get('finishedAt')}; "
+                f"durationMs: {run['durationMs']}."
+            )
         if run.get("windowFrom"):
             label = (
                 "Evaluation at"

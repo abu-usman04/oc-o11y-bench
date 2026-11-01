@@ -1,0 +1,146 @@
+{
+  "case": "find-slow-traces",
+  "exactPreparedTextMatches": true,
+  "attempts": 4,
+  "failed": [],
+  "sourceIncomplete": [
+    1
+  ],
+  "modelClipped": [],
+  "usage": {
+    "inputTokens": 31436,
+    "outputTokens": 3437
+  },
+  "elapsedSeconds": 33.27435330400476,
+  "observations": [
+    {
+      "ordinal": 1,
+      "tool": "tempo_search_traces",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "limit": 20,
+        "query": "{resource.service.name!=\"\" && name=\"POST /api/orders\" && duration>1s}",
+        "start": "2026-10-28T11:00:00Z"
+      },
+      "summary": "Tempo search incomplete: 20 traces, 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z",
+      "networkReads": 1,
+      "returnedTraces": 20,
+      "independentlyCountedAppearances": {
+        "api-gateway": 20,
+        "order-service": 20,
+        "payment-service": 5,
+        "user-service": 12,
+        "webapp": 20
+      },
+      "tracesWithoutServiceStats": 0,
+      "reportedSummary": {
+        "api-gateway": 20,
+        "order-service": 20,
+        "payment-service": 5,
+        "user-service": 12,
+        "webapp": 20
+      }
+    },
+    {
+      "ordinal": 2,
+      "tool": "tempo_search_traces",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "limit": 20,
+        "query": "{resource.service.name!=\"\" && name=\"POST /api/payments\" && duration>1s}",
+        "start": "2026-10-28T11:00:00Z"
+      },
+      "summary": "Tempo search data: 5 traces, 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z",
+      "networkReads": 1,
+      "returnedTraces": 5,
+      "independentlyCountedAppearances": {
+        "api-gateway": 5,
+        "payment-service": 5,
+        "webapp": 5
+      },
+      "tracesWithoutServiceStats": 0,
+      "reportedSummary": {
+        "api-gateway": 5,
+        "payment-service": 5,
+        "webapp": 5
+      }
+    },
+    {
+      "ordinal": 3,
+      "tool": "tempo_get_trace",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "start": "2026-10-28T11:00:00Z",
+        "traceId": "4715b7764646608b1a48f1b3a2cec04b"
+      },
+      "summary": "Tempo trace 4715b7764646608b1a48f1b3a2cec04b: data, 3 spans; searched 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z; backend bounds are not a completeness guarantee",
+      "networkReads": 1,
+      "traceId": "4715b7764646608b1a48f1b3a2cec04b",
+      "spans": [
+        {
+          "id": "89cec30d2e1a64c1",
+          "parentId": null,
+          "service": "webapp",
+          "operation": "POST /api/orders",
+          "durationNanos": 17647701237
+        },
+        {
+          "id": "2a49fb5acfe1d074",
+          "parentId": "89cec30d2e1a64c1",
+          "service": "api-gateway",
+          "operation": "route /api/orders",
+          "durationNanos": 15882931113
+        },
+        {
+          "id": "07092fceefdb7922",
+          "parentId": "2a49fb5acfe1d074",
+          "service": "order-service",
+          "operation": "handle POST /api/orders",
+          "durationNanos": 12706344890
+        }
+      ]
+    },
+    {
+      "ordinal": 4,
+      "tool": "tempo_get_trace",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "start": "2026-10-28T11:00:00Z",
+        "traceId": "47abe06ecd31833974a2217543eb4112"
+      },
+      "summary": "Tempo trace 47abe06ecd31833974a2217543eb4112: data, 4 spans; searched 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z; backend bounds are not a completeness guarantee",
+      "networkReads": 1,
+      "traceId": "47abe06ecd31833974a2217543eb4112",
+      "spans": [
+        {
+          "id": "666ce0d4ff94b14b",
+          "parentId": null,
+          "service": "webapp",
+          "operation": "POST /api/orders",
+          "durationNanos": 16142597832
+        },
+        {
+          "id": "d48debee5c78de39",
+          "parentId": "666ce0d4ff94b14b",
+          "service": "api-gateway",
+          "operation": "route /api/orders",
+          "durationNanos": 14528338048
+        },
+        {
+          "id": "b632dc0ab9dbab14",
+          "parentId": "d48debee5c78de39",
+          "service": "order-service",
+          "operation": "handle POST /api/orders",
+          "durationNanos": 11622670438
+        },
+        {
+          "id": "01b32847579f6406",
+          "parentId": "b632dc0ab9dbab14",
+          "service": "user-service",
+          "operation": "call user-service",
+          "durationNanos": 25000000
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,243 @@
+{
+  "id": "2a60a37d-777a-4d73-91fb-e92f47fead2b",
+  "status": "concluded",
+  "subject": "Observability benchmark",
+  "windowFrom": "2026-10-29T09:54:29.760429Z",
+  "windowUntil": "2026-10-29T10:54:29.760429Z",
+  "conclusionStatus": "answer_only",
+  "summary": "Over the 60-minute window ending at 10:54:29 UTC on 2026-10-29, approximately **3.4%** of HTTP requests across user-service, order-service, and payment-service returned 5xx status codes.\n\nThis is based on `sum(increase(http_requests_total{...}))` evaluated over the full [60m] window:\n- **5xx requests:** ~2.01 (status=~\"5..\")\n- **Total requests:** ~59.27\n- **5xx share:** 2.01 / 59.27 ≈ **3.4%**\n\nPer-service breakdown:\n- **order-service:** ~2.6% 5xx (1.00 / 39.18)\n- **payment-service:** ~9.1% 5xx (1.00 / 11.05) — highest error rate\n- **user-service:** 0% 5xx (0 / 9.04) — no 5xx errors in this window\n\nNote: The metric uses a `status` label (not `code`) for HTTP status classification. The `increase()` function produces fractional estimates from counter extrapolation, so the share is approximate.",
+  "impact": {
+    "summary": "Payment-service has the highest 5xx rate (~9.1%) among the three services; order-service is lower (~2.6%); user-service had zero 5xx errors in this window.",
+    "runRefs": [
+      6,
+      2
+    ]
+  },
+  "findings": [
+    {
+      "statement": "Over the 60-minute window (09:54–10:54 UTC on 2026-10-29), the overall share of HTTP requests returning 5xx across user-service, order-service, and payment-service was approximately 3.4% (≈2.01 5xx out of ≈59.27 total requests).",
+      "kind": "observation",
+      "mechanism": "Prometheus increase() over 60-minute window on http_requests_total with status label for 5xx classification",
+      "runRefs": [
+        6,
+        2
+      ]
+    },
+    {
+      "statement": "Per-service 5xx shares: order-service ~2.6% (≈1.00 / ≈39.18), payment-service ~9.1% (≈1.00 / ≈11.05), user-service 0% (0 / ≈9.04).",
+      "kind": "observation",
+      "mechanism": "Per-service increase() breakdown by job label",
+      "runRefs": [
+        7,
+        8
+      ]
+    },
+    {
+      "statement": "The http_requests_total metric uses a 'status' label (not 'code') for HTTP status codes, with observed values '200' and '500'.",
+      "kind": "observation",
+      "mechanism": "Metric label inspection",
+      "runRefs": [
+        4
+      ]
+    }
+  ],
+  "hypotheses": null,
+  "actions": null,
+  "limitations": [
+    {
+      "type": "missing_telemetry",
+      "statement": "increase() over 60m produces fractional estimates from counter extrapolation, not exact integer counts; the ~3.4% share is an approximation.",
+      "runRefs": [
+        6,
+        2
+      ]
+    }
+  ],
+  "usage": {
+    "inputTokens": 31390,
+    "outputTokens": 2893
+  },
+  "createdAt": "2026-11-01T20:09:17Z",
+  "concludedAt": "2026-11-01T20:09:59Z",
+  "runs": [
+    {
+      "ordinal": 1,
+      "integrationId": "1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a",
+      "tool": "prometheus_query",
+      "purpose": "Get total 5xx HTTP requests across user-service, order-service, and payment-service over the 60-minute window",
+      "arguments": {
+        "end": "2026-10-29T10:54:29Z",
+        "mode": "instant",
+        "query": "sum(increase(http_requests_total{job=~\"user-service|order-service|payment-service\",code=~\"5..\"}[60m]))"
+      },
+      "windowFrom": "2026-10-29T10:54:29Z",
+      "windowUntil": "2026-10-29T10:54:29Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",code=~\\\"5..\\\"}[60m]))\": 0 series, 0 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false",
+      "sources": [
+        "prometheus:1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a:instant"
+      ],
+      "startedAt": "2026-11-01T20:09:37.37214Z",
+      "finishedAt": "2026-11-01T20:09:37.376473Z",
+      "durationMs": 4.333,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 2,
+      "integrationId": "1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a",
+      "tool": "prometheus_query",
+      "purpose": "Get total HTTP requests across user-service, order-service, and payment-service over the 60-minute window",
+      "arguments": {
+        "end": "2026-10-29T10:54:29Z",
+        "mode": "instant",
+        "query": "sum(increase(http_requests_total{job=~\"user-service|order-service|payment-service\"}[60m]))"
+      },
+      "windowFrom": "2026-10-29T10:54:29Z",
+      "windowUntil": "2026-10-29T10:54:29Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\": 1 series, 1 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained {}=59.266666666666666 at 2026-10-29T10:54:29Z",
+      "sources": [
+        "prometheus:1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a:instant"
+      ],
+      "startedAt": "2026-11-01T20:09:37.386014Z",
+      "finishedAt": "2026-11-01T20:09:37.387933Z",
+      "durationMs": 1.919,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 3,
+      "integrationId": "1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a",
+      "tool": "prometheus_discover_metrics",
+      "purpose": "Confirm the metric name and labels exist for the three target services",
+      "arguments": {
+        "hint": "http_requests_total",
+        "selector": "job=~\"user-service|order-service|payment-service\""
+      },
+      "windowFrom": "2026-10-29T09:54:29.760429Z",
+      "windowUntil": "2026-10-29T10:54:29.760429Z",
+      "outcome": "failed",
+      "error": "selector must be label matchers enclosed in braces, at most 2048 bytes",
+      "startedAt": "2026-11-01T20:09:37.396318Z",
+      "finishedAt": "2026-11-01T20:09:37.396338Z",
+      "durationMs": 0.02,
+      "windowApplied": false,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 4,
+      "integrationId": "1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a",
+      "tool": "prometheus_query",
+      "purpose": "See raw series labels to identify the status code label name",
+      "arguments": {
+        "end": "2026-10-29T10:54:29Z",
+        "mode": "instant",
+        "query": "http_requests_total{job=~\"user-service|order-service|payment-service\"}"
+      },
+      "windowFrom": "2026-10-29T10:54:29Z",
+      "windowUntil": "2026-10-29T10:54:29Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}\": 6 series, 6 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained http_requests_total{instance=\"order-service:8083\", job=\"order-service\", status=\"…=2863 at 2026-10-29T10:54:29Z",
+      "sources": [
+        "prometheus:1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a:instant"
+      ],
+      "startedAt": "2026-11-01T20:09:40.510563Z",
+      "finishedAt": "2026-11-01T20:09:40.51253Z",
+      "durationMs": 1.967,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 5,
+      "integrationId": "1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a",
+      "tool": "prometheus_discover_metrics",
+      "purpose": "Discover metric names containing http_requests to confirm exact metric name",
+      "arguments": {
+        "hint": "http_requests"
+      },
+      "windowFrom": "2026-10-29T09:54:29.760429Z",
+      "windowUntil": "2026-10-29T10:54:29.760429Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus metric discovery \"http_requests\": 1 names, 2026-10-29T09:54:29Z to 2026-10-29T10:54:29Z; incomplete=false",
+      "sources": [
+        "prometheus:1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a:metric-names"
+      ],
+      "startedAt": "2026-11-01T20:09:40.521296Z",
+      "finishedAt": "2026-11-01T20:09:40.522945Z",
+      "durationMs": 1.649,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 6,
+      "integrationId": "1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a",
+      "tool": "prometheus_query",
+      "purpose": "Get total 5xx HTTP requests across the three services with correct 'status' label",
+      "arguments": {
+        "end": "2026-10-29T10:54:29Z",
+        "mode": "instant",
+        "query": "sum(increase(http_requests_total{job=~\"user-service|order-service|payment-service\",status=~\"5..\"}[60m]))"
+      },
+      "windowFrom": "2026-10-29T10:54:29Z",
+      "windowUntil": "2026-10-29T10:54:29Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m]))\": 1 series, 1 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained {}=2.009039548022599 at 2026-10-29T10:54:29Z",
+      "sources": [
+        "prometheus:1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a:instant"
+      ],
+      "startedAt": "2026-11-01T20:09:44.206251Z",
+      "finishedAt": "2026-11-01T20:09:44.208413Z",
+      "durationMs": 2.162,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 7,
+      "integrationId": "1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a",
+      "tool": "prometheus_query",
+      "purpose": "Get per-service 5xx request counts over the 60-minute window",
+      "arguments": {
+        "end": "2026-10-29T10:54:29Z",
+        "mode": "instant",
+        "query": "sum by (job) (increase(http_requests_total{job=~\"user-service|order-service|payment-service\",status=~\"5..\"}[60m]))"
+      },
+      "windowFrom": "2026-10-29T10:54:29Z",
+      "windowUntil": "2026-10-29T10:54:29Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m]))\": 3 series, 3 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained {job=\"order-service\"}=1.0045197740112994 at 2026-10-29T10:54:29Z",
+      "sources": [
+        "prometheus:1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a:instant"
+      ],
+      "startedAt": "2026-11-01T20:09:49.539093Z",
+      "finishedAt": "2026-11-01T20:09:49.54187Z",
+      "durationMs": 2.777,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 8,
+      "integrationId": "1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a",
+      "tool": "prometheus_query",
+      "purpose": "Get per-service total request counts over the 60-minute window",
+      "arguments": {
+        "end": "2026-10-29T10:54:29Z",
+        "mode": "instant",
+        "query": "sum by (job) (increase(http_requests_total{job=~\"user-service|order-service|payment-service\"}[60m]))"
+      },
+      "windowFrom": "2026-10-29T10:54:29Z",
+      "windowUntil": "2026-10-29T10:54:29Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\": 3 series, 3 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained {job=\"order-service\"}=39.17627118644068 at 2026-10-29T10:54:29Z",
+      "sources": [
+        "prometheus:1ae0d11a-5aa2-4a4b-b937-2bdd00b14d9a:instant"
+      ],
+      "startedAt": "2026-11-01T20:09:49.554798Z",
+      "finishedAt": "2026-11-01T20:09:49.55755Z",
+      "durationMs": 2.752,
+      "windowApplied": true,
+      "modelClipped": false
+    }
+  ],
+  "adapterElapsedSeconds": 42.26043983199634
+}

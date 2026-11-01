@@ -1,0 +1,120 @@
+{
+    "id": "15577255-1342-4371-a2ae-19595015488b",
+    "task_name": "find-slow-traces",
+    "trial_name": "find-slow-traces__Snke7SD",
+    "trial_uri": "file:///mnt/d/Development/oc-o11y-bench/.work/issue198-evaluation/jobs/find-slow-traces-20261101-195453-b285ce/find-slow-traces__Snke7SD",
+    "task_id": {
+        "path": "/mnt/d/Development/oc-o11y-bench/.work/issue198-evaluation/.work/tasks/find-slow-traces"
+    },
+    "source": "tasks",
+    "task_checksum": "7784c6efb07c2199accb515bcedc93796bee397d8c4c2f8439a972b6134101fb",
+    "config": {
+        "task": {
+            "path": "/mnt/d/Development/oc-o11y-bench/.work/issue198-evaluation/.work/tasks/find-slow-traces",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "tasks"
+        },
+        "trial_name": "find-slow-traces__Snke7SD",
+        "trials_dir": "/mnt/d/Development/oc-o11y-bench/.work/issue198-evaluation/jobs/find-slow-traces-20261101-195453-b285ce",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "opencluster_bench.agent:OpenClusterAgent",
+            "import_path": null,
+            "model_name": "openrouter/z-ai/glm-5.1",
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "stream": false,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [
+                "/mnt/d/Development/oc-o11y-bench/.work/issue198-evaluation/environment/compose.override.yaml"
+            ],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": true
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "c35bc6b8-d597-428c-b1cd-14ce5e41a908",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "opencluster",
+        "version": "f6154db2d418d355142b89fce05bbb894ef273fd",
+        "model_info": {
+            "name": "z-ai/glm-5.1",
+            "provider": "openrouter"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 88237,
+        "n_cache_tokens": null,
+        "n_output_tokens": 5171,
+        "cost_usd": null,
+        "model_usage": null,
+        "rollout_details": null,
+        "metadata": {
+            "controlplaneCommit": "f6154db2d418d355142b89fce05bbb894ef273fd",
+            "trajectorySource": "public Investigation and durable Tool Runs",
+            "fullToolResultsAvailable": true,
+            "smoke": false,
+            "elapsedSeconds": 52.3350487719872
+        }
+    },
+    "verifier_result": null,
+    "verifier_environment_mode": "shared",
+    "exception_info": null,
+    "started_at": "2026-11-01T19:54:59.973187Z",
+    "finished_at": "2026-11-01T19:56:29.279397Z",
+    "environment_setup": {
+        "started_at": "2026-11-01T19:55:00.321588Z",
+        "finished_at": "2026-11-01T19:55:08.153317Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-11-01T19:55:08.153406Z",
+        "finished_at": "2026-11-01T19:55:09.186571Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-11-01T19:55:09.186783Z",
+        "finished_at": "2026-11-01T19:56:06.355710Z"
+    },
+    "verifier": null,
+    "step_results": null
+}

@@ -1,0 +1,28 @@
+{
+    "job_name": "service-degradation-rca-20261101-200528-0dcd72",
+    "jobs_dir": "/mnt/d/Development/oc-o11y-bench/.work/issue198-evaluation/jobs",
+    "n_concurrent_trials": 1,
+    "environment": {
+        "type": "docker",
+        "extra_docker_compose": [
+            "/mnt/d/Development/oc-o11y-bench/.work/issue198-evaluation/environment/compose.override.yaml"
+        ]
+    },
+    "verifier": {
+        "disable": true
+    },
+    "agents": [
+        {
+            "name": "opencluster_bench.agent:OpenClusterAgent",
+            "model_name": "openrouter/z-ai/glm-5.1"
+        }
+    ],
+    "datasets": [
+        {
+            "path": "/mnt/d/Development/oc-o11y-bench/.work/issue198-evaluation/.work/tasks",
+            "task_names": [
+                "service-degradation-rca"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,21 @@
+{
+  "controlplaneCommit": "f6154db2d418d355142b89fce05bbb894ef273fd",
+  "binarySHA256": "5234d0e07dc7de22454dfa1e8d7735eaa9ea9f1d14f5851c70a18bc4608f0014",
+  "instrumentationSHA256": "078e727d8caec7b750bdb3e1222f69e854ec9be68efa5f23a16bc8458b55f2c1",
+  "benchmarkCommit": "b66d8cfbbe309d2e03e9a301baea056d9718b71b",
+  "provider": "openrouter",
+  "model": "z-ai/glm-5.1",
+  "scenarioTime": "2026-10-29T10:54:29.760429+00:00",
+  "case": "promql-error-rate",
+  "attempts": 1,
+  "concurrentTrials": 1,
+  "harborVersion": "0.24.0",
+  "gradingEnabled": false,
+  "adapterCommit": "bf5dd0fbaab7e49d98db9651b493139ec90901fa",
+  "readBudget": 30,
+  "instrumentation": "benchmark-only cmd/oc-benchmark wraps the existing real Completer and HTTP transport; Agent logic and provider policy unchanged",
+  "omittedTaskMetadata": [
+    "environment.mcp_servers"
+  ],
+  "harnessExitCode": 0
+}

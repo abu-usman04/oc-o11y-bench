@@ -1,0 +1,66 @@
+{
+  "mode": "Canonical facts and checks from local upstream grading",
+  "facts": [
+    {
+      "criterion": "The final response states Count of v2.5.0 deployment log lines accurately.",
+      "evidence": {
+        "summary": "Grouped counts from the snapshot window: Query returned 1 result: 3",
+        "debug": {
+          "backend": "loki",
+          "query": "sum(count_over_time({job=~\".+\"} |= \"v2.5.0\" |= \"deployment\" [24h]))",
+          "result": {
+            "shape": "scalar",
+            "value": 3.0
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    },
+    {
+      "criterion": "The final response names every service that logged a v2.5.0 deployment in the Source of truth, and no other",
+      "evidence": {
+        "summary": "Grouped counts from the snapshot window: Query returned 3 results: {job=\"order-service\"} 1; {job=\"payment-service\"} 1; {job=\"user-service\"} 1",
+        "debug": {
+          "backend": "loki",
+          "query": "sum by (job) (count_over_time({job=~\".+\"} |= \"v2.5.0\" |= \"deployment\" [24h]))",
+          "result": {
+            "shape": "items",
+            "items": [
+              {
+                "labels": {
+                  "job": "order-service"
+                },
+                "value": 1.0
+              },
+              {
+                "labels": {
+                  "job": "payment-service"
+                },
+                "value": 1.0
+              },
+              {
+                "labels": {
+                  "job": "user-service"
+                },
+                "value": 1.0
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    }
+  ],
+  "checks": {
+    "scores": {},
+    "explanations": {}
+  },
+  "engineeringReview": [
+    "Run 1 contains three deployment-started records targeting v2.5.0 from v2.4.1: user-service at 01:47:00Z and order-service/payment-service at 07:55:00Z on Oct 29. Exact retained text matches capture.",
+    "The tentative coordinated-rollout suggestion is an inference, not verified coordination. All three upgraded is too strong: these records prove deployment starts, not successful completion or readiness."
+  ],
+  "engineeringVerdict": "supported_with_qualification",
+  "engineeringBasis": "Exact saved model-visible observations; replay facts do not verify returned samples or causal assertions."
+}

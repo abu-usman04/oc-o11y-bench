@@ -1,0 +1,4 @@
+Over the last hour, what overall share of HTTP requests returned 5xx across user-service,
+order-service, and payment-service? In Prometheus those names are the `job` label values on
+`http_requests_total` for API traffic here - ignore webapp and api-gateway. Report the share for the
+full 60-minute window aggregated together, not a conclusion from a single short slice of the timeline.

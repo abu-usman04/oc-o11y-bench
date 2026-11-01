@@ -1,0 +1,73 @@
+{
+  "mode": "Canonical facts and checks from local upstream grading",
+  "facts": [
+    {
+      "criterion": "The final response characterizes the slowdown as a severe multi-second issue, consistent with the order-service p95 peak in the Source of truth.",
+      "evidence": {
+        "summary": "Matching metrics exist in the snapshot window: Query returned 1 result: 10",
+        "debug": {
+          "backend": "prometheus",
+          "query": "max_over_time(histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{job=\"order-service\"}[5m])))[8h:1m])",
+          "result": {
+            "shape": "items",
+            "items": [
+              {
+                "labels": {},
+                "value": 10.0
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    },
+    {
+      "criterion": "The final response names the job with the highest peak p95 in the Source of truth as the primary bottleneck and explains how symptoms in other services or layers connect to it",
+      "evidence": {
+        "summary": "Ranking from the snapshot window: Query returned 3 results: {job=\"order-service\"} 10; {job=\"user-service\"} 4.5; {job=\"payment-service\"} 2.2",
+        "debug": {
+          "backend": "prometheus",
+          "query": "topk(3, max_over_time(histogram_quantile(0.95, sum by (job, le) (rate(http_request_duration_seconds_bucket[5m])))[8h:1m]))",
+          "result": {
+            "shape": "items",
+            "items": [
+              {
+                "labels": {
+                  "job": "order-service"
+                },
+                "value": 10.0
+              },
+              {
+                "labels": {
+                  "job": "user-service"
+                },
+                "value": 4.5
+              },
+              {
+                "labels": {
+                  "job": "payment-service"
+                },
+                "value": 2.1999999999999997
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    }
+  ],
+  "checks": {
+    "scores": {},
+    "explanations": {}
+  },
+  "engineeringReview": [
+    "Database root cause is not established by Runs 25, 27 and 30. The latest database log in Run 27 is 04:56:30, before the claimed 05:00-05:51 peak; its 2575ms query is at 01:48:40. The logs do not show the claimed escalation during that peak or connect database waits to affected requests.",
+    "Run 17 supports 17.648s overall and 12.706s in the order handler, with neither a database span nor a payment child. The 25ms payment child is in Run 21. The Finding combines both traces but cites only 17; the claimed gateway overhead is also unsupported.",
+    "Run 25 legitimately uses rate-based means and peaks at 5.3968s at 05:46. Run 30 supports estimated job-level p99 up to 10s. Their 05:00-06:00 queries do not establish global onset, day-wide concentration, or endpoint-specific latency.",
+    "Payment latency exclusion is unsupported by one fast child, limited search, clipped Run 18, and error logs. An empty db metric-name hint does not establish absence of all database telemetry. All 30 observations match; model clipping occurs at 13,16,18,28 and remains separate from source flags."
+  ],
+  "engineeringVerdict": "failed",
+  "engineeringBasis": "Exact saved model-visible observations; replay facts do not verify returned samples or causal assertions."
+}

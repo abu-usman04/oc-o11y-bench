@@ -1,0 +1,103 @@
+{
+  "case": "promql-error-rate",
+  "exactPreparedTextMatches": true,
+  "attempts": 8,
+  "failed": [
+    3
+  ],
+  "sourceIncomplete": [],
+  "modelClipped": [],
+  "usage": {
+    "inputTokens": 31390,
+    "outputTokens": 2893
+  },
+  "elapsedSeconds": 42.26043983199634,
+  "observations": [
+    {
+      "ordinal": 1,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T10:54:29Z",
+        "mode": "instant",
+        "query": "sum(increase(http_requests_total{job=~\"user-service|order-service|payment-service\",code=~\"5..\"}[60m]))"
+      },
+      "summary": "Prometheus instant \"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",code=~\\\"5..\\\"}[60m]))\": 0 series, 0 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 2,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T10:54:29Z",
+        "mode": "instant",
+        "query": "sum(increase(http_requests_total{job=~\"user-service|order-service|payment-service\"}[60m]))"
+      },
+      "summary": "Prometheus instant \"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\": 1 series, 1 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained {}=59.266666666666666 at 2026-10-29T10:54:29Z",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 3,
+      "tool": "prometheus_discover_metrics",
+      "arguments": {
+        "hint": "http_requests_total",
+        "selector": "job=~\"user-service|order-service|payment-service\""
+      },
+      "summary": null,
+      "networkReads": 0,
+      "contentJSONAvailable": false
+    },
+    {
+      "ordinal": 4,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T10:54:29Z",
+        "mode": "instant",
+        "query": "http_requests_total{job=~\"user-service|order-service|payment-service\"}"
+      },
+      "summary": "Prometheus instant \"http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}\": 6 series, 6 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained http_requests_total{instance=\"order-service:8083\", job=\"order-service\", status=\"\u2026=2863 at 2026-10-29T10:54:29Z",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 5,
+      "tool": "prometheus_discover_metrics",
+      "arguments": {
+        "hint": "http_requests"
+      },
+      "summary": "Prometheus metric discovery \"http_requests\": 1 names, 2026-10-29T09:54:29Z to 2026-10-29T10:54:29Z; incomplete=false",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 6,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T10:54:29Z",
+        "mode": "instant",
+        "query": "sum(increase(http_requests_total{job=~\"user-service|order-service|payment-service\",status=~\"5..\"}[60m]))"
+      },
+      "summary": "Prometheus instant \"sum(increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m]))\": 1 series, 1 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained {}=2.009039548022599 at 2026-10-29T10:54:29Z",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 7,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T10:54:29Z",
+        "mode": "instant",
+        "query": "sum by (job) (increase(http_requests_total{job=~\"user-service|order-service|payment-service\",status=~\"5..\"}[60m]))"
+      },
+      "summary": "Prometheus instant \"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\",status=~\\\"5..\\\"}[60m]))\": 3 series, 3 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained {job=\"order-service\"}=1.0045197740112994 at 2026-10-29T10:54:29Z",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 8,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T10:54:29Z",
+        "mode": "instant",
+        "query": "sum by (job) (increase(http_requests_total{job=~\"user-service|order-service|payment-service\"}[60m]))"
+      },
+      "summary": "Prometheus instant \"sum by (job) (increase(http_requests_total{job=~\\\"user-service|order-service|payment-service\\\"}[60m]))\": 3 series, 3 samples; 2026-10-29T10:54:29Z to 2026-10-29T10:54:29Z; incomplete=false; retained {job=\"order-service\"}=39.17627118644068 at 2026-10-29T10:54:29Z",
+      "networkReads": 1
+    }
+  ]
+}

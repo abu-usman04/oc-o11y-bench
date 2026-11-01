@@ -1,0 +1,14 @@
+{
+  "testedApplicationCommit": "f6154db2d418d355142b89fce05bbb894ef273fd",
+  "finalControlPlaneCommit": "1fa693310fe2f533f35e1b77713d7f249586de3d",
+  "changedFiles": [
+    "Makefile",
+    "README.md"
+  ],
+  "instrumentationSHA256": "078e727d8caec7b750bdb3e1222f69e854ec9be68efa5f23a16bc8458b55f2c1",
+  "originalBinarySHA256": "5234d0e07dc7de22454dfa1e8d7735eaa9ea9f1d14f5851c70a18bc4608f0014",
+  "finalBinarySHA256": "5234d0e07dc7de22454dfa1e8d7735eaa9ea9f1d14f5851c70a18bc4608f0014",
+  "byteIdentical": true,
+  "method": "Each commit was archived separately and built with the existing pinned benchmark Dockerfile; recorder tests ran during both builds.",
+  "scope": "Original run manifests remain unchanged. Model evaluations used the byte-identical executable built from the application commit."
+}

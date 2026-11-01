@@ -1,0 +1,36 @@
+{
+  "command": "make verify",
+  "controlPlaneCommit": "1fa693310fe2f533f35e1b77713d7f249586de3d",
+  "exitCode": 2,
+  "startedAt": "2026-11-01T20:55:13Z",
+  "finishedAt": "2026-11-01T21:24:33Z",
+  "fullPrivateLogSHA256": "6aacb318d67d7b658688bf90924338a70f3df614861e0043434524848493434e",
+  "completed": {
+    "controlPlaneRaceSeconds": 613.257,
+    "postgresRaceSeconds": 403.339
+  },
+  "failedStage": "test/e2e race suite, 540.033 seconds",
+  "failedTest": "TestTheProtocolCarriesWorkBetweenRealProcesses/an_investigation_reads_a_real_cluster_and_cites_its_relay_result",
+  "actual": "Integration reported verified and kubernetes_workload_runtime available; fixture waited for kubernetes.workload.runtime",
+  "cause": "Fixture conflated the public Tool name with the Relay protocol capability ID",
+  "focusedRed": {
+    "exitCode": 1,
+    "seconds": 103.242,
+    "readinessWaitSeconds": 60
+  },
+  "focusedGreen": {
+    "exitCode": 0,
+    "seconds": 46.92,
+    "commit": "0e55641e4f977d05517d9f26d3d65bee13a5b330"
+  },
+  "fix": "One test-local public Tool-name constant reused at provider, availability and Tool Run boundaries; Relay Job capability unchanged",
+  "unchanged": [
+    "production behavior",
+    "deadlines",
+    "assertions",
+    "upstream benchmark",
+    "model evaluations"
+  ],
+  "privateLogNote": "Failed full diagnostics are retained outside version control in .work/issue198-release-attempts; they may include generated test configuration. This safe summary records the exact failure and provenance.",
+  "releaseGatePassed": false
+}

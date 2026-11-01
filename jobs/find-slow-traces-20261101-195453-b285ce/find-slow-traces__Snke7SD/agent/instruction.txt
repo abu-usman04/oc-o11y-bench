@@ -1,0 +1,1 @@
+Anything in our traces pointing to unusually slow checkout (POST /api/orders) or payment (POST /api/payments) requests? Which services keep showing up in those slow requests? I care about what shows up across roughly the last day of traffic, not a tiny recent slice. Please include a trace id for one concrete slow example if you find one.

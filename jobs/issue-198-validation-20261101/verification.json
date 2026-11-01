@@ -1,0 +1,83 @@
+{
+  "controlPlaneCommit": "0e55641e4f977d05517d9f26d3d65bee13a5b330",
+  "evaluatedApplicationCommit": "f6154db2d418d355142b89fce05bbb894ef273fd",
+  "benchmarkAdapterCommit": "bf5dd0fbaab7e49d98db9651b493139ec90901fa",
+  "relayCommit": "b55d544898b3e75c374931b7a2a43fa29b4064b3",
+  "releaseGate": {
+    "command": "make verify",
+    "exitCode": 0,
+    "startedAt": "2026-11-01T21:29:15Z",
+    "finishedAt": "2026-11-01T22:02:51Z",
+    "source": "Clean detached Git checkout of the final control-plane commit",
+    "environment": {
+      "containerNetwork": "host",
+      "OC_REQUIRE_CONTAINERS": "1",
+      "TESTCONTAINERS_HOST_OVERRIDE": "127.0.0.1",
+      "OC_E2E_RELAY_SOURCE": "/mnt/d/Development/oc-o11y-bench/.work/issue198-relay-source",
+      "relaySource": "Clean detached Git checkout; original Relay repository unchanged"
+    },
+    "log": "release-gate.log",
+    "logSHA256": "18f5d8110e9452877d97ebb40e6e69287b75a9f0087eeb9b67637261ccca1b70",
+    "warnings": [
+      "Both govulncheck runs report zero reachable vulnerabilities and zero in imported packages, but three advisories in required modules whose vulnerable code does not appear to be called. This is not a vulnerability-free dependency-graph claim.",
+      "go-licenses reports that non-Go assembly files cannot be inspected for further dependencies; both existing license allowlist checks passed. The complete warnings remain in the log."
+    ],
+    "scope": [
+      "OpenAPI generation and documentation contracts",
+      "gofmt, go vet and pinned golangci-lint in both modules",
+      "Builds and complete race suites in both modules with real containers",
+      "govulncheck and license allowlist in both modules",
+      "Compose configuration, Helm lint/template, deployment image build and deployment tests",
+      "Secret-history scan in the clean committed repository"
+    ],
+    "requiredModuleAdvisories": {
+      "ids": [
+        "GO-2026-6866",
+        "GO-2026-6860",
+        "GO-2026-5932"
+      ],
+      "reachable": 0,
+      "inImportedPackages": 0,
+      "detailsCommand": "govulncheck -show verbose ./...",
+      "detailsExitCode": 0,
+      "detailsLog": "vulnerability-details.log",
+      "detailsScope": "Shipping module; the complete gate separately records the same counts for both modules"
+    }
+  },
+  "tools": {
+    "go": "1.26.10 linux/amd64",
+    "dockerClientAndServer": "29.1.3",
+    "helm": "3.19.0",
+    "node": "18.20.4",
+    "golangciLint": "2.12.2",
+    "govulncheck": "1.1.4",
+    "goLicenses": "2.0.1",
+    "gitleaks": "8.30.1"
+  },
+  "additionalPassedChecks": [
+    "Focused real Kubernetes end-to-end proof: 50.640 seconds",
+    "Existing real-process Investigation subtest: RED 103.242 seconds, test-only public Tool-name fix GREEN 46.920 seconds",
+    "18 existing benchmark adapter tests, Ruff and package mypy in the clean evaluation checkout",
+    "Existing recorder tests during both pinned source builds; instrumented binary parity",
+    "Pinned Mintlify 4.2.810 validation and Linux broken-link check",
+    "Original control-plane all-ref secret history: 464 commits",
+    "Independent Standards and Spec source/record reviews: zero unresolved findings"
+  ],
+  "priorFailedAttempts": [
+    "Native Windows Docker endpoint unavailable; Linux daemon used",
+    "Nested Docker bind paths, safe-directory metadata and ignored scratch formatting required a clean checkout",
+    "Bridge-network loopback forwarding failed; host-network real proof passed",
+    "Shared Testcontainers session reaped another package fixture; reproduced reduced set passed with root package serialization",
+    "Previous full run passed both root suites but failed Relay VCS stamping on an archive; corrected with a clean Git checkout of the same Relay commit",
+    "Complete 1fa6933 gate passed both root race suites then failed a stale public Tool-name fixture; safe exact failure and RED/GREEN record retained in release-attempt-1fa6933.json",
+    "Windows Mintlify nested-link false positives; same pinned Linux CLI passed",
+    "Initial grading loopback preflights did not invoke the judge; preserved beside successful unchanged-rubric grading"
+  ],
+  "acceptance": {
+    "codeReleaseGate": "passed",
+    "autonomousRCACorrectness": "not established; both repeated RCA answers failed independent engineering review",
+    "selectedCaseScope": "Six graded jobs across four cases plus one unscored smoke; no full-suite, Pass@N or ranking claim",
+    "preparedObservationMatches": "86/86 evaluation texts plus 4/4 smoke texts; no remote-delivery claim",
+    "publication": "Draft implementation and companion benchmark PRs; no release-readiness claim"
+  }
+}

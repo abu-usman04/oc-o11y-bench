@@ -1,0 +1,28 @@
+{
+  "case": "logql-deployment-rollout-events",
+  "exactPreparedTextMatches": true,
+  "attempts": 1,
+  "failed": [],
+  "sourceIncomplete": [],
+  "modelClipped": [],
+  "usage": {
+    "inputTokens": 8856,
+    "outputTokens": 854
+  },
+  "elapsedSeconds": 11.156149866001215,
+  "observations": [
+    {
+      "ordinal": 1,
+      "tool": "loki_query_logs",
+      "arguments": {
+        "direction": "forward",
+        "end": "2026-10-29T10:57:28Z",
+        "limit": 200,
+        "query": "{job=~\".+\"} |~ \"v2.5.0\"",
+        "start": "2026-10-28T10:57:28Z"
+      },
+      "summary": "Loki data: 3 log excerpts, 2026-10-28T10:57:28.97009Z to 2026-10-29T10:57:28Z (exclusive end), direction=forward",
+      "networkReads": 1
+    }
+  ]
+}

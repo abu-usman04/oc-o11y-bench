@@ -1,0 +1,3 @@
+Checkout felt sluggish about six hours ago - customers noticed. What slowed down, why, and
+which piece of the stack was the main bottleneck? Summarize what backs your conclusion, and
+include a representative trace id if you find one.

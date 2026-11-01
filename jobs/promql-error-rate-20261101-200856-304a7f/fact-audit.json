@@ -1,0 +1,36 @@
+{
+  "mode": "Canonical facts and checks from local upstream grading",
+  "facts": [
+    {
+      "criterion": "The final response states 5xx share accurately.",
+      "evidence": {
+        "summary": "Matching metrics exist in the snapshot window: Query returned 1 result: 0.033898",
+        "debug": {
+          "backend": "prometheus",
+          "query": "sum(rate(http_requests_total{status=~\"5..\",job=~\"user-service|order-service|payment-service\"}[1h])) / sum(rate(http_requests_total{job=~\"user-service|order-service|payment-service\"}[1h]))",
+          "result": {
+            "shape": "items",
+            "items": [
+              {
+                "labels": {},
+                "value": 0.03389830508474576
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    }
+  ],
+  "checks": {
+    "scores": {},
+    "explanations": {}
+  },
+  "engineeringReview": [
+    "Runs 2/6 give estimated increases of 59.2667 total and 2.00904 5xx, approximately 3.39%. Runs 7/8 support order-service 2.56%, payment-service 9.09% and user-service 0%; the user-service zero is explicitly returned, not inferred from an absent series.",
+    "The answer correctly qualifies fractional increase estimates and uses the 60m lookback with equal instant evaluation bounds. Run 4 corrects the initial empty code label to status. All eight observations match; one malformed discovery selector failed."
+  ],
+  "engineeringVerdict": "supported",
+  "engineeringBasis": "Exact saved model-visible observations; replay facts do not verify returned samples or causal assertions."
+}

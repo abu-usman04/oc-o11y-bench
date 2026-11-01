@@ -55,6 +55,7 @@ class OpenClusterAgent(BaseAgent):
                 "smoke.json",
                 "failure.json",
                 "tool-results.json",
+                "retained-observations.json",
                 "capture.jsonl",
                 "backend.log",
             ):

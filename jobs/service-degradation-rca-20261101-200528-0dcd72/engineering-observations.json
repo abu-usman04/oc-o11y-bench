@@ -1,0 +1,462 @@
+{
+  "case": "service-degradation-rca",
+  "exactPreparedTextMatches": true,
+  "attempts": 28,
+  "failed": [
+    18
+  ],
+  "sourceIncomplete": [
+    5,
+    6,
+    12,
+    13,
+    14,
+    15,
+    16,
+    19,
+    20,
+    21,
+    22,
+    25,
+    28
+  ],
+  "modelClipped": [
+    16,
+    19,
+    20,
+    21,
+    22,
+    28
+  ],
+  "usage": {
+    "inputTokens": 332543,
+    "outputTokens": 8758
+  },
+  "elapsedSeconds": 89.58351822302211,
+  "observations": [
+    {
+      "ordinal": 1,
+      "tool": "prometheus_discover_metrics",
+      "arguments": {
+        "hint": "checkout",
+        "selector": "{job=\"checkout\"}"
+      },
+      "summary": "Prometheus metric discovery \"checkout\": 0 names, 2026-10-28T11:03:20Z to 2026-10-29T11:03:20Z; incomplete=false",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 2,
+      "tool": "prometheus_discover_metrics",
+      "arguments": {
+        "hint": "http"
+      },
+      "summary": "Prometheus metric discovery \"http\": 4 names, 2026-10-28T11:03:20Z to 2026-10-29T11:03:20Z; incomplete=false",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 3,
+      "tool": "tempo_search_traces",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "limit": 10,
+        "query": "{resource.service.name=\"checkout\" && status=error}",
+        "start": "2026-10-28T11:03:20Z"
+      },
+      "summary": "Tempo search empty: 0 traces, 2026-10-28T11:03:21Z to 2026-10-29T11:03:20Z",
+      "networkReads": 1,
+      "returnedTraces": 0,
+      "independentlyCountedAppearances": {},
+      "tracesWithoutServiceStats": 0,
+      "reportedSummary": {}
+    },
+    {
+      "ordinal": 4,
+      "tool": "tempo_search_traces",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "limit": 10,
+        "query": "{resource.service.name=\"checkout\" && duration>1s}",
+        "start": "2026-10-28T11:03:20Z"
+      },
+      "summary": "Tempo search empty: 0 traces, 2026-10-28T11:03:21Z to 2026-10-29T11:03:20Z",
+      "networkReads": 1,
+      "returnedTraces": 0,
+      "independentlyCountedAppearances": {},
+      "tracesWithoutServiceStats": 0,
+      "reportedSummary": {}
+    },
+    {
+      "ordinal": 5,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "mode": "range",
+        "query": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"checkout\"}[5m])) by (le, route))",
+        "start": "2026-10-28T11:03:20Z",
+        "step": 300
+      },
+      "summary": "Prometheus range \"histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\\\"checkout\\\"}[5m])) by (le, route))\": 0 series, 0 samples; 2026-10-28T11:03:20Z to 2026-10-29T11:03:20Z; incomplete=true",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 6,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "mode": "range",
+        "query": "sum(rate(http_requests_total{job=\"checkout\"}[5m])) by (code)",
+        "start": "2026-10-28T11:03:20Z",
+        "step": 300
+      },
+      "summary": "Prometheus range \"sum(rate(http_requests_total{job=\\\"checkout\\\"}[5m])) by (code)\": 0 series, 0 samples; 2026-10-28T11:03:20Z to 2026-10-29T11:03:20Z; incomplete=true",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 7,
+      "tool": "tempo_search_traces",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "limit": 20,
+        "query": "{resource.service.name=\"checkout\"}",
+        "start": "2026-10-28T11:03:20Z"
+      },
+      "summary": "Tempo search empty: 0 traces, 2026-10-28T11:03:21Z to 2026-10-29T11:03:20Z",
+      "networkReads": 1,
+      "returnedTraces": 0,
+      "independentlyCountedAppearances": {},
+      "tracesWithoutServiceStats": 0,
+      "reportedSummary": {}
+    },
+    {
+      "ordinal": 8,
+      "tool": "prometheus_discover_metrics",
+      "arguments": {
+        "hint": "latency"
+      },
+      "summary": "Prometheus metric discovery \"latency\": 0 names, 2026-10-28T11:03:20Z to 2026-10-29T11:03:20Z; incomplete=false",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 9,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "mode": "instant",
+        "query": "count(http_requests_total) by (job)"
+      },
+      "summary": "Prometheus instant \"count(http_requests_total) by (job)\": 3 series, 3 samples; 2026-10-29T11:03:20Z to 2026-10-29T11:03:20Z; incomplete=false; retained {job=\"order-service\"}=2 at 2026-10-29T11:03:20Z",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 10,
+      "tool": "tempo_search_traces",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "limit": 20,
+        "query": "{resource.service.name}",
+        "start": "2026-10-28T11:03:20Z"
+      },
+      "summary": "Tempo search empty: 0 traces, 2026-10-28T11:03:21Z to 2026-10-29T11:03:20Z",
+      "networkReads": 1,
+      "returnedTraces": 0,
+      "independentlyCountedAppearances": {},
+      "tracesWithoutServiceStats": 0,
+      "reportedSummary": {}
+    },
+    {
+      "ordinal": 11,
+      "tool": "loki_query_logs",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "limit": 50,
+        "query": "{job=\"checkout\"}",
+        "start": "2026-10-28T11:03:20Z"
+      },
+      "summary": "Loki empty: 0 log excerpts, 2026-10-28T11:03:20.503024Z to 2026-10-29T11:03:20Z (exclusive end), direction=backward",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 12,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "mode": "range",
+        "query": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"order-service\"}[5m])) by (le, route))",
+        "start": "2026-10-28T11:03:20Z",
+        "step": 300
+      },
+      "summary": "Prometheus range \"histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\\\"order-service\\\"}[5m])) by (le, route))\": 1 series, 239 samples; 2026-10-28T11:03:20Z to 2026-10-29T11:03:20Z; incomplete=true; retained {}=0.04875 at 2026-10-29T10:59:16Z",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 13,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "mode": "range",
+        "query": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"payment-service\"}[5m])) by (le, route))",
+        "start": "2026-10-28T11:03:20Z",
+        "step": 300
+      },
+      "summary": "Prometheus range \"histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\\\"payment-service\\\"}[5m])) by (le, route))\": 1 series, 239 samples; 2026-10-28T11:03:20Z to 2026-10-29T11:03:20Z; incomplete=true; retained {}=0.04875 at 2026-10-29T10:59:16Z",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 14,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "mode": "range",
+        "query": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"user-service\"}[5m])) by (le, route))",
+        "start": "2026-10-28T11:03:20Z",
+        "step": 300
+      },
+      "summary": "Prometheus range \"histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\\\"user-service\\\"}[5m])) by (le, route))\": 1 series, 239 samples; 2026-10-28T11:03:20Z to 2026-10-29T11:03:20Z; incomplete=true; retained {}=NaN at 2026-10-29T10:59:16Z",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 15,
+      "tool": "tempo_search_traces",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "limit": 20,
+        "query": "{resource.service.name=\"order-service\" && duration>500ms}",
+        "start": "2026-10-28T11:03:20Z"
+      },
+      "summary": "Tempo search incomplete: 20 traces, 2026-10-28T11:03:21Z to 2026-10-29T11:03:20Z",
+      "networkReads": 1,
+      "returnedTraces": 20,
+      "independentlyCountedAppearances": {
+        "api-gateway": 20,
+        "order-service": 20,
+        "payment-service": 6,
+        "user-service": 12,
+        "webapp": 20
+      },
+      "tracesWithoutServiceStats": 0,
+      "reportedSummary": {
+        "api-gateway": 20,
+        "order-service": 20,
+        "payment-service": 6,
+        "user-service": 12,
+        "webapp": 20
+      }
+    },
+    {
+      "ordinal": 16,
+      "tool": "loki_query_logs",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "limit": 50,
+        "query": "{job=\"order-service\"}",
+        "start": "2026-10-28T11:03:20Z"
+      },
+      "summary": "Loki incomplete: 50 log excerpts, 2026-10-28T11:03:20.503024Z to 2026-10-29T11:03:20Z (exclusive end), direction=backward",
+      "networkReads": 1,
+      "contentJSONAvailable": false
+    },
+    {
+      "ordinal": 17,
+      "tool": "tempo_get_trace",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "start": "2026-10-28T11:03:20Z",
+        "traceId": "4715b7764646608b1a48f1b3a2cec04b"
+      },
+      "summary": "Tempo trace 4715b7764646608b1a48f1b3a2cec04b: data, 3 spans; searched 2026-10-28T11:03:21Z to 2026-10-29T11:03:20Z; backend bounds are not a completeness guarantee",
+      "networkReads": 1,
+      "traceId": "4715b7764646608b1a48f1b3a2cec04b",
+      "spans": [
+        {
+          "id": "89cec30d2e1a64c1",
+          "parentId": null,
+          "service": "webapp",
+          "operation": "POST /api/orders",
+          "durationNanos": 17647701237
+        },
+        {
+          "id": "2a49fb5acfe1d074",
+          "parentId": "89cec30d2e1a64c1",
+          "service": "api-gateway",
+          "operation": "route /api/orders",
+          "durationNanos": 15882931113
+        },
+        {
+          "id": "07092fceefdb7922",
+          "parentId": "2a49fb5acfe1d074",
+          "service": "order-service",
+          "operation": "handle POST /api/orders",
+          "durationNanos": 12706344890
+        }
+      ]
+    },
+    {
+      "ordinal": 18,
+      "tool": "loki_query_logs",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "limit": 50,
+        "query": "{job=\"order-service\"} |= \"error\" or |= \"timeout\" or |= \"slow\"",
+        "start": "2026-10-28T11:03:20Z"
+      },
+      "summary": null,
+      "networkReads": 1,
+      "contentJSONAvailable": false
+    },
+    {
+      "ordinal": 19,
+      "tool": "loki_query_logs",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "limit": 50,
+        "query": "{job=\"user-service\"}",
+        "start": "2026-10-28T11:03:20Z"
+      },
+      "summary": "Loki incomplete: 50 log excerpts, 2026-10-28T11:03:20.503024Z to 2026-10-29T11:03:20Z (exclusive end), direction=backward",
+      "networkReads": 1,
+      "contentJSONAvailable": false
+    },
+    {
+      "ordinal": 20,
+      "tool": "loki_query_logs",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "limit": 50,
+        "query": "{job=\"payment-service\"}",
+        "start": "2026-10-28T11:03:20Z"
+      },
+      "summary": "Loki incomplete: 50 log excerpts, 2026-10-28T11:03:20.503024Z to 2026-10-29T11:03:20Z (exclusive end), direction=backward",
+      "networkReads": 1,
+      "contentJSONAvailable": false
+    },
+    {
+      "ordinal": 21,
+      "tool": "loki_query_logs",
+      "arguments": {
+        "end": "2026-10-29T06:00:00Z",
+        "limit": 50,
+        "query": "{job=\"order-service\"}",
+        "start": "2026-10-29T05:00:00Z"
+      },
+      "summary": "Loki incomplete: 50 log excerpts, 2026-10-29T05:00:00Z to 2026-10-29T06:00:00Z (exclusive end), direction=backward",
+      "networkReads": 1,
+      "contentJSONAvailable": false
+    },
+    {
+      "ordinal": 22,
+      "tool": "loki_query_logs",
+      "arguments": {
+        "end": "2026-10-29T03:00:00Z",
+        "limit": 50,
+        "query": "{job=\"user-service\"}",
+        "start": "2026-10-29T02:00:00Z"
+      },
+      "summary": "Loki incomplete: 50 log excerpts, 2026-10-29T02:00:00Z to 2026-10-29T03:00:00Z (exclusive end), direction=backward",
+      "networkReads": 1,
+      "contentJSONAvailable": false
+    },
+    {
+      "ordinal": 23,
+      "tool": "tempo_get_trace",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "start": "2026-10-28T11:03:20Z",
+        "traceId": "68d875d7b3fd0552b7542f74963ec4b6"
+      },
+      "summary": "Tempo trace 68d875d7b3fd0552b7542f74963ec4b6: data, 4 spans; searched 2026-10-28T11:03:21Z to 2026-10-29T11:03:20Z; backend bounds are not a completeness guarantee",
+      "networkReads": 1,
+      "traceId": "68d875d7b3fd0552b7542f74963ec4b6",
+      "spans": [
+        {
+          "id": "89a2ef993f0174fe",
+          "parentId": null,
+          "service": "webapp",
+          "operation": "GET /api/cart",
+          "durationNanos": 15269488024
+        },
+        {
+          "id": "d7dbddbb888acad0",
+          "parentId": "89a2ef993f0174fe",
+          "service": "api-gateway",
+          "operation": "route /api/cart",
+          "durationNanos": 13742539221
+        },
+        {
+          "id": "62063cad9c21870a",
+          "parentId": "d7dbddbb888acad0",
+          "service": "order-service",
+          "operation": "handle GET /api/cart",
+          "durationNanos": 10994031376
+        },
+        {
+          "id": "9adc989d98c4c5a9",
+          "parentId": "62063cad9c21870a",
+          "service": "user-service",
+          "operation": "call user-service",
+          "durationNanos": 25000000
+        }
+      ]
+    },
+    {
+      "ordinal": 24,
+      "tool": "loki_query_logs",
+      "arguments": {
+        "end": "2026-10-29T06:00:00Z",
+        "limit": 30,
+        "query": "{job=\"order-service\"} | json | level=\"error\" or level=\"warn\"",
+        "start": "2026-10-29T04:30:00Z"
+      },
+      "summary": "Loki data: 17 log excerpts, 2026-10-29T04:30:00Z to 2026-10-29T06:00:00Z (exclusive end), direction=backward",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 25,
+      "tool": "loki_query_logs",
+      "arguments": {
+        "end": "2026-10-29T06:00:00Z",
+        "limit": 20,
+        "query": "{job=\"order-service\"} | json | duration_ms>1000",
+        "start": "2026-10-29T04:30:00Z"
+      },
+      "summary": "Loki incomplete: 20 log excerpts, 2026-10-29T04:30:00Z to 2026-10-29T06:00:00Z (exclusive end), direction=backward",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 26,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "mode": "instant",
+        "query": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"order-service\"}[5m])) by (le))",
+        "start": "2026-10-28T11:03:20Z"
+      },
+      "summary": "Prometheus instant \"histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\\\"order-service\\\"}[5m])) by (le))\": 1 series, 1 samples; 2026-10-29T11:03:20Z to 2026-10-29T11:03:20Z; incomplete=false; retained {}=2.2750000000000004 at 2026-10-29T11:03:20Z",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 27,
+      "tool": "loki_query_logs",
+      "arguments": {
+        "end": "2026-10-29T06:00:00Z",
+        "limit": 30,
+        "query": "{job=\"order-service\"} | json | level=\"warn\" | message=\"slow database query\"",
+        "start": "2026-10-28T11:03:20Z"
+      },
+      "summary": "Loki data: 11 log excerpts, 2026-10-28T11:03:20.503024Z to 2026-10-29T06:00:00Z (exclusive end), direction=backward",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 28,
+      "tool": "loki_query_logs",
+      "arguments": {
+        "end": "2026-10-29T11:03:20Z",
+        "limit": 30,
+        "query": "{job=\"order-service\"} | json | level=\"error\"",
+        "start": "2026-10-28T11:03:20Z"
+      },
+      "summary": "Loki incomplete: 30 log excerpts, 2026-10-28T11:03:20.503024Z to 2026-10-29T11:03:20Z (exclusive end), direction=backward",
+      "networkReads": 1,
+      "contentJSONAvailable": false
+    }
+  ]
+}

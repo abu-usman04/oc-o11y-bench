@@ -1,0 +1,439 @@
+{
+  "id": "1e4e87c1-dece-4451-94e6-44386e513bd8",
+  "status": "concluded",
+  "subject": "Observability benchmark",
+  "windowFrom": "2026-10-28T10:59:59.659243Z",
+  "windowUntil": "2026-10-29T10:59:59.659243Z",
+  "conclusionStatus": "answer_only",
+  "summary": "Yes — there is clear evidence of unusually slow checkout and payment requests across the last day of traffic (2026-10-28 11:00Z to 2026-10-29 11:00Z).\n\n**POST /api/orders (checkout)** is the worse offender:\n- At least 20 traces exceeded 1s (the search result was truncated, so more exist). Durations range from 1.2s up to **16.1s**.\n- Services appearing across slow checkout traces: **order-service** (every trace), **api-gateway** (every trace), **user-service** (10 of 20), **payment-service** (6 of 20).\n- The latency bottleneck is consistently in **order-service's own processing** (~72% of total duration). Downstream calls to user-service and payment-service are fast (~25ms each).\n- Prometheus confirms: order-service p99 latency spikes repeatedly throughout the day — 10s at 06:00, 4s at 17:00, 2.7s at 05:00, ~2s at multiple other hours — against a baseline of ~50ms.\n- **Concrete slow example**: trace `47abe06ecd31833974a2217543eb4112` — 16.1s total, with order-service's \"handle POST /api/orders\" taking 11.6s; the user-service call inside it took only 25ms.\n\n**POST /api/payments (payment)** is less severely affected:\n- 5 traces exceeded 1s, ranging from 1.9s to **3.3s**.\n- Services appearing: **payment-service** (every trace), **api-gateway** (every trace).\n- The latency bottleneck is in **payment-service's own processing** (~72% of total duration).\n- Prometheus shows payment-service p99 is mostly ~50ms but with occasional spikes up to 3.9s.\n- **Concrete slow example**: trace `134db24c1405400f9452d417f458a179` — 3.3s total, with payment-service's \"handle POST /api/payments\" taking 2.4s.\n\n**Bottom line**: Both endpoints show unusual slowness, but checkout is far more impacted. The services that keep showing up are **order-service** (always, and the primary latency sink for checkout) and **payment-service** (always for payment traces, and sometimes called from checkout as well — though its calls are fast when invoked from order-service).",
+  "impact": {
+    "summary": "Checkout (POST /api/orders) is the more severely affected endpoint: at least 20 traces exceeded 1s (results incomplete), with the worst at 16.1s and order-service p99 spiking to 10s. Payment (POST /api/payments) is less impacted with 5 slow traces, the worst at 3.3s, and occasional p99 spikes to ~4s.",
+    "runRefs": [
+      5,
+      6,
+      15
+    ]
+  },
+  "findings": [
+    {
+      "statement": "Slow POST /api/orders traces are abundant across the day, with order-service, api-gateway, and webapp appearing in every slow checkout trace; user-service appears in half, payment-service in about a third.",
+      "kind": "observation",
+      "mechanism": "Tempo search for POST /api/orders traces with duration>1s returned 20 results (incomplete — more exist), with durations ranging from 1.2s to 16.1s. Service appearances across those 20 slow checkout traces: webapp (20/20), api-gateway (20/20), order-service (20/20), user-service (10/20), payment-service (6/20).",
+      "runRefs": [
+        5
+      ]
+    },
+    {
+      "statement": "Slow POST /api/payments traces are fewer (5 total), with only webapp, api-gateway, and payment-service appearing consistently.",
+      "kind": "observation",
+      "mechanism": "Tempo search for POST /api/payments traces with duration>1s returned 5 results (complete), with durations from 1.9s to 3.3s. All 5 slow payment traces involve webapp, api-gateway, and payment-service.",
+      "runRefs": [
+        6
+      ]
+    },
+    {
+      "statement": "In slow checkout traces, the bulk of latency is in order-service's own processing (~72%), not in downstream calls to user-service or payment-service (which are fast at ~25ms each).",
+      "kind": "observation",
+      "mechanism": "Detailed trace 47abe06ecd31833974a2217543eb4112 (16.1s total): order-service 'handle POST /api/orders' span took 11.6s (72% of total); user-service 'call user-service' span took only 25ms. Trace d3968e161942dfcfb46eb31405e6bdcb (15.3s total): order-service handler took 11.0s (72%); payment-service call took only 25ms.",
+      "runRefs": [
+        9,
+        11
+      ]
+    },
+    {
+      "statement": "In slow payment traces, the bulk of latency is in payment-service's own processing (~72%).",
+      "kind": "observation",
+      "mechanism": "Detailed trace 134db24c1405400f9452d417f458a179 (3.3s total): payment-service 'handle POST /api/payments' span took 2.4s (72% of total latency).",
+      "runRefs": [
+        10
+      ]
+    },
+    {
+      "statement": "Order-service p99 latency is highly volatile with frequent multi-second spikes throughout the day; payment-service p99 is more stable but also has occasional multi-second spikes.",
+      "kind": "observation",
+      "mechanism": "Prometheus histogram_quantile(0.99) for order-service shows baseline ~50ms but frequent spikes: 10s at 06:00, 4s at 17:00, 2.7s at 05:00, ~2s at 11:00/14:00/15:00/18:00/22:00/00:00. Payment-service p99 is mostly ~50ms but with occasional spikes up to 3.9s (20:00), 3.3s (00:00), 1.9s (02:00), 1.5s (06:00).",
+      "runRefs": [
+        15
+      ]
+    },
+    {
+      "statement": "Some slow checkout traces also carry errors, but the majority (18/20) completed without errors despite high latency.",
+      "kind": "observation",
+      "mechanism": "Two of 20 slow checkout traces show error spans: trace ec4d78d2 has errors in order-service and payment-service; trace 0595f4e0 has errors in order-service and user-service.",
+      "runRefs": [
+        5
+      ]
+    }
+  ],
+  "hypotheses": null,
+  "actions": null,
+  "limitations": null,
+  "usage": {
+    "inputTokens": 88237,
+    "outputTokens": 5171
+  },
+  "createdAt": "2026-11-01T19:55:11Z",
+  "concludedAt": "2026-11-01T19:56:03Z",
+  "runs": [
+    {
+      "ordinal": 1,
+      "integrationId": "fb74a154-9bcc-49f7-8b31-edc5d33da388",
+      "tool": "tempo_search_traces",
+      "purpose": "Find slow checkout (POST /api/orders) traces over the last day",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "limit": 20,
+        "query": "{resource.service.name=\"checkout\" && name=\"POST /api/orders\" && duration>1s}",
+        "start": "2026-10-28T11:00:00Z"
+      },
+      "windowFrom": "2026-10-28T11:00:00Z",
+      "windowUntil": "2026-10-29T10:59:59Z",
+      "outcome": "succeeded",
+      "summary": "Tempo search empty: 0 traces, 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z",
+      "startedAt": "2026-11-01T19:55:17.244853Z",
+      "finishedAt": "2026-11-01T19:55:17.251816Z",
+      "durationMs": 6.963,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 2,
+      "integrationId": "fb74a154-9bcc-49f7-8b31-edc5d33da388",
+      "tool": "tempo_search_traces",
+      "purpose": "Find slow payment (POST /api/payments) traces over the last day",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "limit": 20,
+        "query": "{resource.service.name=\"payment\" && name=\"POST /api/payments\" && duration>1s}",
+        "start": "2026-10-28T11:00:00Z"
+      },
+      "windowFrom": "2026-10-28T11:00:00Z",
+      "windowUntil": "2026-10-29T10:59:59Z",
+      "outcome": "succeeded",
+      "summary": "Tempo search empty: 0 traces, 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z",
+      "startedAt": "2026-11-01T19:55:17.26392Z",
+      "finishedAt": "2026-11-01T19:55:17.27044Z",
+      "durationMs": 6.52,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 3,
+      "integrationId": "8943c981-7561-4f5c-a78d-317014f5a55c",
+      "tool": "prometheus_discover_metrics",
+      "purpose": "Discover HTTP request metrics for checkout service",
+      "arguments": {
+        "hint": "http_request",
+        "selector": "{job=\"checkout\"}"
+      },
+      "windowFrom": "2026-10-28T10:59:59.659243Z",
+      "windowUntil": "2026-10-29T10:59:59.659243Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus metric discovery \"http_request\": 0 names, 2026-10-28T10:59:59Z to 2026-10-29T10:59:59Z; incomplete=false",
+      "sources": [
+        "prometheus:8943c981-7561-4f5c-a78d-317014f5a55c:metric-names"
+      ],
+      "startedAt": "2026-11-01T19:55:17.278029Z",
+      "finishedAt": "2026-11-01T19:55:17.281158Z",
+      "durationMs": 3.129,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 4,
+      "integrationId": "8943c981-7561-4f5c-a78d-317014f5a55c",
+      "tool": "prometheus_discover_metrics",
+      "purpose": "Discover HTTP request metrics for payment service",
+      "arguments": {
+        "hint": "http_request",
+        "selector": "{job=\"payment\"}"
+      },
+      "windowFrom": "2026-10-28T10:59:59.659243Z",
+      "windowUntil": "2026-10-29T10:59:59.659243Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus metric discovery \"http_request\": 0 names, 2026-10-28T10:59:59Z to 2026-10-29T10:59:59Z; incomplete=false",
+      "sources": [
+        "prometheus:8943c981-7561-4f5c-a78d-317014f5a55c:metric-names"
+      ],
+      "startedAt": "2026-11-01T19:55:17.288997Z",
+      "finishedAt": "2026-11-01T19:55:17.290522Z",
+      "durationMs": 1.525,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 5,
+      "integrationId": "fb74a154-9bcc-49f7-8b31-edc5d33da388",
+      "tool": "tempo_search_traces",
+      "purpose": "Search slow POST /api/orders traces without service name filter",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "limit": 20,
+        "query": "{name=\"POST /api/orders\" && duration>1s}",
+        "start": "2026-10-28T11:00:00Z"
+      },
+      "windowFrom": "2026-10-28T11:00:00Z",
+      "windowUntil": "2026-10-29T10:59:59Z",
+      "outcome": "succeeded",
+      "truncated": true,
+      "summary": "Tempo search incomplete: 20 traces, 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z",
+      "sources": [
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:f057d51cb33aaa19326a8e457af41d91",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:ec4d78d2e67f3e20edf1ef54c707fa40",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:b9bba1a8dfa73acd91d12a35d784cb27",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:f860802294ea3e4719f6e0ad0f0fec73",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:d3968e161942dfcfb46eb31405e6bdcb",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:47abe06ecd31833974a2217543eb4112",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:3a404358416132d75892f66997a2a8c5",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:6134496a81a6ec7230c2d8fc4cd13853",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:53f10edfcf0168abaf07e2035bd6dce7",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:0595f4e097fcacc5724644e76d76ad60",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:cfc5000f5c9c36e7741b27e9ecf8c87b",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:209ac4592f67e004d5d54697579d6899",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:378770f8605da397713cc0d58d8d6b6b",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:2d129f26d3cee85fa1f679a6340eea5a",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:755556a5671c3b9303560d5fe736b240",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:8df24c9a494129703fa2aa0e18536000",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:5e9d86a61bf3860144cfb929f6d72941",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:4a79d73fdc112b0afb4b695723403014",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:78727a8eef902f59deffcface51ae47d",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:3c9f6fcaed9eebf1fe8203eb0971cec5"
+      ],
+      "startedAt": "2026-11-01T19:55:21.273034Z",
+      "finishedAt": "2026-11-01T19:55:21.30365Z",
+      "durationMs": 30.616,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 6,
+      "integrationId": "fb74a154-9bcc-49f7-8b31-edc5d33da388",
+      "tool": "tempo_search_traces",
+      "purpose": "Search slow POST /api/payments traces without service name filter",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "limit": 20,
+        "query": "{name=\"POST /api/payments\" && duration>1s}",
+        "start": "2026-10-28T11:00:00Z"
+      },
+      "windowFrom": "2026-10-28T11:00:00Z",
+      "windowUntil": "2026-10-29T10:59:59Z",
+      "outcome": "succeeded",
+      "summary": "Tempo search data: 5 traces, 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z",
+      "sources": [
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:0d52095905065127073157ffa3399fc8",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:33404aa118606a46c301ddf51876f64e",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:bab2f00d384e20d4956aefbc975652c3",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:6661aabbc96f535480066bbe28c66e55",
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:134db24c1405400f9452d417f458a179"
+      ],
+      "startedAt": "2026-11-01T19:55:21.312362Z",
+      "finishedAt": "2026-11-01T19:55:21.327896Z",
+      "durationMs": 15.534,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 7,
+      "integrationId": "8943c981-7561-4f5c-a78d-317014f5a55c",
+      "tool": "prometheus_discover_metrics",
+      "purpose": "Discover HTTP request metrics across all services",
+      "arguments": {
+        "hint": "http_request"
+      },
+      "windowFrom": "2026-10-28T10:59:59.659243Z",
+      "windowUntil": "2026-10-29T10:59:59.659243Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus metric discovery \"http_request\": 4 names, 2026-10-28T10:59:59Z to 2026-10-29T10:59:59Z; incomplete=false",
+      "sources": [
+        "prometheus:8943c981-7561-4f5c-a78d-317014f5a55c:metric-names"
+      ],
+      "startedAt": "2026-11-01T19:55:21.335804Z",
+      "finishedAt": "2026-11-01T19:55:21.338351Z",
+      "durationMs": 2.547,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 8,
+      "integrationId": "8943c981-7561-4f5c-a78d-317014f5a55c",
+      "tool": "prometheus_discover_metrics",
+      "purpose": "Discover duration-related metrics",
+      "arguments": {
+        "hint": "duration"
+      },
+      "windowFrom": "2026-10-28T10:59:59.659243Z",
+      "windowUntil": "2026-10-29T10:59:59.659243Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus metric discovery \"duration\": 3 names, 2026-10-28T10:59:59Z to 2026-10-29T10:59:59Z; incomplete=false",
+      "sources": [
+        "prometheus:8943c981-7561-4f5c-a78d-317014f5a55c:metric-names"
+      ],
+      "startedAt": "2026-11-01T19:55:21.344785Z",
+      "finishedAt": "2026-11-01T19:55:21.34741Z",
+      "durationMs": 2.625,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 9,
+      "integrationId": "fb74a154-9bcc-49f7-8b31-edc5d33da388",
+      "tool": "tempo_get_trace",
+      "purpose": "Fetch the slowest POST /api/orders trace (16.1s) to see where time is spent",
+      "arguments": {
+        "traceId": "47abe06ecd31833974a2217543eb4112"
+      },
+      "windowFrom": "2026-10-28T11:00:00Z",
+      "windowUntil": "2026-10-29T10:59:59Z",
+      "outcome": "succeeded",
+      "summary": "Tempo trace 47abe06ecd31833974a2217543eb4112: data, 4 spans; searched 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z; backend bounds are not a completeness guarantee",
+      "sources": [
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:47abe06ecd31833974a2217543eb4112"
+      ],
+      "startedAt": "2026-11-01T19:55:27.577856Z",
+      "finishedAt": "2026-11-01T19:55:27.626485Z",
+      "durationMs": 48.629,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 10,
+      "integrationId": "fb74a154-9bcc-49f7-8b31-edc5d33da388",
+      "tool": "tempo_get_trace",
+      "purpose": "Fetch the slowest POST /api/payments trace (3.3s) to see where time is spent",
+      "arguments": {
+        "traceId": "134db24c1405400f9452d417f458a179"
+      },
+      "windowFrom": "2026-10-28T11:00:00Z",
+      "windowUntil": "2026-10-29T10:59:59Z",
+      "outcome": "succeeded",
+      "summary": "Tempo trace 134db24c1405400f9452d417f458a179: data, 3 spans; searched 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z; backend bounds are not a completeness guarantee",
+      "sources": [
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:134db24c1405400f9452d417f458a179"
+      ],
+      "startedAt": "2026-11-01T19:55:27.633135Z",
+      "finishedAt": "2026-11-01T19:55:27.650177Z",
+      "durationMs": 17.042,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 11,
+      "integrationId": "fb74a154-9bcc-49f7-8b31-edc5d33da388",
+      "tool": "tempo_get_trace",
+      "purpose": "Fetch a slow checkout trace (15.2s) that includes payment-service to see its contribution",
+      "arguments": {
+        "traceId": "d3968e161942dfcfb46eb31405e6bdcb"
+      },
+      "windowFrom": "2026-10-28T11:00:00Z",
+      "windowUntil": "2026-10-29T10:59:59Z",
+      "outcome": "succeeded",
+      "summary": "Tempo trace d3968e161942dfcfb46eb31405e6bdcb: data, 4 spans; searched 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z; backend bounds are not a completeness guarantee",
+      "sources": [
+        "tempo:fb74a154-9bcc-49f7-8b31-edc5d33da388:trace:d3968e161942dfcfb46eb31405e6bdcb"
+      ],
+      "startedAt": "2026-11-01T19:55:36.136937Z",
+      "finishedAt": "2026-11-01T19:55:36.163429Z",
+      "durationMs": 26.492,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 12,
+      "integrationId": "8943c981-7561-4f5c-a78d-317014f5a55c",
+      "tool": "prometheus_query",
+      "purpose": "Check p99 latency for order-service and payment-service POST requests over the day",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "mode": "range",
+        "query": "histogram_quantile(0.99, sum by (le, job) (rate(http_request_duration_seconds_bucket{job=~\"order-service|payment-service\",method=\"POST\"}[1h])))",
+        "start": "2026-10-28T11:00:00Z",
+        "step": 3600
+      },
+      "windowFrom": "2026-10-28T11:00:00Z",
+      "windowUntil": "2026-10-29T10:59:59Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus range \"histogram_quantile(0.99, sum by (le, job) (rate(http_request_duration_seconds_bucket{job=~\\\"order-service|payment-service…\": 0 series, 0 samples; 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z; incomplete=false",
+      "sources": [
+        "prometheus:8943c981-7561-4f5c-a78d-317014f5a55c:range"
+      ],
+      "startedAt": "2026-11-01T19:55:36.171218Z",
+      "finishedAt": "2026-11-01T19:55:36.174302Z",
+      "durationMs": 3.084,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 13,
+      "integrationId": "8943c981-7561-4f5c-a78d-317014f5a55c",
+      "tool": "prometheus_query",
+      "purpose": "Discover which job labels exist for the HTTP duration histogram",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "mode": "instant",
+        "query": "count by (job) (http_request_duration_seconds_bucket)"
+      },
+      "windowFrom": "2026-10-29T10:59:59Z",
+      "windowUntil": "2026-10-29T10:59:59Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"count by (job) (http_request_duration_seconds_bucket)\": 5 series, 5 samples; 2026-10-29T10:59:59Z to 2026-10-29T10:59:59Z; incomplete=false; retained {job=\"api-gateway\"}=12 at 2026-10-29T10:59:59Z",
+      "sources": [
+        "prometheus:8943c981-7561-4f5c-a78d-317014f5a55c:instant"
+      ],
+      "startedAt": "2026-11-01T19:55:39.878172Z",
+      "finishedAt": "2026-11-01T19:55:39.881616Z",
+      "durationMs": 3.444,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 14,
+      "integrationId": "8943c981-7561-4f5c-a78d-317014f5a55c",
+      "tool": "prometheus_query",
+      "purpose": "Check what method and route labels exist for order-service duration buckets",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "mode": "instant",
+        "query": "count by (job, method, route) (http_request_duration_seconds_bucket{job=\"order-service\"})"
+      },
+      "windowFrom": "2026-10-29T10:59:59Z",
+      "windowUntil": "2026-10-29T10:59:59Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus instant \"count by (job, method, route) (http_request_duration_seconds_bucket{job=\\\"order-service\\\"})\": 1 series, 1 samples; 2026-10-29T10:59:59Z to 2026-10-29T10:59:59Z; incomplete=false; retained {job=\"order-service\"}=12 at 2026-10-29T10:59:59Z",
+      "sources": [
+        "prometheus:8943c981-7561-4f5c-a78d-317014f5a55c:instant"
+      ],
+      "startedAt": "2026-11-01T19:55:42.265154Z",
+      "finishedAt": "2026-11-01T19:55:42.267248Z",
+      "durationMs": 2.094,
+      "windowApplied": true,
+      "modelClipped": false
+    },
+    {
+      "ordinal": 15,
+      "integrationId": "8943c981-7561-4f5c-a78d-317014f5a55c",
+      "tool": "prometheus_query",
+      "purpose": "Get p99 latency for order-service and payment-service over the day",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "mode": "range",
+        "query": "histogram_quantile(0.99, sum by (le, job) (rate(http_request_duration_seconds_bucket{job=~\"order-service|payment-service\"}[1h])))",
+        "start": "2026-10-28T11:00:00Z",
+        "step": 3600
+      },
+      "windowFrom": "2026-10-28T11:00:00Z",
+      "windowUntil": "2026-10-29T10:59:59Z",
+      "outcome": "succeeded",
+      "summary": "Prometheus range \"histogram_quantile(0.99, sum by (le, job) (rate(http_request_duration_seconds_bucket{job=~\\\"order-service|payment-service…\": 2 series, 48 samples; 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z; incomplete=false; retained {job=\"order-service\"}=0.04955263157894737 at 2026-10-29T10:00:00Z",
+      "sources": [
+        "prometheus:8943c981-7561-4f5c-a78d-317014f5a55c:range"
+      ],
+      "startedAt": "2026-11-01T19:55:45.013106Z",
+      "finishedAt": "2026-11-01T19:55:45.023848Z",
+      "durationMs": 10.742,
+      "windowApplied": true,
+      "modelClipped": false
+    }
+  ],
+  "adapterElapsedSeconds": 52.3350487719872
+}

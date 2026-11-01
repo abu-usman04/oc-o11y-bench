@@ -1,0 +1,300 @@
+{
+  "case": "find-slow-traces",
+  "exactPreparedTextMatches": true,
+  "attempts": 15,
+  "failed": [],
+  "sourceIncomplete": [
+    5
+  ],
+  "modelClipped": [],
+  "usage": {
+    "inputTokens": 88237,
+    "outputTokens": 5171
+  },
+  "elapsedSeconds": 52.3350487719872,
+  "observations": [
+    {
+      "ordinal": 1,
+      "tool": "tempo_search_traces",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "limit": 20,
+        "query": "{resource.service.name=\"checkout\" && name=\"POST /api/orders\" && duration>1s}",
+        "start": "2026-10-28T11:00:00Z"
+      },
+      "summary": "Tempo search empty: 0 traces, 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z",
+      "networkReads": 1,
+      "returnedTraces": 0,
+      "independentlyCountedAppearances": {},
+      "tracesWithoutServiceStats": 0,
+      "reportedSummary": {}
+    },
+    {
+      "ordinal": 2,
+      "tool": "tempo_search_traces",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "limit": 20,
+        "query": "{resource.service.name=\"payment\" && name=\"POST /api/payments\" && duration>1s}",
+        "start": "2026-10-28T11:00:00Z"
+      },
+      "summary": "Tempo search empty: 0 traces, 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z",
+      "networkReads": 1,
+      "returnedTraces": 0,
+      "independentlyCountedAppearances": {},
+      "tracesWithoutServiceStats": 0,
+      "reportedSummary": {}
+    },
+    {
+      "ordinal": 3,
+      "tool": "prometheus_discover_metrics",
+      "arguments": {
+        "hint": "http_request",
+        "selector": "{job=\"checkout\"}"
+      },
+      "summary": "Prometheus metric discovery \"http_request\": 0 names, 2026-10-28T10:59:59Z to 2026-10-29T10:59:59Z; incomplete=false",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 4,
+      "tool": "prometheus_discover_metrics",
+      "arguments": {
+        "hint": "http_request",
+        "selector": "{job=\"payment\"}"
+      },
+      "summary": "Prometheus metric discovery \"http_request\": 0 names, 2026-10-28T10:59:59Z to 2026-10-29T10:59:59Z; incomplete=false",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 5,
+      "tool": "tempo_search_traces",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "limit": 20,
+        "query": "{name=\"POST /api/orders\" && duration>1s}",
+        "start": "2026-10-28T11:00:00Z"
+      },
+      "summary": "Tempo search incomplete: 20 traces, 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z",
+      "networkReads": 1,
+      "returnedTraces": 20,
+      "independentlyCountedAppearances": {
+        "api-gateway": 20,
+        "order-service": 20,
+        "payment-service": 6,
+        "user-service": 10,
+        "webapp": 20
+      },
+      "tracesWithoutServiceStats": 0,
+      "reportedSummary": {
+        "api-gateway": 20,
+        "order-service": 20,
+        "payment-service": 6,
+        "user-service": 10,
+        "webapp": 20
+      }
+    },
+    {
+      "ordinal": 6,
+      "tool": "tempo_search_traces",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "limit": 20,
+        "query": "{name=\"POST /api/payments\" && duration>1s}",
+        "start": "2026-10-28T11:00:00Z"
+      },
+      "summary": "Tempo search data: 5 traces, 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z",
+      "networkReads": 1,
+      "returnedTraces": 5,
+      "independentlyCountedAppearances": {
+        "api-gateway": 5,
+        "payment-service": 5,
+        "webapp": 5
+      },
+      "tracesWithoutServiceStats": 0,
+      "reportedSummary": {
+        "api-gateway": 5,
+        "payment-service": 5,
+        "webapp": 5
+      }
+    },
+    {
+      "ordinal": 7,
+      "tool": "prometheus_discover_metrics",
+      "arguments": {
+        "hint": "http_request"
+      },
+      "summary": "Prometheus metric discovery \"http_request\": 4 names, 2026-10-28T10:59:59Z to 2026-10-29T10:59:59Z; incomplete=false",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 8,
+      "tool": "prometheus_discover_metrics",
+      "arguments": {
+        "hint": "duration"
+      },
+      "summary": "Prometheus metric discovery \"duration\": 3 names, 2026-10-28T10:59:59Z to 2026-10-29T10:59:59Z; incomplete=false",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 9,
+      "tool": "tempo_get_trace",
+      "arguments": {
+        "traceId": "47abe06ecd31833974a2217543eb4112"
+      },
+      "summary": "Tempo trace 47abe06ecd31833974a2217543eb4112: data, 4 spans; searched 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z; backend bounds are not a completeness guarantee",
+      "networkReads": 1,
+      "traceId": "47abe06ecd31833974a2217543eb4112",
+      "spans": [
+        {
+          "id": "666ce0d4ff94b14b",
+          "parentId": null,
+          "service": "webapp",
+          "operation": "POST /api/orders",
+          "durationNanos": 16142597832
+        },
+        {
+          "id": "d48debee5c78de39",
+          "parentId": "666ce0d4ff94b14b",
+          "service": "api-gateway",
+          "operation": "route /api/orders",
+          "durationNanos": 14528338048
+        },
+        {
+          "id": "b632dc0ab9dbab14",
+          "parentId": "d48debee5c78de39",
+          "service": "order-service",
+          "operation": "handle POST /api/orders",
+          "durationNanos": 11622670438
+        },
+        {
+          "id": "01b32847579f6406",
+          "parentId": "b632dc0ab9dbab14",
+          "service": "user-service",
+          "operation": "call user-service",
+          "durationNanos": 25000000
+        }
+      ]
+    },
+    {
+      "ordinal": 10,
+      "tool": "tempo_get_trace",
+      "arguments": {
+        "traceId": "134db24c1405400f9452d417f458a179"
+      },
+      "summary": "Tempo trace 134db24c1405400f9452d417f458a179: data, 3 spans; searched 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z; backend bounds are not a completeness guarantee",
+      "networkReads": 1,
+      "traceId": "134db24c1405400f9452d417f458a179",
+      "spans": [
+        {
+          "id": "e3a812de24c4227f",
+          "parentId": null,
+          "service": "webapp",
+          "operation": "POST /api/payments",
+          "durationNanos": 3275048490
+        },
+        {
+          "id": "3eeb2cde5ec8d8ce",
+          "parentId": "e3a812de24c4227f",
+          "service": "api-gateway",
+          "operation": "route /api/payments",
+          "durationNanos": 2947543641
+        },
+        {
+          "id": "8947527974939b9f",
+          "parentId": "3eeb2cde5ec8d8ce",
+          "service": "payment-service",
+          "operation": "handle POST /api/payments",
+          "durationNanos": 2358034912
+        }
+      ]
+    },
+    {
+      "ordinal": 11,
+      "tool": "tempo_get_trace",
+      "arguments": {
+        "traceId": "d3968e161942dfcfb46eb31405e6bdcb"
+      },
+      "summary": "Tempo trace d3968e161942dfcfb46eb31405e6bdcb: data, 4 spans; searched 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z; backend bounds are not a completeness guarantee",
+      "networkReads": 1,
+      "traceId": "d3968e161942dfcfb46eb31405e6bdcb",
+      "spans": [
+        {
+          "id": "1102ebfd65d3913a",
+          "parentId": null,
+          "service": "webapp",
+          "operation": "POST /api/orders",
+          "durationNanos": 15252895544
+        },
+        {
+          "id": "2380db1fd7533dd0",
+          "parentId": "1102ebfd65d3913a",
+          "service": "api-gateway",
+          "operation": "route /api/orders",
+          "durationNanos": 13727605989
+        },
+        {
+          "id": "df30c293eba10e2b",
+          "parentId": "2380db1fd7533dd0",
+          "service": "order-service",
+          "operation": "handle POST /api/orders",
+          "durationNanos": 10982084791
+        },
+        {
+          "id": "76a209a0de608093",
+          "parentId": "df30c293eba10e2b",
+          "service": "payment-service",
+          "operation": "call payment-service",
+          "durationNanos": 25000000
+        }
+      ]
+    },
+    {
+      "ordinal": 12,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "mode": "range",
+        "query": "histogram_quantile(0.99, sum by (le, job) (rate(http_request_duration_seconds_bucket{job=~\"order-service|payment-service\",method=\"POST\"}[1h])))",
+        "start": "2026-10-28T11:00:00Z",
+        "step": 3600
+      },
+      "summary": "Prometheus range \"histogram_quantile(0.99, sum by (le, job) (rate(http_request_duration_seconds_bucket{job=~\\\"order-service|payment-service\u2026\": 0 series, 0 samples; 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z; incomplete=false",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 13,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "mode": "instant",
+        "query": "count by (job) (http_request_duration_seconds_bucket)"
+      },
+      "summary": "Prometheus instant \"count by (job) (http_request_duration_seconds_bucket)\": 5 series, 5 samples; 2026-10-29T10:59:59Z to 2026-10-29T10:59:59Z; incomplete=false; retained {job=\"api-gateway\"}=12 at 2026-10-29T10:59:59Z",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 14,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "mode": "instant",
+        "query": "count by (job, method, route) (http_request_duration_seconds_bucket{job=\"order-service\"})"
+      },
+      "summary": "Prometheus instant \"count by (job, method, route) (http_request_duration_seconds_bucket{job=\\\"order-service\\\"})\": 1 series, 1 samples; 2026-10-29T10:59:59Z to 2026-10-29T10:59:59Z; incomplete=false; retained {job=\"order-service\"}=12 at 2026-10-29T10:59:59Z",
+      "networkReads": 1
+    },
+    {
+      "ordinal": 15,
+      "tool": "prometheus_query",
+      "arguments": {
+        "end": "2026-10-29T10:59:59Z",
+        "mode": "range",
+        "query": "histogram_quantile(0.99, sum by (le, job) (rate(http_request_duration_seconds_bucket{job=~\"order-service|payment-service\"}[1h])))",
+        "start": "2026-10-28T11:00:00Z",
+        "step": 3600
+      },
+      "summary": "Prometheus range \"histogram_quantile(0.99, sum by (le, job) (rate(http_request_duration_seconds_bucket{job=~\\\"order-service|payment-service\u2026\": 2 series, 48 samples; 2026-10-28T11:00:00Z to 2026-10-29T10:59:59Z; incomplete=false; retained {job=\"order-service\"}=0.04955263157894737 at 2026-10-29T10:00:00Z",
+      "networkReads": 1
+    }
+  ]
+}

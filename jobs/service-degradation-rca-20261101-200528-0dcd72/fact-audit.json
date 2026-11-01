@@ -1,0 +1,73 @@
+{
+  "mode": "Canonical facts and checks from local upstream grading",
+  "facts": [
+    {
+      "criterion": "The final response characterizes the slowdown as a severe multi-second issue, consistent with the order-service p95 peak in the Source of truth.",
+      "evidence": {
+        "summary": "Matching metrics exist in the snapshot window: Query returned 1 result: 10",
+        "debug": {
+          "backend": "prometheus",
+          "query": "max_over_time(histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{job=\"order-service\"}[5m])))[8h:1m])",
+          "result": {
+            "shape": "items",
+            "items": [
+              {
+                "labels": {},
+                "value": 10.0
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    },
+    {
+      "criterion": "The final response names the job with the highest peak p95 in the Source of truth as the primary bottleneck and explains how symptoms in other services or layers connect to it",
+      "evidence": {
+        "summary": "Ranking from the snapshot window: Query returned 3 results: {job=\"order-service\"} 10; {job=\"user-service\"} 4.5; {job=\"payment-service\"} 2.2",
+        "debug": {
+          "backend": "prometheus",
+          "query": "topk(3, max_over_time(histogram_quantile(0.95, sum by (job, le) (rate(http_request_duration_seconds_bucket[5m])))[8h:1m]))",
+          "result": {
+            "shape": "items",
+            "items": [
+              {
+                "labels": {
+                  "job": "order-service"
+                },
+                "value": 10.0
+              },
+              {
+                "labels": {
+                  "job": "user-service"
+                },
+                "value": 4.5
+              },
+              {
+                "labels": {
+                  "job": "payment-service"
+                },
+                "value": 2.1999999999999997
+              }
+            ]
+          }
+        },
+        "error": null,
+        "fails": false
+      }
+    }
+  ],
+  "checks": {
+    "scores": {},
+    "explanations": {}
+  },
+  "engineeringReview": [
+    "Runs 17/23 show substantial order-handler duration; missing child spans do not identify database operations, pool exhaustion, or 11-14s connection waits. Run 17 has no user child: the stated 25ms user call belongs to a different trace in Run 23.",
+    "Run 27 database warnings are nonmonotonic: the largest query is at 01:48, and the latest warning is 04:56, before the claimed peak. Visible Run 28 database timeouts start at 08:16, after it; that clipped backward-limited observation cannot establish global onset.",
+    "Run 12 supports sampled job-level order p95 up to 10s during 05:03-05:45, without isolating checkout endpoints. Run 14 supports a separate user-service excursion, but cache lag at 02:43, stale keys at 02:46 and memory at 02:53 do not prove a cache mechanism or propagation into checkout.",
+    "All 28 retained observations match capture. Source flags and model clipping (16,19,20,21,22,28) are recorded correctly; those contracts do not validate the causal answer."
+  ],
+  "engineeringVerdict": "failed",
+  "engineeringBasis": "Exact saved model-visible observations; replay facts do not verify returned samples or causal assertions."
+}

@@ -1,0 +1,19 @@
+{
+  "score": 1.0,
+  "status": "passed",
+  "grading_model": "anthropic/claude-haiku-5.5@high",
+  "checks_passed": 1,
+  "rubric_passed": 1,
+  "The final response states Count of v2.5.0 deployment log lines accurately.": 1.0,
+  "The final response names every service that logged a v2.5.0 deployment in the Source of truth, and no other": 1.0,
+  "The response includes the approximate deployment time, or a close relative time, tied to the rollout itself rather than only the search window": 1.0,
+  "outcome:The final response states Count of v2.5.0 deployment log lines accurately.": "pass",
+  "explanation:The final response states Count of v2.5.0 deployment log lines accurately.": "The truth is 3 matching log lines, and the response's implied count of three deployment events, one per service, matches it, though it never states a log-line count explicitly.",
+  "quote:The final response states Count of v2.5.0 deployment log lines accurately.": "Three services logged a v2.5.0 deployment in the window",
+  "outcome:The final response names every service that logged a v2.5.0 deployment in the Source of truth, and no other": "ungrounded",
+  "explanation:The final response names every service that logged a v2.5.0 deployment in the Source of truth, and no other": "The response names exactly user-service, order-service and payment-service, which are the three services in the truth, and no others.",
+  "quote:The final response names every service that logged a v2.5.0 deployment in the Source of truth, and no other": "1. **user-service** \u2014 2026-10-29T01:47:00Z (v2.4.1 \u2192 v2.5.0)\n2. **order-service** \u2014 2026-10-29T07:55:00Z (v2.4.1 \u2192 v2.5.0)\n3. **payment-service** \u2014 2026-10-29T07:55:00Z (v2.4.1 \u2192 v2.5.0)",
+  "outcome:The response includes the approximate deployment time, or a close relative time, tied to the rollout itself rather than only the search window": "pass",
+  "explanation:The response includes the approximate deployment time, or a close relative time, tied to the rollout itself rather than only the search window": "Each service is given a specific deployment timestamp described as a v2.4.1 \u2192 v2.5.0 rollout event, not just the search window bounds.",
+  "quote:The response includes the approximate deployment time, or a close relative time, tied to the rollout itself rather than only the search window": "1. **user-service** \u2014 2026-10-29T01:47:00Z (v2.4.1 \u2192 v2.5.0)"
+}

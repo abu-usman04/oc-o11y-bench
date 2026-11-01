@@ -1,0 +1,111 @@
+{
+  "date": "2026-11-01",
+  "postgres": "17-alpine",
+  "controlPlaneBaseCommit": "aa863b08f4d143f41ce19a19cb441ddea2459d68",
+  "phase2WorkingTreeDiffSHA256": "13459edeb89380596c99e36edb378e449269dabb244c286a5b56c6a83878a2af",
+  "schemaSHA256": "9b7d61a3242dd95b3901a8acbf077c35a69d2527594c128ca0451e219f983815",
+  "method": "One metadata-only and one retained-text replay per historical completed Investigation, using the current schema, real Integration foreign keys, lease predicates, row locking, and one committed INSERT transaction per Tool Run. EXPLAIN ANALYZE BUFFERS WAL measures INSERT execution including foreign-key triggers. Separate queries verify committed row and text sizes.",
+  "limits": "Single local replay per treatment, metadata-only first, no statistical latency claim. INSERT timings exclude row-lock acquisition, network/encoding, commit fsync and extra WAL for COMMIT. pg_column_size reports datum sizes with PostgreSQL storage behavior; it excludes page/index/backup overhead. This is a storage measurement, not a new model evaluation or release gate.",
+  "cases": [
+    {
+      "case": "promql-error-rate",
+      "historicalJob": "promql-error-rate-20261029-105457-a33cd3",
+      "observations": 6,
+      "maxTextBytes": 1832,
+      "metadataOnly": {
+        "rows": 6,
+        "textBytes": 0,
+        "storedObservationBytes": 0,
+        "rowBytes": 4101,
+        "insertExecutionMs": 8.033,
+        "insertWalBytes": 4857,
+        "largestInsertMs": 4.752
+      },
+      "retained": {
+        "rows": 6,
+        "textBytes": 6467,
+        "storedObservationBytes": 5218,
+        "rowBytes": 9328,
+        "insertExecutionMs": 7.73,
+        "insertWalBytes": 9994,
+        "largestInsertMs": 4.651
+      }
+    },
+    {
+      "case": "logql-deployment-rollout-events",
+      "historicalJob": "logql-deployment-rollout-events-20261029-105757-b7a9ea",
+      "observations": 1,
+      "maxTextBytes": 1754,
+      "metadataOnly": {
+        "rows": 1,
+        "textBytes": 0,
+        "storedObservationBytes": 0,
+        "rowBytes": 537,
+        "insertExecutionMs": 3.647,
+        "insertWalBytes": 648,
+        "largestInsertMs": 3.647
+      },
+      "retained": {
+        "rows": 1,
+        "textBytes": 1754,
+        "storedObservationBytes": 667,
+        "rowBytes": 1204,
+        "insertExecutionMs": 4.137,
+        "insertWalBytes": 1315,
+        "largestInsertMs": 4.137
+      }
+    },
+    {
+      "case": "find-slow-traces",
+      "historicalJob": "find-slow-traces-20261029-110031-61566d",
+      "observations": 10,
+      "maxTextBytes": 7585,
+      "metadataOnly": {
+        "rows": 10,
+        "textBytes": 0,
+        "storedObservationBytes": 0,
+        "rowBytes": 6901,
+        "insertExecutionMs": 8.482,
+        "insertWalBytes": 8011,
+        "largestInsertMs": 3.544
+      },
+      "retained": {
+        "rows": 10,
+        "textBytes": 17722,
+        "storedObservationBytes": 8854,
+        "rowBytes": 15780,
+        "insertExecutionMs": 8.313,
+        "insertWalBytes": 17124,
+        "largestInsertMs": 3.472
+      }
+    },
+    {
+      "case": "service-degradation-rca",
+      "historicalJob": "service-degradation-rca-20261029-110353-fca189",
+      "observations": 14,
+      "maxTextBytes": 16958,
+      "metadataOnly": {
+        "rows": 14,
+        "textBytes": 0,
+        "storedObservationBytes": 0,
+        "rowBytes": 8757,
+        "insertExecutionMs": 8.597,
+        "insertWalBytes": 10311,
+        "largestInsertMs": 3.468
+      },
+      "retained": {
+        "rows": 14,
+        "textBytes": 55658,
+        "storedObservationBytes": 18134,
+        "rowBytes": 26920,
+        "insertExecutionMs": 11.114,
+        "insertWalBytes": 29578,
+        "largestInsertMs": 3.469
+      }
+    }
+  ],
+  "transport": "Binary UTF-8 stdin; exact saved prepared-text byte totals verified for each Investigation",
+  "postgresImageID": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+  "excludedInitialReplay": "initial-text-mode.json used Windows text-mode stdin, which converted embedded LF to CRLF. Its byte totals do not match the source observations and it is excluded from conclusions.",
+  "controlPlaneImplementationCommit": "aac63ffc92f7eb081acbc9d9fd3646536595211b"
+}
